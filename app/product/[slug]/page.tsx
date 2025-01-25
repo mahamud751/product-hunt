@@ -15,7 +15,7 @@ const ProductPage = async ({ params }: { params: IParams }) => {
     return <div>Product not found</div>;
   }
 
-  const productImageUrls = product.images.map((image: any) => image.url);
+  const productImageUrls = product?.images?.map((image: any) => image?.url);
 
   console.log(product, "product info");
 
@@ -24,7 +24,7 @@ const ProductPage = async ({ params }: { params: IParams }) => {
       <div className="flex items-center justify-between">
         <div className="flex gap-x-4 items-center">
           <Image
-            src={product.logo}
+            src={product?.logo}
             alt="logo"
             width={1000}
             height={1000}
@@ -71,7 +71,7 @@ const ProductPage = async ({ params }: { params: IParams }) => {
             <div key={comment.id} className="border p-4 rounded-lg">
               <div className="flex gap-x-4 items-center">
                 <Image
-                  src={comment.user.image}
+                  src={comment?.user?.image}
                   alt="profile"
                   width={50}
                   height={50}

@@ -11,27 +11,21 @@ import Link from "next/link";
 import { PiGear, PiHeart, PiPackage } from "react-icons/pi";
 import { signOut } from "next-auth/react";
 
-
 interface AvatarProps {
   authenticatedUser?: any;
 }
 
 const Avatar: React.FC<AvatarProps> = ({ authenticatedUser }) => {
-
-
-
-    const handleMyUpvotes = () => {
-        window.location.href = "/my-upvoted";
-    }
-
-
+  const handleMyUpvotes = () => {
+    window.location.href = "/my-upvoted";
+  };
 
   return (
     <div>
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
           <Image
-            src={authenticatedUser.user.image}
+            src={authenticatedUser?.user?.image}
             className="rounded-full border h-8 w-8"
             height={50}
             width={50}
@@ -49,10 +43,10 @@ const Avatar: React.FC<AvatarProps> = ({ authenticatedUser }) => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div 
-            onClick={handleMyUpvotes}
-            
-            className="flex gap-x-2 rounded-sm w-full cursor-pointer">
+            <div
+              onClick={handleMyUpvotes}
+              className="flex gap-x-2 rounded-sm w-full cursor-pointer"
+            >
               <PiHeart className="text-xl" />
               Upvoted
             </div>
@@ -67,11 +61,7 @@ const Avatar: React.FC<AvatarProps> = ({ authenticatedUser }) => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div
-            onClick={() => signOut()}
-            >
-                Log out
-            </div>
+            <div onClick={() => signOut()}>Log out</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

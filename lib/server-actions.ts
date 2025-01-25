@@ -65,7 +65,7 @@ export const createProduct = async ({
         },
         images: {
           createMany: {
-            data: images.map((image) => ({ url: image })),
+            data: images?.map((image) => ({ url: image })),
           },
         },
 
@@ -134,7 +134,7 @@ export const updateProduct = async (
           productId,
         },
         createMany: {
-          data: images.map((image) => ({ url: image })),
+          data: images?.map((image) => ({ url: image })),
         },
       },
       status: "PENDING",
@@ -361,7 +361,7 @@ export const commentOnProduct = async (
     const userId = authenticatedUser.user.id;
 
     // Check if authenticated user has a profile picture
-    const profilePicture = authenticatedUser.user.image || ""; // Use an empty string if profile picture is undefined
+    const profilePicture = authenticatedUser?.user?.image || ""; // Use an empty string if profile picture is undefined
 
     await db.comment.create({
       data: {
@@ -442,7 +442,7 @@ export const upvoteProduct = async (productId: string) => {
       },
     });
 
-    const profilePicture = authenticatedUser.user.image || ""; // Use an empty string if profile picture is undefined
+    const profilePicture = authenticatedUser?.user?.image || ""; // Use an empty string if profile picture is undefined
 
     if (upvote) {
       await db.upvote.delete({
@@ -731,7 +731,6 @@ export const isUserPremium = async () => {
   return user.isPremium;
 };
 
-
 export const getRejectedProducts = async () => {
   const products = await db.product.findMany({
     where: {
@@ -744,14 +743,13 @@ export const getRejectedProducts = async () => {
   });
 
   return products;
-}
-
+};
 
 export const getUsers = async () => {
   const users = await db.user.findMany();
 
   return users;
-}
+};
 
 export const getTotalUpvotes = async () => {
   const totalUpvotes = await db.upvote.count({
@@ -778,4 +776,4 @@ export const getAdminData = async () => {
     totalComments,
     totalCategories,
   };
-}
+};

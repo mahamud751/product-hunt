@@ -41,7 +41,7 @@ const ShareModalContent: React.FC<ShareModalContentProps> = ({
   return (
     <div>
       <Image
-        src={currentProduct.logo}
+        src={currentProduct?.logo}
         alt="logo"
         width={200}
         height={200}

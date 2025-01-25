@@ -79,7 +79,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         images:
           uploadedProductImages.length > 0
             ? uploadedProductImages
-            : product.images.map((image: any) => image.url),
+            : product?.images?.map((image: any) => image?.url),
       });
       toast(
         <>
@@ -269,7 +269,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                   <div key={image.id}>
                     <Image
                       priority
-                      src={image.url}
+                      src={image?.url}
                       alt={product.name}
                       width={200}
                       height={200}
@@ -306,7 +306,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
 
       <div className="flex justify-end py-10">
         <button
-            onClick={onSave}
+          onClick={onSave}
           className="bg-emerald-500 text-white 
         p-4 rounded-md w-40 text-center cursor-pointer"
         >

@@ -100,10 +100,10 @@ const Search = () => {
               className="p-2 hover:bg-gray-100 
             cursor-pointer text-sm 
             flex items-center gap-x-2"
-                onClick={() => handleItemClick(product.slug, product.name)}
+              onClick={() => handleItemClick(product.slug, product.name)}
             >
               <Image
-                src={product.logo}
+                src={product?.logo}
                 alt="logo"
                 width={50}
                 height={50}

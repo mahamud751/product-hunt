@@ -13,7 +13,11 @@ import CarouselComponent from "./carousel-component";
 import { useState } from "react";
 import ShareModal from "./ui/modals/share-product-modal";
 import ShareModalContent from "./share-modal-content";
-import { commentOnProduct, deleteComment, upvoteProduct } from "@/lib/server-actions";
+import {
+  commentOnProduct,
+  deleteComment,
+  upvoteProduct,
+} from "@/lib/server-actions";
 import { Badge } from "./ui/badge";
 
 interface ProductModalContentProps {
@@ -55,11 +59,11 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
         {
           user: authenticatedUser.user.name,
           body: commentText,
-          profile: authenticatedUser.user.image,
+          profile: authenticatedUser?.user?.image,
           userId: authenticatedUser.user.id,
           timestamp: new Date().toISOString(),
-        }
-      ])
+        },
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +78,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
       // Call the deleteComment function with the comment ID
       await deleteComment(commentId);
       // Filter out the deleted comment from the comments state
-        setComments(comments.filter((comment: any) => comment.id !== commentId));
+      setComments(comments.filter((comment: any) => comment.id !== commentId));
     } catch (error) {
       console.error("Error deleting comment:", error);
       // Handle error appropriately, e.g., display an error message to the user
@@ -92,21 +96,14 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
       setHasUpvoted(!hasUpvoted);
     } catch (error) {
       console.error("Error upvoting product:", error);
-      
     }
-  }
-
-
-
-
-
-
+  };
 
   return (
     <div className="h-full">
       <div className="md:w-4/5 mx-auto">
         <Image
-          src={currentProduct.logo}
+          src={currentProduct?.logo}
           alt="logo"
           width={200}
           height={200}
@@ -137,9 +134,6 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                     : "text-black border"
                 }`}
                 onClick={handleUpvoteClick}
-        
-              
-        
               >
                 <PiCaretUpFill
                   className={`text-xl ${
@@ -192,7 +186,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
           <div>
             <div className="w-full flex gap-4 mt-4">
               <Image
-                src={authenticatedUser.user.image}
+                src={authenticatedUser?.user?.image}
                 alt="profile"
                 width={50}
                 height={50}
@@ -222,7 +216,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
             {comments.map((comment: any) => (
               <div key={comment.id} className="flex gap-4">
                 <Image
-                  src={comment.profile}
+                  src={comment?.profile}
                   alt="profile"
                   width={50}
                   height={50}
@@ -242,24 +236,24 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                       <div className="text-gray-500 text-xs">
                         {new Date(comment.timestamp).toDateString()}
                       </div>
-                      </div>
-
-                      {(comment.userId === authenticatedUser?.user?.id ||
-                        currentProduct.userId ===
-                          authenticatedUser?.user?.id) && (
-                        <PiTrash
-                          onClick={() => handleDeleteComment(comment.id)}
-                          className="text-red-500 hover:cursor-pointer"
-                        />
-                      )}
-    
                     </div>
 
-                    <div className="text-gray-600 text-sm 
-                    hover:cursor-pointer mt-2">
-                      {comment.body}
-                    </div>
-               
+                    {(comment.userId === authenticatedUser?.user?.id ||
+                      currentProduct.userId ===
+                        authenticatedUser?.user?.id) && (
+                      <PiTrash
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="text-red-500 hover:cursor-pointer"
+                      />
+                    )}
+                  </div>
+
+                  <div
+                    className="text-gray-600 text-sm 
+                    hover:cursor-pointer mt-2"
+                  >
+                    {comment.body}
+                  </div>
                 </div>
               </div>
             ))}

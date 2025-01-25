@@ -53,7 +53,7 @@ const CategoryPage: React.FC<{ params: IParams }> = async ({ params }) => {
             className="flex gap-x-4 items-center p-2 rounded-md border"
           >
             <Image
-              src={product.logo}
+              src={product?.logo}
               alt="logo"
               width={1000}
               height={1000}
@@ -61,7 +61,9 @@ const CategoryPage: React.FC<{ params: IParams }> = async ({ params }) => {
             />
             <div>
               <h2 className="font-semibold text-lg">{product.name}</h2>
-              <p className="text-gray-500 text-sm md:py-2">{product.headline}</p>
+              <p className="text-gray-500 text-sm md:py-2">
+                {product.headline}
+              </p>
             </div>
           </Link>
         ))}

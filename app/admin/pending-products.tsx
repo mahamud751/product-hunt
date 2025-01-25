@@ -47,7 +47,7 @@ const PendingProducts: React.FC<PendingProductsProps> = ({
       categories,
     } = product;
 
-    const imageUrls = images.map((image: any) => image.url);
+    const imageUrls = images?.map((image: any) => image?.url);
     const categoryNames = categories.map((category: any) => category.name);
 
     return {
@@ -100,7 +100,7 @@ const PendingProducts: React.FC<PendingProductsProps> = ({
           >
             <div className="flex gap-x-6 items-center">
               <Image
-                src={product.logo}
+                src={product?.logo}
                 alt="logo"
                 width={200}
                 height={200}

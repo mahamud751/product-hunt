@@ -48,16 +48,14 @@ const NotificationIcon: React.FC<NotificationIconProps> = ({
     }
   };
 
-
   const handleMarkAllAsRead = async () => {
-   try {
-    //mark all notifications as read with server action
-    await markAllNotificationsAsRead();
-    setUnreadNotifications(0);
-   } catch (error) {
+    try {
+      //mark all notifications as read with server action
+      await markAllNotificationsAsRead();
+      setUnreadNotifications(0);
+    } catch (error) {
       console.log(error);
     }
-
   };
 
   return (
@@ -97,9 +95,9 @@ const NotificationIcon: React.FC<NotificationIconProps> = ({
           ) : (
             <div className="py-6">
               <button
-              onClick={handleMarkAllAsRead}
-              
-              className="text-sm text-red-500 hover:underline">
+                onClick={handleMarkAllAsRead}
+                className="text-sm text-red-500 hover:underline"
+              >
                 Mark all as read
               </button>
             </div>
@@ -110,7 +108,7 @@ const NotificationIcon: React.FC<NotificationIconProps> = ({
               <div key={notification.id} className="flex items-center gap-x-4">
                 <Image
                   priority
-                  src={notification.profilePicture}
+                  src={notification?.profilePicture}
                   alt="profile picture"
                   width={50}
                   height={50}

@@ -15,7 +15,6 @@ import Link from "next/link";
 import { upvoteProduct } from "@/lib/server-actions";
 import { motion } from "framer-motion";
 
-
 interface ProductItemProps {
   product: any;
   authenticatedUser: any;
@@ -59,7 +58,6 @@ const ProductItem: React.FC<ProductItemProps> = ({
     e.stopPropagation();
   };
 
-
   const handleUpvoteClick = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -72,10 +70,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
     } catch (error) {
       console.error(error);
     }
-  }
-
-
-
+  };
 
   const releaseDate = product.releaseDate && new Date(product.releaseDate);
 
@@ -90,11 +85,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
   }
 
   const variants = {
-    initital : { scale: 1 },
+    initital: { scale: 1 },
     upvoted: { scale: [1, 1.2, 1], transition: { duration: 0.3 } },
   };
-
-
 
   return (
     <div
@@ -111,7 +104,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Image
-            src={product.logo}
+            src={product?.logo}
             alt="logo"
             width={1000}
             height={1000}
@@ -165,10 +158,9 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
         <div className="text-sm">
           <motion.div
-          onClick={handleUpvoteClick}
-          variants={variants}
-          animate={hasUpvoted ? "upvoted" : "initital"}
-          
+            onClick={handleUpvoteClick}
+            variants={variants}
+            animate={hasUpvoted ? "upvoted" : "initital"}
           >
             {hasUpvoted ? (
               <div

@@ -6,16 +6,11 @@ import { redirect } from "next/navigation";
 import { PiCrown, PiPlus } from "react-icons/pi";
 
 const MyProducts = async () => {
-
   const authenticatedUser = await auth();
 
   if (!authenticatedUser) {
     redirect("/");
   }
-  
-
-
-
 
   const products = await getOwnerProducts();
 
@@ -77,7 +72,7 @@ const MyProducts = async () => {
                             "
                   >
                     <Image
-                      src={product.logo}
+                      src={product?.logo}
                       alt="logo"
                       width={1000}
                       height={1000}

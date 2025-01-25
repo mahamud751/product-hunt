@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from '@vercel/analytics/react';
-
+// import { Analytics } from '@vercel/analytics/react';
 
 const font = DM_Sans({ subsets: ["latin"] });
 
@@ -18,19 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html 
-    suppressHydrationWarning={true}
-    
-    lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <body className={font.className}>
-  
-
-        
         {children}
         <Toaster />
-        <Analytics />
-        
-        </body>
+        {/* <Analytics /> */}
+      </body>
     </html>
   );
 }

@@ -40,7 +40,7 @@ const ProductIDPage = async ({ params }: { params: IParams }) => {
       <div className="flex items-center justify-between py-4">
         <div className="flex items-center gap-x-4">
           <Image
-            src={product.logo}
+            src={product?.logo}
             alt="logo"
             width={500}
             height={500}
@@ -123,7 +123,7 @@ const ProductIDPage = async ({ params }: { params: IParams }) => {
             <div key={comment.id} className="border p-4 rounded-lg">
               <div className="flex gap-x-4 items-center">
                 <Image
-                  src={comment.user.image}
+                  src={comment?.user?.image}
                   alt="profile"
                   width={50}
                   height={50}
