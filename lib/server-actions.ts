@@ -439,55 +439,7 @@ export const getActiveProducts = async () => {
   return products;
 };
 
-export const getTopVotedProducts = async () => {
-  const now = new Date();
-
-  // Set startDate to the beginning of the day (00:00:00)
-  const startDate = new Date(now);
-  startDate.setHours(0, 0, 0, 0);
-
-  // Set endDate to the end of the day (23:59:59)
-  const endDate = new Date(now);
-  endDate.setHours(23, 59, 59, 999);
-
-  // Fetch products with upvotes within the current day
-  const productsWithVotes = await db.product.findMany({
-    where: {
-      upvotes: {
-        some: {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-      },
-    },
-    include: {
-      categories: true,
-      images: true,
-      upvotes: {
-        where: {
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-      },
-    },
-  });
-
-  if (productsWithVotes.length === 0) return [];
-
-  const maxVotes = Math.max(
-    ...productsWithVotes.map((product) => product.upvotes.length)
-  );
-
-  const topVotedProducts = productsWithVotes.filter(
-    (product) => product.upvotes.length === maxVotes
-  );
-
-  return topVotedProducts;
-};
+export const getTopVotedProducts = async () => {};
 
 export const commentOnProduct = async (
   productId: string,
