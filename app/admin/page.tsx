@@ -12,14 +12,14 @@ import {
 import { Separator } from "@/components/ui/separator";
 import PendingProducts from "./pending-products";
 import { auth } from "@/auth";
-import { 
-  getActiveProducts, 
-  getAdminData, 
-  getPendingProducts, 
-  getRejectedProducts, 
-  getTotalUpvotes, 
-  getUsers
- } from "@/lib/server-actions";
+import {
+  getActiveProducts,
+  getAdminData,
+  getPendingProducts,
+  getRejectedProducts,
+  getTotalUpvotes,
+  getUsers,
+} from "@/lib/server-actions";
 import OverviewChart from "@/components/overview-chart";
 import RecentActivity from "@/components/recent-activity";
 
@@ -34,10 +34,7 @@ const Admin = async () => {
 
   const premiumUsers = users.filter((user) => user.isPremium);
 
-
-
-
-  console.log(pendingProducts, "pending products here");
+  // console.log(pendingProducts, "pending products here");
 
   return (
     <div className="px-8 md:px-20">
@@ -73,9 +70,7 @@ const Admin = async () => {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-md font-bold">Users</CardTitle>👤
             </CardHeader>
-            <CardContent>
-              {users.length}
-            </CardContent>
+            <CardContent>{users.length}</CardContent>
           </Card>
 
           <Card>
@@ -83,9 +78,7 @@ const Admin = async () => {
               <CardTitle className="text-md font-bold">Premium Users</CardTitle>{" "}
               💰
             </CardHeader>
-            <CardContent>
-              {premiumUsers.length}
-            </CardContent>
+            <CardContent>{premiumUsers.length}</CardContent>
           </Card>
 
           <Card>
@@ -95,9 +88,7 @@ const Admin = async () => {
               </CardTitle>{" "}
               📦
             </CardHeader>
-            <CardContent>
-            {activeProducts.length}
-            </CardContent>
+            <CardContent>{activeProducts.length}</CardContent>
           </Card>
 
           <Card>
@@ -107,9 +98,7 @@ const Admin = async () => {
               </CardTitle>{" "}
               🕒
             </CardHeader>
-            <CardContent>
-              {pendingProducts.length}
-            </CardContent>
+            <CardContent>{pendingProducts.length}</CardContent>
           </Card>
 
           <Card>
@@ -119,21 +108,16 @@ const Admin = async () => {
               </CardTitle>
               👤
             </CardHeader>
-            <CardContent>
-              {rejectedProducts.length}
-            </CardContent>
+            <CardContent>{rejectedProducts.length}</CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-md font-bold">Upvotes</CardTitle> 🔺
             </CardHeader>
-            <CardContent>
-              {totalUpvotes}
-            </CardContent>
+            <CardContent>{totalUpvotes}</CardContent>
           </Card>
         </div>
-
 
         <div className="grid md:grid-cols-2 lg:grid-cols-7 my-4 gap-4">
           <Card className="col-span-4">
@@ -145,17 +129,15 @@ const Admin = async () => {
             </CardContent>
           </Card>
 
-<Card className="w-full col-span-4 md:col-span-3">
-  <CardHeader>
-    <CardTitle>Recent Activity</CardTitle>
-    <CardDescription>View recent activity</CardDescription>
-
-  </CardHeader>
-  <CardContent>
-    <RecentActivity users={users} />
-  </CardContent>
-</Card>
-
+          <Card className="w-full col-span-4 md:col-span-3">
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>View recent activity</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RecentActivity users={users} />
+            </CardContent>
+          </Card>
         </div>
 
         <Separator className="my-10" />

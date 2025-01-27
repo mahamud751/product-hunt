@@ -2,63 +2,35 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import {
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
-  endOfMonth,
-  subDays,
-  setHours,
-  setMinutes,
-  setSeconds,
-  setMilliseconds,
-} from "date-fns";
-import { toZonedTime, format } from "date-fns-tz";
+import { DateTime, Interval } from "luxon";
 
+// Function to get date range based on filter type and time zone
 const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
-  let startDate: Date;
-  let endDate: Date;
-
-  const now = new Date();
   const timeZone = "Asia/Dhaka";
-  const formatString = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
 
-  const getFormattedDate = (date: Date) => {
-    const zonedDate = toZonedTime(date, timeZone);
-    return format(zonedDate, formatString, { timeZone });
-  };
+  const now = DateTime.now().setZone(timeZone);
+  let startDate: DateTime;
+  let endDate: DateTime;
 
   switch (filter) {
     case "day":
-      startDate = new Date();
-      startDate.setHours(0, 0, 0, 0);
-
-      endDate = new Date();
-      endDate.setHours(23, 59, 59, 999);
+      startDate = now.startOf("day");
+      endDate = now.endOf("day");
       break;
 
     case "yesterday":
-      const yesterday = subDays(now, 1);
-
-      startDate = setMilliseconds(
-        setSeconds(setMinutes(setHours(yesterday, 0), 0), 0),
-        0
-      );
-
-      endDate = setMilliseconds(
-        setSeconds(setMinutes(setHours(yesterday, 23), 59), 59),
-        999
-      );
+      startDate = now.minus({ days: 1 }).startOf("day");
+      endDate = now.minus({ days: 1 }).endOf("day");
       break;
 
     case "week":
-      startDate = startOfWeek(now, { weekStartsOn: 1 });
-      endDate = endOfWeek(now, { weekStartsOn: 1 });
+      startDate = now.startOf("week");
+      endDate = now.endOf("week");
       break;
 
     case "month":
-      startDate = startOfMonth(now);
-      endDate = endOfMonth(now);
+      startDate = now.startOf("month");
+      endDate = now.endOf("month");
       break;
 
     default:
@@ -67,9 +39,10 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
       );
   }
 
+  // Return start and end dates in the required format
   return {
-    startDate: getFormattedDate(startDate),
-    endDate: getFormattedDate(endDate),
+    startDate: startDate.toISO(),
+    endDate: endDate.toISO(),
   };
 };
 
@@ -395,14 +368,14 @@ export const getFilteredProducts = async (
       OR: [
         {
           createdAt: {
-            gte: startDate,
-            lte: endDate,
+            gte: startDate ? new Date(startDate) : undefined,
+            lte: endDate ? new Date(endDate) : undefined,
           },
         },
         {
           updatedAt: {
-            gte: startDate,
-            lte: endDate,
+            gte: startDate ? new Date(startDate) : undefined,
+            lte: endDate ? new Date(endDate) : undefined,
           },
         },
       ],
