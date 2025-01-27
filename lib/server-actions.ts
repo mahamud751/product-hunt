@@ -8,6 +8,10 @@ import {
   startOfMonth,
   endOfMonth,
   subDays,
+  setHours,
+  setMinutes,
+  setSeconds,
+  setMilliseconds,
 } from "date-fns";
 import { toZonedTime, format } from "date-fns-tz";
 
@@ -21,34 +25,46 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
 
   const getFormattedDate = (date: Date) => {
     const zonedDate = toZonedTime(date, timeZone);
-    return format(zonedDate, formatString);
+    return format(zonedDate, formatString, { timeZone });
   };
 
   switch (filter) {
     case "day":
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      startDate = today;
-      endDate = tomorrow;
+      startDate = setMilliseconds(
+        setSeconds(setMinutes(setHours(now, 0), 0), 0),
+        0
+      );
+
+      endDate = setMilliseconds(
+        setSeconds(setMinutes(setHours(now, 23), 59), 59),
+        999
+      );
       break;
+
     case "yesterday":
       const yesterday = subDays(now, 1);
-      yesterday.setHours(0, 0, 0, 0);
-      const endOfYesterday = new Date(yesterday);
-      endOfYesterday.setDate(yesterday.getDate() + 1);
-      startDate = yesterday;
-      endDate = endOfYesterday;
+
+      startDate = setMilliseconds(
+        setSeconds(setMinutes(setHours(yesterday, 0), 0), 0),
+        0
+      );
+
+      endDate = setMilliseconds(
+        setSeconds(setMinutes(setHours(yesterday, 23), 59), 59),
+        999
+      );
       break;
+
     case "week":
       startDate = startOfWeek(now, { weekStartsOn: 1 });
       endDate = endOfWeek(now, { weekStartsOn: 1 });
       break;
+
     case "month":
       startDate = startOfMonth(now);
       endDate = endOfMonth(now);
       break;
+
     default:
       throw new Error(
         "Invalid filter type. Choose 'day', 'yesterday', 'week', or 'month'."
