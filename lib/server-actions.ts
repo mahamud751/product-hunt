@@ -2,7 +2,6 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-
 import {
   startOfWeek,
   endOfWeek,
@@ -10,12 +9,20 @@ import {
   endOfMonth,
   subDays,
 } from "date-fns";
+import { toZonedTime, format } from "date-fns-tz";
 
 const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   let startDate: Date;
   let endDate: Date;
 
   const now = new Date();
+  const timeZone = "Asia/Dhaka";
+  const formatString = "yyyy-MM-dd'T'HH:mm:ss.SSSxxx";
+
+  const getFormattedDate = (date: Date) => {
+    const zonedDate = toZonedTime(date, timeZone);
+    return format(zonedDate, formatString);
+  };
 
   switch (filter) {
     case "day":
@@ -48,7 +55,10 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
       );
   }
 
-  return { startDate, endDate };
+  return {
+    startDate: getFormattedDate(startDate),
+    endDate: getFormattedDate(endDate),
+  };
 };
 
 interface ProductData {
