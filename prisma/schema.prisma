@@ -112,7 +112,7 @@ model Upvote {
 }
 
 
-
+//cm6e8qxjq0001nk82qzjonbvi
 
 model Comment {
   id             String    @id @default(cuid())
@@ -122,6 +122,7 @@ model Comment {
   userId         String
   user           User      @relation(fields: [userId], references: [id])
   body           String
+  replies        Json?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 

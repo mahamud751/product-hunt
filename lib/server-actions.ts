@@ -407,6 +407,37 @@ export const commentOnProduct = async (
   }
 };
 
+export const updateComment = async (
+  commentId: string,
+  updateData: { replies?: any }
+) => {
+  try {
+    const existingComment = await db.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!existingComment) {
+      throw new Error("Comment not found");
+    }
+
+    // Update the comment or its replies
+    const updatedComment = await db.comment.update({
+      where: { id: commentId },
+      data: {
+        ...updateData,
+      },
+    });
+
+    return {
+      message: "Comment updated successfully",
+      updatedComment,
+    };
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    throw error;
+  }
+};
+
 export const deleteComment = async (commentId: string) => {
   try {
     await db.comment.delete({

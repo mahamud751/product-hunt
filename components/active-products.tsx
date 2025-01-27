@@ -45,6 +45,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
           timestamp: comment.createdAt,
           userId: comment.user.id,
           name: comment.user.name.toLowerCase().replace(/\s/g, "_"),
+          replies: comment.replies,
         }))
       : [];
 

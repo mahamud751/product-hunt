@@ -16,6 +16,7 @@ import ShareModalContent from "./share-modal-content";
 import {
   commentOnProduct,
   deleteComment,
+  updateComment,
   upvoteProduct,
 } from "@/lib/server-actions";
 import { Badge } from "./ui/badge";
@@ -41,7 +42,72 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
 
   const [shareModalModalVisible, setShareModalVisible] = useState(false);
 
-  const [comments, setComments] = useState(currentProduct.commentData || []);
+  const [comments, setComments] = useState(
+    currentProduct.commentData.map((comment: any) => ({
+      ...comment,
+      replies: comment.replies || [],
+    })) || []
+  );
+
+  const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
+
+  const handleReplyChange = (commentId: string, value: string) => {
+    setReplyText((prevReplies) => ({
+      ...prevReplies,
+      [commentId]: value,
+    }));
+  };
+
+  const handleReplySubmit = async (commentId: string) => {
+    const reply = replyText[commentId];
+
+    if (!reply) return;
+
+    try {
+      // call the updateComment function with the comment id and the reply text
+      await updateComment(commentId, {
+        replies: [
+          // add the new reply to the replies array
+          ...comments?.find((comment: any) => comment.id === commentId).replies,
+          {
+            user: authenticatedUser.user.name,
+            body: reply,
+            profile: authenticatedUser?.user?.image,
+            userId: authenticatedUser.user.id,
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      });
+
+      // update the comments state with the new reply
+      setComments(
+        comments.map((comment: any) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                replies: [
+                  {
+                    user: authenticatedUser.user.name,
+                    replies: reply,
+                    profile: authenticatedUser?.user?.image,
+                    userId: authenticatedUser.user.id,
+                    timestamp: new Date().toISOString(),
+                  },
+                ],
+              }
+            : comment
+        )
+      );
+
+      // reset the reply text for the specific comment
+      setReplyText((prevReplies) => ({
+        ...prevReplies,
+        [commentId]: "",
+      }));
+    } catch (error) {
+      console.error("Error replying to comment:", error);
+    }
+  };
 
   const handleShareClick = () => {
     setShareModalVisible(true);
@@ -213,7 +279,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
           </div>
 
           <div className="py-8 space-y-8">
-            {comments.map((comment: any) => (
+            {comments?.map((comment: any) => (
               <div key={comment.id} className="flex gap-4">
                 <Image
                   src={comment?.profile}
@@ -253,6 +319,52 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                     hover:cursor-pointer mt-2"
                   >
                     {comment.body}
+                  </div>
+                  <div className="ml-10 mt-4 space-y-4">
+                    {comment?.replies?.map((reply: any, index: number) => (
+                      <div key={index} className="flex gap-2 items-start">
+                        <Image
+                          src={reply?.profile}
+                          alt="profile"
+                          width={30}
+                          height={30}
+                          className="w-6 h-6 rounded-full mt-1 cursor-pointer"
+                        />
+                        <div className="flex flex-col">
+                          <div className="flex gap-2 items-center">
+                            <h1 className="text-gray-600 font-semibold cursor-pointer text-sm">
+                              {reply.user}
+                            </h1>
+                            <div className="text-gray-500 text-xs">
+                              {new Date(reply.timestamp).toDateString()}
+                            </div>
+                          </div>
+                          <div className="text-gray-600 text-sm mt-1">
+                            {reply.body}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Reply Form */}
+                    <div className="mt-4">
+                      <textarea
+                        value={replyText[comment.id] || ""}
+                        onChange={(e) =>
+                          handleReplyChange(comment.id, e.target.value)
+                        }
+                        placeholder="Reply to this comment"
+                        className="w-full rounded-md p-2 focus:outline-none text-gray-600"
+                      />
+                      <div className="flex justify-end mt-2">
+                        <button
+                          onClick={() => handleReplySubmit(comment.id)}
+                          className="bg-[#ff6154] text-white p-2 rounded-md"
+                        >
+                          Reply
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
