@@ -1,12 +1,19 @@
 import ActiveProducts from "@/components/active-products";
-import { getActiveProducts, getTopVotedProducts } from "@/lib/server-actions";
+import FilteredProducts from "@/components/filter-product";
+import {
+  getActiveProducts,
+  getFilteredProducts,
+  getTopVotedProducts,
+} from "@/lib/server-actions";
 
 const Home = async () => {
   const activeProducts = await getActiveProducts();
   const topVotedProducts = await getTopVotedProducts();
+  const filteredProducts = await getFilteredProducts("day");
 
   return (
     <>
+      <FilteredProducts products={filteredProducts} />
       {topVotedProducts.length > 0 && (
         <div className="mt-12 bg-white p-6 border rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Top Voted Products Today</h2>

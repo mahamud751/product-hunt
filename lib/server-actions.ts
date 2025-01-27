@@ -1,7 +1,40 @@
 "use server";
-import { startOfDay, endOfDay } from "date-fns";
+import {
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  endOfMonth,
+} from "date-fns";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+
+const getDateRange = (filter: "day" | "week" | "month") => {
+  let startDate: Date;
+  let endDate: Date;
+
+  const now = new Date();
+
+  switch (filter) {
+    case "day":
+      startDate = startOfDay(now);
+      endDate = endOfDay(now);
+      break;
+    case "week":
+      startDate = startOfWeek(now, { weekStartsOn: 1 }); // Week starts on Monday
+      endDate = endOfWeek(now, { weekStartsOn: 1 });
+      break;
+    case "month":
+      startDate = startOfMonth(now);
+      endDate = endOfMonth(now);
+      break;
+    default:
+      throw new Error("Invalid filter type. Choose 'day', 'week', or 'month'.");
+  }
+
+  return { startDate, endDate };
+};
 
 interface ProductData {
   name: string;
@@ -312,6 +345,31 @@ export const rejectProduct = async (productId: string, reason: string) => {
     console.error("Error rejecting product:", error);
     throw error;
   }
+};
+
+export const getFilteredProducts = async (filter: "day" | "week" | "month") => {
+  const { startDate, endDate } = getDateRange(filter);
+
+  const products = await db.product.findMany({
+    where: {
+      OR: [
+        {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        {
+          updatedAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      ],
+    },
+  });
+
+  return products;
 };
 
 export const getActiveProducts = async () => {
