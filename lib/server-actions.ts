@@ -30,15 +30,11 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
 
   switch (filter) {
     case "day":
-      startDate = setMilliseconds(
-        setSeconds(setMinutes(setHours(now, 0), 0), 0),
-        0
-      );
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
 
-      endDate = setMilliseconds(
-        setSeconds(setMinutes(setHours(now, 23), 59), 59),
-        999
-      );
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
       break;
 
     case "yesterday":
