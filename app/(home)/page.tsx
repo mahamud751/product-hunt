@@ -1,14 +1,11 @@
 import ActiveProducts from "@/components/active-products";
-// import FilteredProducts from "@/components/filter-product";
 import {
-  getActiveProducts,
   getFilteredProducts,
-  getTopVotedProducts,
+  getTopUpvotedProducts,
 } from "@/lib/server-actions";
 
 const Home = async () => {
-  // const activeProducts = await getActiveProducts();
-  const topVotedProducts = await getTopVotedProducts();
+  const topVotedProducts = await getTopUpvotedProducts("day");
   const filteredTodayProducts = await getFilteredProducts("day");
   const filteredYesterDayProducts = await getFilteredProducts("yesterday");
   const filteredWeekProducts = await getFilteredProducts("week");

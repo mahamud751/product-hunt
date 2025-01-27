@@ -8,7 +8,6 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
 
   const now = DateTime.now().setZone(timeZone);
-  console.log(now);
 
   let startDate: DateTime;
   let endDate: DateTime;
@@ -439,7 +438,23 @@ export const getActiveProducts = async () => {
   return products;
 };
 
-export const getTopVotedProducts = async () => {};
+export const getTopUpvotedProducts = async (
+  filter: "day" | "yesterday" | "week" | "month"
+) => {
+  const products = await getFilteredProducts(filter);
+
+  if (products.length === 0) return [];
+
+  const maxUpvotes = Math.max(
+    ...products.map((product) => product.upvotes.length)
+  );
+
+  const topUpvotedProducts = products.filter(
+    (product) => product.upvotes.length === maxUpvotes
+  );
+
+  return topUpvotedProducts;
+};
 
 export const commentOnProduct = async (
   productId: string,
