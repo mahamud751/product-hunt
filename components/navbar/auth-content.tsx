@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaTwitter } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 
@@ -24,20 +24,28 @@ const AuthContent = () => {
         </div>
       </div>
 
-      <button 
-            onClick={() => signIn("google", { redirect: false })}
-      
-      className="border rounded-md py-2 mt-4 flex items-center gap-4 px-10">
+      <button
+        onClick={() => signIn("google", { redirect: false })}
+        className="border rounded-md py-2 mt-4 flex items-center gap-4 px-10"
+      >
         <FcGoogle className="text-xl" />
         Sign in with Google
       </button>
 
-      <button 
-     onClick={() => signIn("github", { redirect: false })}
-      
-      className="border rounded-md py-2 mt-4 flex items-center gap-4 px-10">
+      <button
+        onClick={() => signIn("github", { redirect: false })}
+        className="border rounded-md py-2 mt-4 flex items-center gap-4 px-10"
+      >
         <FaGithub className="text-xl text-purple-800" />
-        Sign in with Github 
+        Sign in with Github
+      </button>
+
+      <button
+        onClick={() => signIn("twitter", { redirect: false })}
+        className="border rounded-md py-2 mt-4 flex items-center gap-4 px-10"
+      >
+        <FaTwitter className="text-xl text-blue-500" />
+        Sign in with Twitter
       </button>
     </div>
   );
