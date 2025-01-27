@@ -442,20 +442,27 @@ export const getActiveProducts = async () => {
 export const getTopVotedProducts = async () => {
   const timeZone = "Asia/Dhaka";
 
+  // Get the current time in Bangladesh timezone
   const now = DateTime.now().setZone(timeZone);
+
+  // Adjust startDate to beginning of day and add 6 hours
   const startDate = now.startOf("day").plus({ hours: 6 });
+
+  // Adjust endDate to the end of the day and add 6 hours
   const endDate = now.endOf("day").plus({ hours: 6 });
 
-  const startDateUTC = startDate.toUTC();
-  const endDateUTC = endDate.toUTC();
+  // Convert the dates to JavaScript Date objects for Prisma query
+  const startDateJS = startDate.toJSDate();
+  const endDateJS = endDate.toJSDate();
 
+  // Fetch products with upvotes within the adjusted current day (Bangladesh time)
   const productsWithVotes = await db.product.findMany({
     where: {
       upvotes: {
         some: {
           createdAt: {
-            gte: startDateUTC.toJSDate(),
-            lte: endDateUTC.toJSDate(),
+            gte: startDateJS,
+            lte: endDateJS,
           },
         },
       },
@@ -466,20 +473,23 @@ export const getTopVotedProducts = async () => {
       upvotes: {
         where: {
           createdAt: {
-            gte: startDateUTC.toJSDate(),
-            lte: endDateUTC.toJSDate(),
+            gte: startDateJS,
+            lte: endDateJS,
           },
         },
       },
     },
   });
 
+  // If no products have votes, return an empty array
   if (productsWithVotes.length === 0) return [];
 
+  // Calculate the maximum number of upvotes
   const maxVotes = Math.max(
     ...productsWithVotes.map((product) => product.upvotes.length)
   );
 
+  // Filter products that have the maximum number of upvotes
   const topVotedProducts = productsWithVotes.filter(
     (product) => product.upvotes.length === maxVotes
   );
