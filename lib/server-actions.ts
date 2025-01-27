@@ -1,16 +1,17 @@
 "use server";
+
+import { auth } from "@/auth";
+import { db } from "@/lib/db";
+
 import {
-  startOfDay,
-  endOfDay,
   startOfWeek,
   endOfWeek,
   startOfMonth,
   endOfMonth,
+  subDays,
 } from "date-fns";
-import { auth } from "@/auth";
-import { db } from "@/lib/db";
 
-const getDateRange = (filter: "day" | "week" | "month") => {
+const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   let startDate: Date;
   let endDate: Date;
 
@@ -18,11 +19,23 @@ const getDateRange = (filter: "day" | "week" | "month") => {
 
   switch (filter) {
     case "day":
-      startDate = startOfDay(now);
-      endDate = endOfDay(now);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      startDate = today;
+      endDate = tomorrow;
+      break;
+    case "yesterday":
+      const yesterday = subDays(now, 1);
+      yesterday.setHours(0, 0, 0, 0);
+      const endOfYesterday = new Date(yesterday);
+      endOfYesterday.setDate(yesterday.getDate() + 1);
+      startDate = yesterday;
+      endDate = endOfYesterday;
       break;
     case "week":
-      startDate = startOfWeek(now, { weekStartsOn: 1 }); // Week starts on Monday
+      startDate = startOfWeek(now, { weekStartsOn: 1 });
       endDate = endOfWeek(now, { weekStartsOn: 1 });
       break;
     case "month":
@@ -30,7 +43,9 @@ const getDateRange = (filter: "day" | "week" | "month") => {
       endDate = endOfMonth(now);
       break;
     default:
-      throw new Error("Invalid filter type. Choose 'day', 'week', or 'month'.");
+      throw new Error(
+        "Invalid filter type. Choose 'day', 'yesterday', 'week', or 'month'."
+      );
   }
 
   return { startDate, endDate };
@@ -347,11 +362,14 @@ export const rejectProduct = async (productId: string, reason: string) => {
   }
 };
 
-export const getFilteredProducts = async (filter: "day" | "week" | "month") => {
+export const getFilteredProducts = async (
+  filter: "day" | "yesterday" | "week" | "month"
+) => {
   const { startDate, endDate } = getDateRange(filter);
 
   const products = await db.product.findMany({
     where: {
+      status: "ACTIVE",
       OR: [
         {
           createdAt: {
@@ -366,6 +384,25 @@ export const getFilteredProducts = async (filter: "day" | "week" | "month") => {
           },
         },
       ],
+    },
+    include: {
+      categories: true,
+      images: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+      upvotes: {
+        include: {
+          user: true,
+        },
+      },
+    },
+    orderBy: {
+      upvotes: {
+        _count: "desc",
+      },
     },
   });
 
@@ -403,9 +440,16 @@ export const getActiveProducts = async () => {
 
 export const getTopVotedProducts = async () => {
   const now = new Date();
-  const startDate = startOfDay(now);
-  const endDate = endOfDay(now);
 
+  // Set startDate to the beginning of the day (00:00:00)
+  const startDate = new Date(now);
+  startDate.setHours(0, 0, 0, 0);
+
+  // Set endDate to the end of the day (23:59:59)
+  const endDate = new Date(now);
+  endDate.setHours(23, 59, 59, 999);
+
+  // Fetch products with upvotes within the current day
   const productsWithVotes = await db.product.findMany({
     where: {
       upvotes: {
@@ -418,6 +462,8 @@ export const getTopVotedProducts = async () => {
       },
     },
     include: {
+      categories: true,
+      images: true,
       upvotes: {
         where: {
           createdAt: {
@@ -428,6 +474,8 @@ export const getTopVotedProducts = async () => {
       },
     },
   });
+
+  if (productsWithVotes.length === 0) return [];
 
   const maxVotes = Math.max(
     ...productsWithVotes.map((product) => product.upvotes.length)
@@ -457,8 +505,7 @@ export const commentOnProduct = async (
 
     const userId = authenticatedUser.user.id;
 
-    // Check if authenticated user has a profile picture
-    const profilePicture = authenticatedUser?.user?.image || ""; // Use an empty string if profile picture is undefined
+    const profilePicture = authenticatedUser?.user?.image || "";
 
     await db.comment.create({
       data: {
@@ -479,13 +526,11 @@ export const commentOnProduct = async (
       },
       select: {
         userId: true,
-        name: true, // Include the product name in the query
+        name: true,
       },
     });
 
-    // Check if the commenter is not the owner of the product
     if (productDetails && productDetails.userId !== userId) {
-      // Notify the product owner about the comment
       await db.notification.create({
         data: {
           userId: productDetails.userId,
@@ -494,7 +539,6 @@ export const commentOnProduct = async (
           productId: productId,
           type: "COMMENT",
           status: "UNREAD",
-          // Ensure commentId is included here
         },
       });
     }
@@ -517,7 +561,6 @@ export const updateComment = async (
       throw new Error("Comment not found");
     }
 
-    // Update the comment or its replies
     const updatedComment = await db.comment.update({
       where: { id: commentId },
       data: {
@@ -570,7 +613,7 @@ export const upvoteProduct = async (productId: string) => {
       },
     });
 
-    const profilePicture = authenticatedUser?.user?.image || ""; // Use an empty string if profile picture is undefined
+    const profilePicture = authenticatedUser?.user?.image || "";
 
     if (upvote) {
       await db.upvote.delete({
@@ -594,8 +637,6 @@ export const upvoteProduct = async (productId: string) => {
           userId: true,
         },
       });
-
-      // notify the product owner about the upvote
 
       if (productOwner && productOwner.userId !== userId) {
         await db.notification.create({
@@ -711,7 +752,6 @@ export const getRankById = async (): Promise<
     rank: number;
   }[]
 > => {
-  // Fetch products along with their upvote counts from the database
   const rankedProducts = await db.product.findMany({
     where: {
       status: "ACTIVE",
@@ -727,7 +767,7 @@ export const getRankById = async (): Promise<
     },
     orderBy: {
       upvotes: {
-        _count: "desc", // Order by upvotes count in descending order
+        _count: "desc",
       },
     },
   });

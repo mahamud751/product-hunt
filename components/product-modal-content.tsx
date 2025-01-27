@@ -28,6 +28,7 @@ interface ProductModalContentProps {
   hasUpvoted: boolean;
   setTotalUpvotes: any;
   setHasUpvoted: any;
+  total?: number;
 }
 
 const ProductModalContent: React.FC<ProductModalContentProps> = ({
@@ -37,6 +38,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
   hasUpvoted,
   setTotalUpvotes,
   setHasUpvoted,
+  total,
 }) => {
   const [commentText, setCommentText] = useState("");
 
@@ -191,23 +193,24 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
               >
                 Visit
               </button>
-
-              <button
-                className={`rounded-md flex justify-center items-center p-5 
+              {total && (
+                <button
+                  className={`rounded-md flex justify-center items-center p-5 
                 gap-x-3 cursor-pointer bg-gradient-to-r w-full xl:w-56 ${
                   hasUpvoted
                     ? "from-[#ff6154] to-[#ff4582] border-[#ff6154] text-white"
                     : "text-black border"
                 }`}
-                onClick={handleUpvoteClick}
-              >
-                <PiCaretUpFill
-                  className={`text-xl ${
-                    hasUpvoted ? "text-white" : "text-black"
-                  }`}
-                />
-                {totalUpvotes}
-              </button>
+                  onClick={handleUpvoteClick}
+                >
+                  <PiCaretUpFill
+                    className={`text-xl ${
+                      hasUpvoted ? "text-white" : "text-black"
+                    }`}
+                  />
+                  {totalUpvotes}
+                </button>
+              )}
             </div>
           </div>
           <h2 className="text-gray-600 py-6">{currentProduct.description}</h2>

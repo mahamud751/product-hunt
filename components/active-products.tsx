@@ -3,10 +3,14 @@ import ProductItem from "./product-item";
 
 interface ActiveProductsProps {
   activeProducts: any;
+  header: string;
+  total?: number;
 }
 
 const ActiveProducts: React.FC<ActiveProductsProps> = async ({
   activeProducts,
+  header,
+  total,
 }) => {
   const authenticatedUser = await auth();
 
@@ -50,7 +54,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
       : [];
 
     const upvotesCount = upvotes ? upvotes.length : 0;
-    const upvotesData = upvotes.map((upvote: any) => upvote.user.id);
+    const upvotesData = upvotes.map((upvote: any) => upvote?.user?.id);
 
     return {
       id,
@@ -81,7 +85,9 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
   return (
     <div className="w-full">
       <div className="flex items-center border-b pb-3">
-        <h1 className="text-xl font-medium">All Products</h1>
+        <h1 className="text-xl font-medium">
+          {header} {total && "(" + total + ")"}
+        </h1>
       </div>
 
       <div className="space-y-2 py-6 flex flex-col">
@@ -90,6 +96,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
             key={product.id}
             product={product}
             authenticatedUser={authenticatedUser}
+            total={total}
           />
         ))}
       </div>

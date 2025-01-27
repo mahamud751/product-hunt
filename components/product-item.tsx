@@ -18,11 +18,13 @@ import { motion } from "framer-motion";
 interface ProductItemProps {
   product: any;
   authenticatedUser: any;
+  total?: number;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({
   product,
   authenticatedUser,
+  total,
 }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -114,10 +116,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <div className="ml-4">
             <div className="md:flex items-center gap-x-2">
               <h1 className="text-sm font-semibold">{product.name}</h1>
-              <p className="hidden md:flex text-xs">-</p>
-              <p className="text-gray-500 text-xs md:text-sm pr-2">
-                {product.headline}
-              </p>
+
               <div
                 onClick={handleArrowClick}
                 className="hidden md:flex cursor-pointer"
@@ -126,6 +125,10 @@ const ProductItem: React.FC<ProductItemProps> = ({
               </div>
             </div>
             <div className="hidden md:flex gap-x-2 items-center">
+              <p className="hidden md:flex text-xs">-</p>
+              <p className="text-gray-500 text-xs md:text-sm pr-2">
+                {product.headline.slice(0, 40)}
+              </p>
               <div className="text-xs text-gray-500 flex gap-x-1 items-center">
                 {product.commentsLength}
                 <PiChatCircle />
@@ -155,31 +158,32 @@ const ProductItem: React.FC<ProductItemProps> = ({
             </div>
           </div>
         </div>
-
-        <div className="text-sm">
-          <motion.div
-            onClick={handleUpvoteClick}
-            variants={variants}
-            animate={hasUpvoted ? "upvoted" : "initital"}
-          >
-            {hasUpvoted ? (
-              <div
-                className="border px-2 rounded-md flex flex-col 
-              items-center bg-gradient-to-bl 
-              from-[#ff6154] to-[#ff4582] border-[#ff6154]
-              text-white"
-              >
-                <PiCaretUpFill className="text-xl" />
-                {totalUpvotes}
-              </div>
-            ) : (
-              <div className="border px-2 rounded-md flex flex-col items-center">
-                <PiCaretUpFill className="text-xl" />
-                {totalUpvotes}
-              </div>
-            )}
-          </motion.div>
-        </div>
+        {total && (
+          <div className="text-sm">
+            <motion.div
+              onClick={handleUpvoteClick}
+              variants={variants}
+              animate={hasUpvoted ? "upvoted" : "initital"}
+            >
+              {hasUpvoted ? (
+                <div
+                  className="border px-2 rounded-md flex flex-col 
+      items-center bg-gradient-to-bl 
+      from-[#ff6154] to-[#ff4582] border-[#ff6154]
+      text-white"
+                >
+                  <PiCaretUpFill className="text-xl" />
+                  {totalUpvotes}
+                </div>
+              ) : (
+                <div className="border px-2 rounded-md flex flex-col items-center">
+                  <PiCaretUpFill className="text-xl" />
+                  {totalUpvotes}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
       </div>
 
       <ProductModal visible={showProductModal} setVisible={setShowProductModal}>
@@ -190,6 +194,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           totalUpvotes={totalUpvotes}
           hasUpvoted={hasUpvoted}
           setHasUpvoted={setHasUpvoted}
+          total={total}
         />
       </ProductModal>
 
