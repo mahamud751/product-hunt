@@ -8,6 +8,7 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
 
   const now = DateTime.now().setZone(timeZone);
+  console.log(now);
 
   let startDate: DateTime;
   let endDate: DateTime;
@@ -16,7 +17,6 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
     case "day":
       startDate = now.startOf("day");
       endDate = now.endOf("day");
-
       break;
 
     case "yesterday":
@@ -39,6 +39,9 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
         "Invalid filter type. Choose 'day', 'yesterday', 'week', or 'month'."
       );
   }
+
+  startDate = startDate.plus({ hours: 6 });
+  endDate = endDate.plus({ hours: 6 });
 
   const startDateUTC = startDate.toUTC();
   const endDateUTC = endDate.toUTC();
@@ -437,24 +440,22 @@ export const getActiveProducts = async () => {
 };
 
 export const getTopVotedProducts = async () => {
-  const now = new Date();
+  const timeZone = "Asia/Dhaka";
 
-  // Set startDate to the beginning of the day (00:00:00)
-  const startDate = new Date(now);
-  startDate.setHours(0, 0, 0, 0);
+  const now = DateTime.now().setZone(timeZone);
+  const startDate = now.startOf("day").plus({ hours: 6 });
+  const endDate = now.endOf("day").plus({ hours: 6 });
 
-  // Set endDate to the end of the day (23:59:59)
-  const endDate = new Date(now);
-  endDate.setHours(23, 59, 59, 999);
+  const startDateUTC = startDate.toUTC();
+  const endDateUTC = endDate.toUTC();
 
-  // Fetch products with upvotes within the current day
   const productsWithVotes = await db.product.findMany({
     where: {
       upvotes: {
         some: {
           createdAt: {
-            gte: startDate,
-            lte: endDate,
+            gte: startDateUTC.toJSDate(),
+            lte: endDateUTC.toJSDate(),
           },
         },
       },
@@ -465,8 +466,8 @@ export const getTopVotedProducts = async () => {
       upvotes: {
         where: {
           createdAt: {
-            gte: startDate,
-            lte: endDate,
+            gte: startDateUTC.toJSDate(),
+            lte: endDateUTC.toJSDate(),
           },
         },
       },
