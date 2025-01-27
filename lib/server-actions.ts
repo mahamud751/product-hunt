@@ -2,13 +2,13 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 
-// Function to get date range based on filter type and time zone
 const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
 
   const now = DateTime.now().setZone(timeZone);
+
   let startDate: DateTime;
   let endDate: DateTime;
 
@@ -16,6 +16,7 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
     case "day":
       startDate = now.startOf("day");
       endDate = now.endOf("day");
+
       break;
 
     case "yesterday":
@@ -39,10 +40,12 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
       );
   }
 
-  // Return start and end dates in the required format
+  const startDateUTC = startDate.toUTC();
+  const endDateUTC = endDate.toUTC();
+
   return {
-    startDate: startDate.toISO(),
-    endDate: endDate.toISO(),
+    startDate: startDateUTC.toISO(),
+    endDate: endDateUTC.toISO(),
   };
 };
 
