@@ -1,5 +1,5 @@
 "use server";
-
+import { startOfDay, endOfDay } from "date-fns";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 
@@ -341,6 +341,45 @@ export const getActiveProducts = async () => {
   });
 
   return products;
+};
+
+export const getTopVotedProducts = async () => {
+  const now = new Date();
+  const startDate = startOfDay(now);
+  const endDate = endOfDay(now);
+
+  const productsWithVotes = await db.product.findMany({
+    where: {
+      upvotes: {
+        some: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+    },
+    include: {
+      upvotes: {
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      },
+    },
+  });
+
+  const maxVotes = Math.max(
+    ...productsWithVotes.map((product) => product.upvotes.length)
+  );
+
+  const topVotedProducts = productsWithVotes.filter(
+    (product) => product.upvotes.length === maxVotes
+  );
+
+  return topVotedProducts;
 };
 
 export const commentOnProduct = async (
