@@ -440,29 +440,24 @@ export const getActiveProducts = async () => {
 };
 
 export const getTopVotedProducts = async () => {
-  const timeZone = "Asia/Dhaka";
+  const now = new Date();
 
-  // Get the current time in Bangladesh timezone
-  const now = DateTime.now().setZone(timeZone);
+  // Set startDate to the beginning of the day (00:00:00)
+  const startDate = new Date(now);
+  startDate.setHours(0, 0, 0, 0);
 
-  // Adjust startDate to beginning of day and add 6 hours
-  const startDate = now.startOf("day").plus({ hours: 6 });
+  // Set endDate to the end of the day (23:59:59)
+  const endDate = new Date(now);
+  endDate.setHours(23, 59, 59, 999);
 
-  // Adjust endDate to the end of the day and add 6 hours
-  const endDate = now.endOf("day").plus({ hours: 6 });
-
-  // Convert the dates to JavaScript Date objects for Prisma query
-  const startDateJS = startDate.toJSDate();
-  const endDateJS = endDate.toJSDate();
-
-  // Fetch products with upvotes within the adjusted current day (Bangladesh time)
+  // Fetch products with upvotes within the current day
   const productsWithVotes = await db.product.findMany({
     where: {
       upvotes: {
         some: {
           createdAt: {
-            gte: startDateJS,
-            lte: endDateJS,
+            gte: startDate,
+            lte: endDate,
           },
         },
       },
@@ -473,23 +468,20 @@ export const getTopVotedProducts = async () => {
       upvotes: {
         where: {
           createdAt: {
-            gte: startDateJS,
-            lte: endDateJS,
+            gte: startDate,
+            lte: endDate,
           },
         },
       },
     },
   });
 
-  // If no products have votes, return an empty array
   if (productsWithVotes.length === 0) return [];
 
-  // Calculate the maximum number of upvotes
   const maxVotes = Math.max(
     ...productsWithVotes.map((product) => product.upvotes.length)
   );
 
-  // Filter products that have the maximum number of upvotes
   const topVotedProducts = productsWithVotes.filter(
     (product) => product.upvotes.length === maxVotes
   );
