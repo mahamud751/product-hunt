@@ -53,11 +53,20 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
 
 interface ProductData {
   name: string;
+  tags: string;
+  linekdin: string;
+  weburl: string;
+  suggestUrl: string;
+  promoOffer: string;
+  promoCode: string;
+  videoLink: string;
+  price: string;
   slug: string;
   headline: string;
   description: string;
   logo: string;
   releaseDate: string;
+  promoExpire: string;
   website: string;
   twitter: string;
   discord: string;
@@ -68,11 +77,20 @@ interface ProductData {
 
 export const createProduct = async ({
   name,
+  tags,
+  linekdin,
+  weburl,
+  suggestUrl,
+  promoOffer,
+  promoCode,
+  videoLink,
+  price,
   slug,
   headline,
   description,
   logo,
   releaseDate,
+  promoExpire,
   website,
   twitter,
   discord,
@@ -91,12 +109,21 @@ export const createProduct = async ({
     const product = await db.product.create({
       data: {
         name,
+        tags,
+        linekdin,
+        weburl,
+        suggestUrl,
+        promoOffer,
+        promoCode,
+        videoLink,
+        price,
         rank: 0,
         slug,
         headline,
         description,
         logo,
         releaseDate,
+        promoExpire,
         website,
         twitter,
         discord,
