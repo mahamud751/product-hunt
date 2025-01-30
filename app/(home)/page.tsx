@@ -25,13 +25,13 @@ const Home = async () => {
           total={filteredTodayProducts.length}
         />
       </div>
-      <div className="md:w-3/5 mx-auto py-10 px-6">
+      {/* <div className="md:w-3/5 mx-auto py-10 px-6">
         <ActiveProducts
           activeProducts={filteredYesterDayProducts}
           header="Yesterday's Top Products"
           total={filteredYesterDayProducts.length}
         />
-      </div>
+      </div> */}
       <div className="md:w-3/5 mx-auto py-10 px-6">
         <ActiveProducts
           activeProducts={filteredWeekProducts}

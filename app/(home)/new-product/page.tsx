@@ -1,20 +1,32 @@
 "use client";
 
+import { Autocomplete, TextField, Chip } from "@mui/material";
 import { ImagesUploader } from "@/components/images-uploader";
 import { LogoUploader } from "@/components/logo-uploader";
-import Image from "next/image";
-import React, { useCallback, useState } from "react";
-
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-
-import { Calendar } from "@/components/ui/calendar";
+import { Separator } from "@/components/ui/separator";
+import { createProduct } from "@/lib/server-actions";
 import { cn } from "@/lib/utils";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import React, { useCallback, useState } from "react";
+import {
+  PiPackage,
+  PiListBullets,
+  PiNotepad,
+  PiImages,
+  PiCalendarBlank,
+  PiLink,
+  PiEye,
+} from "react-icons/pi";
 import {
   PiCalendar,
   PiDiscordLogoFill,
@@ -22,9 +34,6 @@ import {
   PiTwitterLogoFill,
   PiXCircleFill,
 } from "react-icons/pi";
-import { Separator } from "@/components/ui/separator";
-import { createProduct } from "@/lib/server-actions";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 const categories = [
@@ -55,11 +64,63 @@ const categories = [
   "Art",
   "Analytics",
 ];
+const steps = [
+  {
+    id: 1,
+    label: "Product Name",
+    icon: PiPackage,
+    color: "#F44336",
+    lightColor: "#FFECEC",
+  }, // Light red background
+  {
+    id: 2,
+    label: "Categories",
+    icon: PiListBullets,
+    color: "#3F51B5",
+    lightColor: "#EDEFFF",
+  }, // Light blue background
+  {
+    id: 3,
+    label: "Product Details",
+    icon: PiNotepad,
+    color: "#4CAF50",
+    lightColor: "#E8F5E9",
+  }, // Light green background
+  {
+    id: 4,
+    label: "Images",
+    icon: PiImages,
+    color: "#FF9800",
+    lightColor: "#FFF3E0",
+  }, // Light orange background
+  {
+    id: 5,
+    label: "Release Date",
+    icon: PiCalendarBlank,
+    color: "#9C27B0",
+    lightColor: "#F3E5F5",
+  }, // Light purple background
+  {
+    id: 6,
+    label: "Links",
+    icon: PiLink,
+    color: "#00BCD4",
+    lightColor: "#E0F7FA",
+  }, // Light cyan background
+  {
+    id: 7,
+    label: "Review",
+    icon: PiEye,
+    color: "#FFC107",
+    lightColor: "#FFF9E5",
+  }, // Light amber background
+];
 
 const NewProduct = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
+
   const [slug, setSlug] = useState("");
   const [headline, setHeadline] = useState("");
   const [shortDescription, setShortDescription] = useState("");
@@ -71,7 +132,8 @@ const NewProduct = () => {
 
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [uploadedProductImages, setUploadedProductImages] = useState<string[]>(
     []
   );
@@ -111,15 +173,19 @@ const NewProduct = () => {
     setSlug(slugValue);
   };
 
-  const handleCategoryToggle = (category: string) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories((prevCategories) =>
-        prevCategories.filter((prevCategory) => prevCategory !== category)
-      );
-    } else if (selectedCategories.length < 3) {
-      setSelectedCategories((prevCategories) => [...prevCategories, category]);
-    }
-  };
+  // const filteredCategories = categories.filter((category) =>
+  //   category.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
+  // const handleCategoryToggle = (category: string) => {
+  //   if (selectedCategories.includes(category)) {
+  //     setSelectedCategories((prevCategories) =>
+  //       prevCategories.filter((prevCategory) => prevCategory !== category)
+  //     );
+  //   } else if (selectedCategories.length < 3) {
+  //     setSelectedCategories((prevCategories) => [...prevCategories, category]);
+  //   }
+  // };
 
   const handleLogoUpload = useCallback((url: any) => {
     setUploadedLogoUrl(url);
@@ -147,25 +213,7 @@ const NewProduct = () => {
 
       return;
     }
-
-    if (step === 2 && selectedCategories.length < 3) {
-      toast(
-        <>
-          <div className="flex items-center gap-4  mx-auto">
-            <PiXCircleFill className="text-red-500 text-3xl" />
-            <div className="text-md font-semibold">
-              Please select at least 3 categories for the product.
-            </div>
-          </div>
-        </>,
-        {
-          position: "top-center",
-        }
-      );
-      return;
-    }
-
-    if (step === 3 && headline.length < 10) {
+    if (step === 1 && headline.length < 10) {
       toast(
         <>
           <div className="flex items-center gap-4  mx-auto">
@@ -181,6 +229,24 @@ const NewProduct = () => {
       );
       return;
     }
+
+    if (step === 2 && selectedCategory === null) {
+      toast(
+        <>
+          <div className="flex items-center gap-4  mx-auto">
+            <PiXCircleFill className="text-red-500 text-3xl" />
+            <div className="text-md font-semibold">
+              Please select at least 1 categories for the product.
+            </div>
+          </div>
+        </>,
+        {
+          position: "top-center",
+        }
+      );
+      return;
+    }
+
     if (step === 3 && shortDescription.length < 20) {
       toast(
         <>
@@ -270,7 +336,7 @@ const NewProduct = () => {
   }, [
     step,
     name,
-    selectedCategories,
+    selectedCategory,
     headline,
     shortDescription,
     uploadedLogoUrl,
@@ -280,9 +346,6 @@ const NewProduct = () => {
     twitter,
     discord,
   ]);
-
-
-
 
   const prevStep = useCallback(() => {
     setStep(step - 1);
@@ -302,7 +365,7 @@ const NewProduct = () => {
     setWebsite("");
     setTwitter("");
     setDiscord("");
-    setSelectedCategories([]);
+    setSelectedCategory("");
     setUploadedProductImages([]);
     setUploadedLogoUrl("");
   };
@@ -323,7 +386,7 @@ const NewProduct = () => {
         logo: uploadedLogoUrl,
         releaseDate: formattedDate,
         images: uploadedProductImages,
-        category: selectedCategories,
+        category: selectedCategory?.trim() || undefined,
       });
       setStep(8);
     } catch (error) {
@@ -331,20 +394,49 @@ const NewProduct = () => {
       setLoading(false);
     }
   };
-
+  const handleStepClick = (stepId: number) => {
+    setStep(stepId);
+  };
   return (
     <div className="flex items-center justify-center py-8 md:py-20">
-      <div className="px-8 md:w-3/5 md:mx-auto">
+      <div className="hidden md:block w-1/5 p-4">
+        <div className="space-y-4">
+          {steps.map((stepItem) => {
+            const Icon = stepItem.icon; // Get the icon component
+            const isActive = step === stepItem.id; // Check if the step is active
+
+            return (
+              <button
+                key={stepItem.id}
+                onClick={() => handleStepClick(stepItem.id)}
+                className={`w-full flex items-center gap-3 p-3 rounded-md transition-all ${
+                  isActive ? "" : "text-gray-700 hover:bg-gray-200" // Inactive step styling
+                }`}
+                style={{
+                  backgroundColor: isActive ? stepItem.lightColor : "",
+                }}
+              >
+                <Icon
+                  className={`text-xl ${isActive ? "text-white" : ""}`} // Icon color for active step
+                  style={{ color: isActive ? stepItem.color : stepItem.color }} // Full color for the icon
+                />
+                <span>{stepItem.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Form content on the right side - Always visible */}
+      <div className="px-8 w-full md:w-2/5 ms-20">
         {step === 1 && (
-          <motion.div 
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-
-
-          
-          className="space-y-10">
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold"> 📦 New product</h1>
             <p className="text-xl font-light mt-4 leading-8">
               Ready to showcase your product to the world? You came to the right
@@ -364,7 +456,19 @@ const NewProduct = () => {
                 {name.length} / 30
               </div>
             </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Headline</h2>
+              <input
+                type="text"
+                value={headline}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handleHeadlineChange}
+              />
 
+              <div className="text-sm text-gray-500 mt-1">
+                {headline.length} / 70
+              </div>
+            </div>
             <div className="mt-10">
               <h2 className="font-medium">
                 Slug (URL) - This will be used to create a unique URL for
@@ -383,12 +487,12 @@ const NewProduct = () => {
 
         {step === 2 && (
           <motion.div
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          className="space-y-10">
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold">
               {" "}
               📊 What category does your product belong to ?{" "}
@@ -399,27 +503,25 @@ const NewProduct = () => {
             </p>
 
             <div className="mt-10">
-              <h2 className="font-medium">Select Categories</h2>
-              <div className="grid grid-cols-4 gap-2 pt-4 items-center justify-center">
-                {categories.map((category, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex border rounded-full"
-                    onClick={() => handleCategoryToggle(category)}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <div
-                      className={`text-xs md:text-sm p-2 cursor-pointer w-full text-center
-                     ${
-                       selectedCategories.includes(category)
-                         ? "bg-[#ff6154] text-white rounded-full"
-                         : "text-black"
-                     }`}
-                    >
-                      {category}
-                    </div>
-                  </motion.div>
-                ))}
+              <h2 className="font-medium">Select Category</h2>
+              <div className="pt-4">
+                <Autocomplete
+                  options={categories}
+                  value={selectedCategory}
+                  onChange={(event, newValue) => {
+                    setSelectedCategory(newValue); // Set only one category at a time
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Search Categories"
+                      fullWidth
+                      onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+                    />
+                  )}
+                  isOptionEqualToValue={(option, value) => option === value} // Check if the value matches the option
+                />
               </div>
             </div>
           </motion.div>
@@ -427,31 +529,17 @@ const NewProduct = () => {
 
         {step === 3 && (
           <motion.div
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          className="space-y-10">
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <div className="text-4xl font-semibold">📝 Product Details</div>
             <p className="text-xl font-light mt-4 leading-8">
               Keep it simple and clear. Describe your product in a way that
               makes it easy for people to understand what it does.
             </p>
-
-            <div className="mt-10">
-              <h2 className="font-medium">Headline</h2>
-              <input
-                type="text"
-                value={headline}
-                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                onChange={handleHeadlineChange}
-              />
-
-              <div className="text-sm text-gray-500 mt-1">
-                {headline.length} / 70
-              </div>
-            </div>
 
             <div className="mt-10">
               <h2 className="font-medium">Short Description</h2>
@@ -472,12 +560,12 @@ const NewProduct = () => {
 
         {step === 4 && (
           <motion.div
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          className="space-y-10">
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold">
               🖼️ Add images to showcase your product
             </h1>
@@ -536,12 +624,12 @@ const NewProduct = () => {
 
         {step === 5 && (
           <motion.div
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          className="space-y-10">
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold"> 🗓️ Release Date</h1>
             <p className="text-xl font-light mt-4 leading-8">
               When will your product be available to the public? Select a date
@@ -582,12 +670,12 @@ const NewProduct = () => {
 
         {step === 6 && (
           <motion.div
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          className="space-y-10">
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold">Additional Links </h1>
             <p className="text-xl font-light mt-4 leading-8">
               Add links to your product&apos;s website, social media, and other
@@ -642,14 +730,13 @@ const NewProduct = () => {
         )}
 
         {step === 7 && (
-          <motion.div 
-          initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-          animate={{ opacity: 1, x: 0 }} // Slide to the center
-          exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-          transition={{ duration: 0.3 }}
-          
-          
-          className="space-y-10">
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
+            animate={{ opacity: 1, x: 0 }} // Slide to the center
+            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
             <h1 className="text-4xl font-semibold"> 🔍 Review and submit</h1>
             <p className="text-xl font-light mt-4 leading-8">
               Review the details of your product and submit it to the world.
@@ -669,9 +756,7 @@ const NewProduct = () => {
 
               <div className="">
                 <div className="font-semibold">Category</div>
-                <div className="  mt-2 text-gray-600">
-                  {selectedCategories.join(", ")}
-                </div>
+                <div className="  mt-2 text-gray-600">{selectedCategory}</div>
               </div>
 
               <div>

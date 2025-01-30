@@ -62,7 +62,7 @@ interface ProductData {
   twitter: string;
   discord: string;
   images: string[];
-  category: string[];
+  category?: string;
   rank?: number;
 }
 
@@ -101,22 +101,24 @@ export const createProduct = async ({
         twitter,
         discord,
         status: "PENDING",
-        categories: {
-          connectOrCreate: category.map((name) => ({
-            where: {
-              name,
+        category: category
+          ? {
+              connectOrCreate: {
+                where: { name: category }, // Check if the category already exists
+                create: { name: category }, // Create the category if it doesn't exist
+              },
+            }
+          : {
+              connectOrCreate: {
+                where: { name: "Uncategorized" }, // Default category name
+                create: { name: "Uncategorized" }, // Create the default category
+              },
             },
-            create: {
-              name,
-            },
-          })),
-        },
         images: {
           createMany: {
             data: images?.map((image) => ({ url: image })),
           },
         },
-
         user: {
           connect: {
             id: userId,
@@ -250,7 +252,7 @@ export const getProductById = async (productId: string) => {
         id: productId,
       },
       include: {
-        categories: true,
+        category: true,
         images: true,
         comments: {
           include: {
@@ -278,7 +280,7 @@ export const getPendingProducts = async () => {
       status: "PENDING",
     },
     include: {
-      categories: true,
+      category: true,
       images: true,
     },
   });
@@ -386,7 +388,7 @@ export const getFilteredProducts = async (
       ],
     },
     include: {
-      categories: true,
+      category: true,
       images: true,
       comments: {
         include: {
@@ -415,7 +417,7 @@ export const getActiveProducts = async () => {
       status: "ACTIVE",
     },
     include: {
-      categories: true,
+      category: true,
       images: true,
       comments: {
         include: {
@@ -664,7 +666,7 @@ export const getProductBySlug = async (slug: string) => {
       },
       include: {
         images: true,
-        categories: true,
+        category: true,
         comments: {
           include: {
             user: true,
@@ -701,11 +703,6 @@ export const getCategories = async () => {
 export const getProductsByCategoryName = async (category: string) => {
   const products = await db.product.findMany({
     where: {
-      categories: {
-        some: {
-          name: category,
-        },
-      },
       status: "ACTIVE",
     },
   });
@@ -873,7 +870,7 @@ export const getRejectedProducts = async () => {
       status: "REJECTED",
     },
     include: {
-      categories: true,
+      category: true,
       images: true,
     },
   });

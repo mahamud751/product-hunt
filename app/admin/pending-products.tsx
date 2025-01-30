@@ -48,7 +48,7 @@ const PendingProducts: React.FC<PendingProductsProps> = ({
     } = product;
 
     const imageUrls = images?.map((image: any) => image?.url);
-    const categoryNames = categories.map((category: any) => category.name);
+    const categoryNames = categories?.name;
 
     return {
       id,

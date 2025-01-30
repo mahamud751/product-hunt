@@ -37,7 +37,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
     } = product;
 
     const imageUrls = images?.map((image: any) => image?.url);
-    const categoryNames = categories.map((category: any) => category.name);
+    const categoryNames = categories?.name;
     const commentsCount = comments ? comments.length : 0;
 
     const commentText = comments
