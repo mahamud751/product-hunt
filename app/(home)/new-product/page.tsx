@@ -1,8 +1,9 @@
 "use client";
 
+import axios from "axios";
 import { Autocomplete, TextField, Chip, Select, MenuItem } from "@mui/material";
-import { ImagesUploader } from "@/components/images-uploader";
-import { LogoUploader } from "@/components/logo-uploader";
+// import { ImagesUploader } from "@/components/images-uploader";
+import LogoUploader from "@/components/custom-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -26,6 +27,7 @@ import {
   PiCalendarBlank,
   PiLink,
   PiEye,
+  PiLinkedinLogo,
 } from "react-icons/pi";
 import {
   PiCalendar,
@@ -35,6 +37,7 @@ import {
   PiXCircleFill,
 } from "react-icons/pi";
 import { toast } from "sonner";
+import ImagesUploader from "@/components/custom-imgae-upload-multiple";
 
 const categories = [
   "Media",
@@ -93,6 +96,14 @@ const steps = [
     color: "#FF9800",
     lightColor: "#FFF3E0",
   },
+  // Light orange background
+  // {
+  //   id: 5,
+  //   label: "Success",
+  //   icon: PiListBullets,
+  //   color: "#9E9E9E",
+  //   lightColor: "#FAFAFA",
+  // }, // Light grey background
 ];
 
 const NewProduct = () => {
@@ -167,9 +178,9 @@ const NewProduct = () => {
     setTwitter(e.target.value);
   };
 
-  const handleDiscordChange = (e: any) => {
-    setDiscord(e.target.value);
-  };
+  // const handleDiscordChange = (e: any) => {
+  //   setDiscord(e.target.value);
+  // };
 
   const handleShortDescriptionChange = (e: any) => {
     setShortDescription(e.target.value.slice(0, 300));
@@ -401,6 +412,32 @@ const NewProduct = () => {
     const formattedExpireDate = date ? format(date, "MM/dd/yyyy") : "";
 
     try {
+      const file = uploadedLogoUrl;
+
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "upload");
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dtpvtjiry/image/upload",
+        data
+      );
+      const { secure_url } = uploadRes.data;
+
+      const list = await Promise.all(
+        Object.values(uploadedProductImages).map(async (file) => {
+          const data = new FormData();
+          data.append("file", file);
+          data.append("upload_preset", "upload");
+          const uploadRes = await axios.post(
+            "https://api.cloudinary.com/v1_1/dtpvtjiry/image/upload",
+            data
+          );
+
+          const { secure_url } = uploadRes.data;
+          return secure_url;
+        })
+      );
+
       await createProduct({
         name,
         tags,
@@ -417,13 +454,13 @@ const NewProduct = () => {
         twitter,
         discord,
         description: shortDescription,
-        logo: uploadedLogoUrl,
+        logo: secure_url,
         releaseDate: formattedDate,
         promoExpire: formattedExpireDate,
-        images: uploadedProductImages,
+        images: list,
         category: selectedCategory?.trim() || undefined,
       });
-      setStep(8);
+      setStep(5);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -435,7 +472,7 @@ const NewProduct = () => {
   return (
     <div className="flex justify-center py-8 md:py-20">
       <div className="hidden md:block w-1/5 p-4">
-        <div className="space-y-4">
+        <div className="space-y-4 sticky top-10">
           {steps.map((stepItem) => {
             const Icon = stepItem.icon;
             const isActive = step === stepItem.id;
@@ -465,269 +502,222 @@ const NewProduct = () => {
       <div className="px-8 w-full md:w-2/5 ms-20">
         {step === 1 && (
           <>
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-              animate={{ opacity: 1, x: 0 }} // Slide to the center
-              exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-              transition={{ duration: 0.3 }}
-              className="space-y-10"
-            >
-              <h1 className="text-4xl font-semibold"> 📦 New product</h1>
-              <p className="text-xl font-light mt-4 leading-8">
-                Ready to showcase your product to the world? You came to the
-                right place. Follow the steps below to get started.
-              </p>
+            <h1 className="text-4xl font-semibold"> 📦 New product</h1>
+            <p className="text-xl font-light mt-4 leading-8">
+              Ready to showcase your product to the world? You came to the right
+              place. Follow the steps below to get started.
+            </p>
 
-              <div className="mt-10">
-                <h2 className="font-medium">Name of the product</h2>
-                <input
-                  type="text"
-                  value={name}
-                  maxLength={30}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  onChange={handleNameChange}
-                />
-                <div className="text-sm text-gray-500 mt-1">
-                  {name.length} / 30
-                </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Name of the product</h2>
+              <input
+                type="text"
+                value={name}
+                maxLength={30}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handleNameChange}
+              />
+              <div className="text-sm text-gray-500 mt-1">
+                {name.length} / 30
               </div>
-              <div className="mt-10">
-                <h2 className="font-medium">Headline</h2>
-                <input
-                  type="text"
-                  value={headline}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  onChange={handleHeadlineChange}
-                />
+            </div>
+            <div className="mt-10">
+              <h2 className="font-medium">
+                Slug (URL) - This will be used to create a unique URL for
+                yourproduct
+              </h2>
 
-                <div className="text-sm text-gray-500 mt-1">
-                  {headline.length} / 70
-                </div>
+              <input
+                type="text"
+                value={slug}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                readOnly
+              />
+            </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Headline</h2>
+              <input
+                type="text"
+                value={headline}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handleHeadlineChange}
+              />
+
+              <div className="text-sm text-gray-500 mt-1">
+                {headline.length} / 70
               </div>
+            </div>
 
-              <div className="mt-10">
-                <h2 className="font-medium">
-                  Slug (URL) - This will be used to create a unique URL for
-                  yourproduct
-                </h2>
+            <div className="mt-10">
+              <h2 className="font-medium">Tags</h2>
+              <input
+                type="text"
+                value={tags}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handletagsChange}
+              />
+            </div>
 
-                <input
-                  type="text"
-                  value={slug}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="mt-10">
-                <h2 className="font-medium">Tags</h2>
-                <input
-                  type="text"
-                  value={tags}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  onChange={handletagsChange}
-                />
-              </div>
-              <div className="mt-10">
-                <h2 className="font-medium">Web Url</h2>
-                <input
-                  type="text"
-                  value={weburl}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  onChange={handlewebChange}
-                />
-              </div>
-              <div className="mt-10">
-                <h2 className="font-medium">Suggest Url</h2>
-                <input
-                  type="text"
-                  value={suggestUrl}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  onChange={handleSuggestUrlChange}
-                />
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-              animate={{ opacity: 1, x: 0 }} // Slide to the center
-              exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-              transition={{ duration: 0.3 }}
-              className="space-y-10"
-            >
-              <h1 className="text-4xl font-semibold">
-                {" "}
-                📊 What category does your product belong to ?{" "}
-              </h1>
-              <p className="text-xl font-light mt-4 leading-8">
-                Choose at least 3 categories that best fits your product. This
-                will people discover your product
-              </p>
+            <h1 className="text-4xl font-semibold mt-10">
+              {" "}
+              📊 What category does your product belong to ?{" "}
+            </h1>
+            <p className="text-xl font-light mt-4 leading-8">
+              Choose at least 1 categories that best fits your product. This
+              will people discover your product
+            </p>
 
-              <div className="mt-10">
-                <h2 className="font-medium">Select Category</h2>
-                <div className="pt-4">
-                  <Autocomplete
-                    options={categories}
-                    value={selectedCategory}
-                    onChange={(event, newValue) => {
-                      setSelectedCategory(newValue); // Set only one category at a time
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        label="Search Categories"
-                        fullWidth
-                        onChange={(e) => setSearchQuery(e.target.value)} // Update search query
-                      />
-                    )}
-                    isOptionEqualToValue={(option, value) => option === value} // Check if the value matches the option
-                  />
-                </div>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-              animate={{ opacity: 1, x: 0 }} // Slide to the center
-              exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-              transition={{ duration: 0.3 }}
-              className="space-y-10"
-            >
-              <div className="text-4xl font-semibold">📝 Product Details</div>
-              <p className="text-xl font-light mt-4 leading-8">
-                Keep it simple and clear. Describe your product in a way that
-                makes it easy for people to understand what it does.
-              </p>
-
-              <div className="mt-10">
-                <h2 className="font-medium">Short Description</h2>
-                <textarea
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  rows={8}
-                  maxLength={300}
-                  value={shortDescription}
-                  onChange={handleShortDescriptionChange}
-                />
-
-                <div className="text-sm text-gray-500 mt-1">
-                  {shortDescription.length} / 300
-                </div>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-              animate={{ opacity: 1, x: 0 }} // Slide to the center
-              exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-              transition={{ duration: 0.3 }}
-              className="space-y-10"
-            >
-              <h1 className="text-4xl font-semibold">Additional Links </h1>
-              <p className="text-xl font-light mt-4 leading-8">
-                Add links to your product&apos;s website, social media, and
-                other platforms
-              </p>
-
-              <div className="mt-10">
-                <div className="font-medium flex items-center gap-x-2">
-                  <PiPlanet className="text-2xl text-gray-600" />
-                  <span>Website</span>
-                </div>
-
-                <input
-                  type="text"
-                  value={website}
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none"
-                  placeholder="https://www.yourdomain.com"
-                  onChange={handleWebsiteChange}
+            <div className="mt-10">
+              <h2 className="font-medium">Select Category</h2>
+              <div className="pt-4">
+                <Autocomplete
+                  options={categories}
+                  value={selectedCategory}
+                  onChange={(event, newValue) => {
+                    setSelectedCategory(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Search Categories"
+                      fullWidth
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  )}
+                  isOptionEqualToValue={(option, value) => option === value} // Check if the value matches the option
                 />
               </div>
+            </div>
 
-              <div className="mt-10">
-                <div className="font-medium flex items-center gap-x-2">
-                  <PiTwitterLogoFill className="text-2xl text-sky-400" />
-                  <div>Twitter</div>
-                </div>
+            <div className="text-4xl font-semibold mt-10">
+              📝 Product Details
+            </div>
+            <p className="text-xl font-light mt-4 leading-8">
+              Keep it simple and clear. Describe your product in a way that
+              makes it easy for people to understand what it does.
+            </p>
 
-                <input
-                  placeholder="https://www.twitter.com"
-                  type="text"
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none "
-                  value={twitter}
-                  onChange={handleTwitterChange}
-                />
+            <div className="mt-10">
+              <h2 className="font-medium">Short Description</h2>
+              <textarea
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                rows={8}
+                maxLength={300}
+                value={shortDescription}
+                onChange={handleShortDescriptionChange}
+              />
+
+              <div className="text-sm text-gray-500 mt-1">
+                {shortDescription.length} / 300
               </div>
-              <div className="mt-10">
-                <div className="font-medium flex items-center gap-x-2">
-                  <PiTwitterLogoFill className="text-2xl text-sky-400" />
-                  <div>LinkedIn</div>
-                </div>
+            </div>
 
-                <input
-                  placeholder="https://www.twitter.com"
-                  type="text"
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none "
-                  value={linekdin}
-                  onChange={handleLinekdin}
-                />
+            <h1 className="text-4xl font-semibold mt-10">Additional Links </h1>
+            <p className="text-xl font-light mt-4 leading-8">
+              Add links to your product&apos;s website, social media, and other
+              platforms
+            </p>
+
+            <div className="mt-10">
+              <h2 className="font-medium">Web Url</h2>
+              <input
+                type="text"
+                value={weburl}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handlewebChange}
+              />
+            </div>
+
+            <div className="mt-10">
+              <h2 className="font-medium">Suggest Url</h2>
+              <input
+                type="text"
+                value={suggestUrl}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handleSuggestUrlChange}
+              />
+            </div>
+
+            <div className="mt-10">
+              <div className="font-medium flex items-center gap-x-2">
+                <PiPlanet className="text-2xl text-gray-600" />
+                <span>Website</span>
               </div>
 
-              <div className="mt-10">
-                <div className="font-medium flex items-center gap-x-2">
-                  <PiDiscordLogoFill className="text-2xl text-indigo-500" />
-                  <div>Discord</div>
-                </div>
+              <input
+                type="text"
+                value={website}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                placeholder="https://www.yourdomain.com"
+                onChange={handleWebsiteChange}
+              />
+            </div>
 
-                <input
-                  placeholder="https://www.discord.com"
-                  type="text"
-                  className="border rounded-md p-2 w-full mt-2 focus:outline-none "
-                  value={discord}
-                  onChange={handleDiscordChange}
-                />
+            <div className="mt-10">
+              <div className="font-medium flex items-center gap-x-2">
+                <PiTwitterLogoFill className="text-2xl text-sky-400" />
+                <div>Twitter</div>
               </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-              animate={{ opacity: 1, x: 0 }} // Slide to the center
-              exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
-              transition={{ duration: 0.3 }}
-              className="space-y-10"
-            >
-              <h1 className="text-4xl font-semibold"> 🗓️ Release Date</h1>
-              <p className="text-xl font-light mt-4 leading-8">
-                When will your product be available to the public? Select a date
-                to continue.
-              </p>
 
-              <div className="mt-10">
-                <div className="font-medium pb-3">Release date</div>
-                <>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[300px] pl-3 text-left font-normal",
-                          !date && "text-muted-foreground"
-                        )}
-                      >
-                        {date ? format(date, "PPP") : <span>Pick a date</span>}
-
-                        <PiCalendar className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(date) => setDate(date)}
-                        initialFocus
-                        disabled={(date) => date < new Date()}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </>
+              <input
+                placeholder="https://www.twitter.com"
+                type="text"
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none "
+                value={twitter}
+                onChange={handleTwitterChange}
+              />
+            </div>
+            <div className="mt-10">
+              <div className="font-medium flex items-center gap-x-2">
+                <PiLinkedinLogo className="text-2xl text-sky-400" />
+                <div>LinkedIn</div>
               </div>
-            </motion.div>
+
+              <input
+                placeholder="https://www.linkedin.com"
+                type="text"
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none "
+                value={linekdin}
+                onChange={handleLinekdin}
+              />
+            </div>
+
+            <h1 className="text-4xl font-semibold mt-10"> 🗓️ Release Date</h1>
+            <p className="text-xl font-light mt-4 leading-8">
+              When will your product be available to the public? Select a date
+              to continue.
+            </p>
+
+            <div className="mt-10">
+              <div className="font-medium pb-3">Release date</div>
+              <>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[300px] pl-3 text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+
+                      <PiCalendar className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(date) => setDate(date)}
+                      initialFocus
+                      disabled={(date) => date < new Date()}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </>
+            </div>
           </>
         )}
 
@@ -750,13 +740,16 @@ const NewProduct = () => {
             <div className="mt-10">
               <h2 className="font-medium">Logo</h2>
               {uploadedLogoUrl ? (
-                <div className="mt-2">
-                  <Image
+                <div style={{ marginTop: 16 }}>
+                  <img
                     src={uploadedLogoUrl}
-                    alt="logo"
-                    width={1000}
-                    height={1000}
-                    className="rounded-md h-40 w-40 object-cover"
+                    alt="Uploaded Logo"
+                    style={{
+                      width: 100,
+                      height: 100,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                    }}
                   />
                 </div>
               ) : (
@@ -805,17 +798,17 @@ const NewProduct = () => {
         )}
         {step === 3 && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-            animate={{ opacity: 1, x: 0 }} // Slide to the center
-            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
             transition={{ duration: 0.3 }}
             className="space-y-10"
           >
             <div className="mt-10">
               <h2 className="font-medium">Select Price</h2>
               <Select
-                value={price} // The value for the select input
-                onChange={handlePriceChange} // The handler for when a price is selected
+                value={price}
+                onChange={handlePriceChange}
                 fullWidth
                 className="mt-2"
               >
@@ -885,9 +878,9 @@ const NewProduct = () => {
 
         {step === 4 && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-            animate={{ opacity: 1, x: 0 }} // Slide to the center
-            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
             transition={{ duration: 0.3 }}
             className="space-y-10"
           >
@@ -909,22 +902,35 @@ const NewProduct = () => {
               </div>
 
               <div className="">
+                <div className="font-semibold">Headline</div>
+                <div className="  mt-2 text-gray-600">{headline}</div>
+              </div>
+              <div className="">
+                <div className="font-semibold">Tags</div>
+                <div className="  mt-2 text-gray-600">{tags}</div>
+              </div>
+
+              <div className="">
                 <div className="font-semibold">Category</div>
                 <div className="  mt-2 text-gray-600">{selectedCategory}</div>
+              </div>
+
+              <div className="">
+                <div className="font-semibold">Short description</div>
+                <div className=" mt-2 text-gray-600 ">{shortDescription}</div>
               </div>
 
               <div>
                 <div className="font-semibold">Website URL</div>
                 <div className=" mt-2 text-gray-600">{website}</div>
               </div>
-
-              <div className="">
-                <div className="font-semibold">Headline</div>
-                <div className="  mt-2 text-gray-600">{headline}</div>
+              <div>
+                <div className="font-semibold">Suggest URL</div>
+                <div className=" mt-2 text-gray-600">{suggestUrl}</div>
               </div>
-              <div className="">
-                <div className="font-semibold">Short description</div>
-                <div className=" mt-2 text-gray-600 ">{shortDescription}</div>
+              <div>
+                <div className="font-semibold">Website</div>
+                <div className=" mt-2 text-gray-600">{website}</div>
               </div>
 
               <div>
@@ -933,8 +939,8 @@ const NewProduct = () => {
               </div>
 
               <div>
-                <div className="font-semibold">Discord</div>
-                <div className=" mt-2 text-gray-600">{discord}</div>
+                <div className="font-semibold">LinkedIn</div>
+                <div className=" mt-2 text-gray-600">{linekdin}</div>
               </div>
 
               <div className="">
@@ -961,6 +967,30 @@ const NewProduct = () => {
                       />
                     </div>
                   ))}
+                </div>
+              </div>
+              <div>
+                <div className="font-semibold">Select Price</div>
+                <div className=" mt-2 text-gray-600">{price}</div>
+              </div>
+              <div>
+                <div className="font-semibold">Promo Code Name</div>
+                <div className=" mt-2 text-gray-600">{promoOffer}</div>
+              </div>
+              <div>
+                <div className="font-semibold">Promo Code</div>
+                <div className=" mt-2 text-gray-600">{promoCode}</div>
+              </div>
+              <div>
+                <div className="font-semibold">Promo Code</div>
+                <div className=" mt-2 text-gray-600">{promoCode}</div>
+              </div>
+              <div className="">
+                <div className="font-semibold">Promo Code date - Expired</div>
+                <div className=" mt-2 text-gray-600">
+                  {promoExpireDate
+                    ? promoExpireDate.toDateString()
+                    : "Not specified"}
                 </div>
               </div>
             </div>
