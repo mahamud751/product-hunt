@@ -6,7 +6,6 @@ export default async function Products() {
 
   return (
     <div>
-      <h1>All Products</h1>
       <ProductTable
         products={products as Product[]}
         totalProducts={totalProducts}

@@ -54,7 +54,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
       : [];
 
     const upvotesCount = upvotes ? upvotes.length : 0;
-    const upvotesData = upvotes.map((upvote: any) => upvote?.user?.id);
+    const upvotesData = upvotes?.map((upvote: any) => upvote?.user?.id);
 
     return {
       id,

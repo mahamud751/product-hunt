@@ -115,7 +115,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           <div className="ml-4">
             <div className="md:flex items-center gap-x-2">
-              <h1 className="text-sm font-semibold">{product.name}</h1>
+              <h1 className="text-sm font-semibold">{product?.name}</h1>
 
               <div
                 onClick={handleArrowClick}
@@ -127,7 +127,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             <div className="hidden md:flex gap-x-2 items-center">
               {/* <p className="hidden md:flex text-xs">-</p> */}
               <p className="text-gray-500 text-xs md:text-sm pr-2">
-                {product.headline.slice(0, 40)}
+                {product?.headline.slice(0, 40)}
               </p>
               {/* <div className="text-xs text-gray-500 flex gap-x-1 items-center">
                 {product.commentsLength}

@@ -22,7 +22,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import StarIcon from "@mui/icons-material/Star";
@@ -48,14 +47,14 @@ const modalStyle = {
 };
 
 interface ProductTableClientProps {
-  initialProducts: Product[];
+  products: Product[];
   totalProducts: number;
   initialPage: number;
   initialRowsPerPage: number;
 }
 
 const ProductTable: React.FC<ProductTableClientProps> = ({
-  initialProducts,
+  products,
   totalProducts,
   initialPage,
   initialRowsPerPage,
@@ -67,7 +66,7 @@ const ProductTable: React.FC<ProductTableClientProps> = ({
   const [tabValue, setTabValue] = useState(0);
 
   const [statusFilter, setStatusFilter] = useState<Status | "">("");
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [productsData, setProductsData] = useState<Product[]>(products);
   const [filteredTotalProducts, setFilteredTotalProducts] =
     useState(totalProducts);
 
@@ -76,7 +75,7 @@ const ProductTable: React.FC<ProductTableClientProps> = ({
       const { products: filteredProducts, totalProducts: filteredTotal } =
         await getProducts(page, rowsPerPage, statusFilter || undefined);
 
-      setProducts(filteredProducts as Product[]);
+      setProductsData(filteredProducts as Product[]);
       setFilteredTotalProducts(filteredTotal);
     };
 
@@ -253,7 +252,7 @@ const ProductTable: React.FC<ProductTableClientProps> = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {products?.map((product, index) => (
+              {productsData?.map((product, index) => (
                 <TableRow
                   key={product.id}
                   sx={{

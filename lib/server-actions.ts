@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { DateTime } from "luxon";
+import { features } from "process";
 
 const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
@@ -164,12 +165,20 @@ export const createProduct = async ({
 export const getProducts = async (
   page: number,
   rowsPerPage: number,
-  status?: "PENDING" | "ACTIVE" | "REJECTED"
+  status?: "PENDING" | "ACTIVE" | "REJECTED",
+  featured?: boolean
 ) => {
   const skip = page * rowsPerPage;
   const take = rowsPerPage;
 
-  const where = status ? { status } : {};
+  const where: any = {};
+
+  if (status) {
+    where.status = status;
+  }
+  if (featured !== undefined) {
+    where.featured = featured;
+  }
 
   const products = await db.product.findMany({
     skip,

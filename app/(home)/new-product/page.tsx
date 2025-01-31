@@ -502,7 +502,7 @@ const NewProduct = () => {
       <div className="px-8 w-full md:w-2/5 ms-20">
         {step === 1 && (
           <>
-            <h1 className="text-4xl font-semibold"> 📦 New product</h1>
+            <h1 className="text-4xl font-semibold"> New product</h1>
             <p className="text-xl font-light mt-4 leading-8">
               Ready to showcase your product to the world? You came to the right
               place. Follow the steps below to get started.
@@ -516,6 +516,7 @@ const NewProduct = () => {
                 maxLength={30}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handleNameChange}
+                placeholder="Simply the name of the product"
               />
               <div className="text-sm text-gray-500 mt-1">
                 {name.length} / 30
@@ -532,6 +533,7 @@ const NewProduct = () => {
                 value={slug}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 readOnly
+                placeholder="Simply the name of the product"
               />
             </div>
             <div className="mt-10">
@@ -541,6 +543,7 @@ const NewProduct = () => {
                 value={headline}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handleHeadlineChange}
+                placeholder="Headline of the product"
               />
 
               <div className="text-sm text-gray-500 mt-1">
@@ -555,12 +558,13 @@ const NewProduct = () => {
                 value={tags}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handletagsChange}
+                placeholder="Tags of the product"
               />
             </div>
 
             <h1 className="text-4xl font-semibold mt-10">
               {" "}
-              📊 What category does your product belong to ?{" "}
+              What category does your product belong to ?{" "}
             </h1>
             <p className="text-xl font-light mt-4 leading-8">
               Choose at least 1 categories that best fits your product. This
@@ -585,14 +589,12 @@ const NewProduct = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   )}
-                  isOptionEqualToValue={(option, value) => option === value} // Check if the value matches the option
+                  isOptionEqualToValue={(option, value) => option === value}
                 />
               </div>
             </div>
 
-            <div className="text-4xl font-semibold mt-10">
-              📝 Product Details
-            </div>
+            <div className="text-4xl font-semibold mt-10">Product Details</div>
             <p className="text-xl font-light mt-4 leading-8">
               Keep it simple and clear. Describe your product in a way that
               makes it easy for people to understand what it does.
@@ -606,6 +608,7 @@ const NewProduct = () => {
                 maxLength={300}
                 value={shortDescription}
                 onChange={handleShortDescriptionChange}
+                placeholder="Short description of the product"
               />
 
               <div className="text-sm text-gray-500 mt-1">
@@ -626,6 +629,7 @@ const NewProduct = () => {
                 value={weburl}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handlewebChange}
+                placeholder="https://www.yourdomain.com"
               />
             </div>
 
@@ -636,6 +640,7 @@ const NewProduct = () => {
                 value={suggestUrl}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handleSuggestUrlChange}
+                placeholder="https://www.yourdomain.com/suggest"
               />
             </div>
 
@@ -683,7 +688,7 @@ const NewProduct = () => {
               />
             </div>
 
-            <h1 className="text-4xl font-semibold mt-10"> 🗓️ Release Date</h1>
+            <h1 className="text-4xl font-semibold mt-10"> Release Date</h1>
             <p className="text-xl font-light mt-4 leading-8">
               When will your product be available to the public? Select a date
               to continue.
@@ -723,14 +728,14 @@ const NewProduct = () => {
 
         {step === 2 && (
           <motion.div
-            initial={{ opacity: 0, x: "100%" }} // Slide in from the right
-            animate={{ opacity: 1, x: 0 }} // Slide to the center
-            exit={{ opacity: 0, x: "-100%" }} // Slide out to the left
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
             transition={{ duration: 0.3 }}
             className="space-y-10"
           >
             <h1 className="text-4xl font-semibold">
-              🖼️ Add images to showcase your product
+              Add images to showcase your product
             </h1>
             <p className="text-xl font-light mt-4 leading-8">
               Include images that best represent your product. This will help
@@ -792,6 +797,7 @@ const NewProduct = () => {
                 value={videoLink}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handleVideoLinkChange}
+                placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
               />
             </div>
           </motion.div>
@@ -829,6 +835,7 @@ const NewProduct = () => {
                 value={promoOffer}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handlePromoChange}
+                placeholder="Enter a promo name"
               />
             </div>
             <div className="mt-10">
@@ -838,6 +845,7 @@ const NewProduct = () => {
                 value={promoCode}
                 className="border rounded-md p-2 w-full mt-2 focus:outline-none"
                 onChange={handlePromoCodeChange}
+                placeholder="Enter a promo code"
               />
             </div>
             <div className="mt-10">
