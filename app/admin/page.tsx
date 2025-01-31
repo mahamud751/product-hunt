@@ -22,6 +22,7 @@ import {
 } from "@/lib/server-actions";
 import OverviewChart from "@/components/overview-chart";
 import RecentActivity from "@/components/recent-activity";
+import AppMenu from "@/components/navbar/layout/Header/AppMenu";
 
 const Admin = async () => {
   const users = await getUsers();
@@ -37,7 +38,7 @@ const Admin = async () => {
   // console.log(pendingProducts, "pending products here");
 
   return (
-    <div className="px-8 md:px-20">
+    <div>
       <div>
         <div className="flex justify-between items-center">
           <div className="flex gap-x-6 items-center py-10">

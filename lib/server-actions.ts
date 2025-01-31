@@ -161,6 +161,27 @@ export const createProduct = async ({
   }
 };
 
+export const getProducts = async (
+  page: number,
+  rowsPerPage: number,
+  status?: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const skip = page * rowsPerPage;
+  const take = rowsPerPage;
+
+  const where = status ? { status } : {};
+
+  const products = await db.product.findMany({
+    skip,
+    take,
+    where,
+  });
+
+  const totalProducts = await db.product.count({ where });
+
+  return { products, totalProducts };
+};
+
 export const updateProduct = async (
   productId: string,
   {
@@ -218,6 +239,77 @@ export const updateProduct = async (
     },
   });
   return product;
+};
+export const updateProductStatus = async (
+  productId: string,
+  status: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const authenticatedUser = await auth();
+
+  if (!authenticatedUser) {
+    throw new Error("You must be signed in to update a product status");
+  }
+
+  const product = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const updatedProduct = await db.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      status,
+    },
+  });
+
+  return updatedProduct;
+};
+
+interface UpdateProductFlagsParams {
+  verified?: boolean;
+  top?: boolean;
+  featured?: boolean;
+}
+
+export const updateProductFlags = async (
+  productId: string,
+  { verified, top, featured }: UpdateProductFlagsParams
+) => {
+  const authenticatedUser = await auth();
+
+  if (!authenticatedUser) {
+    throw new Error("You must be signed in to update product flags");
+  }
+
+  const product = await db.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  const updatedProduct = await db.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      verified,
+      top,
+      featured,
+    },
+  });
+
+  return updatedProduct;
 };
 
 export const deleteProduct = async (productId: string) => {

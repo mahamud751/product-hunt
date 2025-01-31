@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Product" ADD COLUMN     "featured" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "top" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "verified" BOOLEAN NOT NULL DEFAULT false;

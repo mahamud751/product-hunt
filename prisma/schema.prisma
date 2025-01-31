@@ -82,6 +82,9 @@ model Product {
   tags         String
   videoLink    String
   weburl       String
+  verified     Boolean        @default(false)
+  top          Boolean        @default(false)
+  featured     Boolean        @default(false)
   comments     Comment[]
   images       Image[]
   notification Notification[]

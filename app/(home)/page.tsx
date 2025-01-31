@@ -1,4 +1,5 @@
 import ActiveProducts from "@/components/active-products";
+import HeroSection from "@/components/home/HeroSecion";
 import {
   getFilteredProducts,
   getTopUpvotedProducts,
@@ -12,6 +13,7 @@ const Home = async () => {
 
   return (
     <>
+      <HeroSection />
       <div className="md:w-3/5 mx-auto py-10 px-6">
         <ActiveProducts
           activeProducts={topVotedProducts}
