@@ -10,7 +10,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { Status } from "@/app/services/types";
+import { Status } from "@/services/types";
 import { updateProductStatus } from "@/lib/server-actions";
 
 interface ProductStatusUpdaterProps {

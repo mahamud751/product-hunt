@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PendingIcon from "@mui/icons-material/Pending";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { Status } from "@/app/services/types";
+import { Status } from "@/services/types";
 
 interface ProductRowProps {
   status: Status;

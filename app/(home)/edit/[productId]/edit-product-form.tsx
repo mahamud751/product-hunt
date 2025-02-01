@@ -24,9 +24,20 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
   const router = useRouter();
 
   const [name, setName] = useState(product.name);
+
+  const [tags, setTags] = useState(product.tags);
+  const [linekdin, setLinekdin] = useState(product.linekdin);
+  const [weburl, setWeburl] = useState(product.weburl);
+  const [suggestUrl, setSuggestUrl] = useState(product.suggestUrl);
+  const [promoOffer, setPromoOffer] = useState(product.promoOffer);
+  const [promoCode, setPromoCode] = useState(product.promoCode);
+
+  const [videoLink, setVideoLink] = useState(product.videoLink);
+  const [price, setPrice] = useState(product.price);
   const [headline, setHeadline] = useState(product.headline);
   const [description, setDescription] = useState(product.description);
   const [releaseDate, setReleaseDate] = useState(product.releaseDate);
+  const [promoExpire, setPromoExpire] = useState(product.promoExpire);
   const [website, setWebsite] = useState(product.website);
   const [twitter, setTwitter] = useState(product.twitter);
   const [discord, setDiscord] = useState(product.discord);
@@ -67,6 +78,15 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
     try {
       await updateProduct(product.id, {
         name,
+        tags,
+        linekdin,
+        weburl,
+        suggestUrl,
+        promoOffer,
+        promoCode,
+        videoLink,
+        price,
+        promoExpire,
         headline,
         description,
         releaseDate,
@@ -171,6 +191,87 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
           />
         </div>
 
+        <div>
+          <div className="font-medium">Tags</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Linekdin</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={linekdin}
+            onChange={(e) => setLinekdin(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Weburl</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={weburl}
+            onChange={(e) => setWeburl(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Suggest Url</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={suggestUrl}
+            onChange={(e) => setSuggestUrl(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Promo Offer</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={promoOffer}
+            onChange={(e) => setPromoOffer(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Promo Code</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={promoCode}
+            onChange={(e) => setPromoCode(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Video Link</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={videoLink}
+            onChange={(e) => setVideoLink(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Price</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Promo Expire Date</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={promoExpire}
+            onChange={(e) => setPromoExpire(e.target.value)}
+          />
+        </div>
         <div>
           <div className="font-medium">Website</div>
           <input

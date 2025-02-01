@@ -27,7 +27,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import StarIcon from "@mui/icons-material/Star";
 import FeaturedIcon from "@mui/icons-material/FeaturedVideo";
 import VerifiedIcon from "@mui/icons-material/Verified";
-import { Product, Status } from "@/app/services/types";
+import { Product, Status } from "@/services/types";
 import { Edit } from "@mui/icons-material";
 import ProductStatusUpdater from "../statusUpdate/productStatus";
 import ProductStatus from "../status/productStatus";

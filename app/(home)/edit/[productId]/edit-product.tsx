@@ -10,9 +10,7 @@ interface EditProductProps {
   product: any;
 }
 
-const EditProduct: React.FC<EditProductProps> = ({ 
-    product
- }) => {
+const EditProduct: React.FC<EditProductProps> = ({ product }) => {
   const [editProductModalVisible, setEditProductModalVisible] = useState(false);
 
   const handleEditProductClick = () => {
@@ -29,8 +27,10 @@ const EditProduct: React.FC<EditProductProps> = ({
         <PiPencil className="text-xl text-emerald-500" />
       </button>
 
-      <EditProductModal visible={editProductModalVisible} 
-      setVisible={setEditProductModalVisible}>
+      <EditProductModal
+        visible={editProductModalVisible}
+        setVisible={setEditProductModalVisible}
+      >
         <EditProductForm product={product} />
       </EditProductModal>
     </>
