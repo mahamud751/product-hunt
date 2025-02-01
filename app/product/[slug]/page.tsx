@@ -35,17 +35,17 @@ const ProductPage = async ({ params }: { params: IParams }) => {
             <p className="text-gray-500 text-sm py-2">{product.headline}</p>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {product.categories.map((category: any) => (
+              {product?.category && (
                 <Link
-                  href={`/category/${category.name.toLowerCase()}`}
-                  key={category.id}
-                  className="bg-gray-100 text-gray-600 
-                            px-4 py-2 rounded-md
-                             cursor-pointer"
+                  href={`/category/${product.category.name.toLowerCase()}`}
+                  key={product.category.id}
+                  className="bg-gray-100 text-gray-600 px-4 py-2 rounded-md cursor-pointer"
                 >
-                  <h2 className="text-xs text-center">{category.name}</h2>
+                  <h2 className="text-xs text-center">
+                    {product.category.name}
+                  </h2>
                 </Link>
-              ))}
+              )}
             </div>
           </div>
         </div>

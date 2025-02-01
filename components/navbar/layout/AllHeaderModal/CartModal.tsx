@@ -1,11 +1,11 @@
 import React from "react";
 import { Box, Button, Popper, IconButton, Fade } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { Close, Delete } from "@mui/icons-material";
 import Link from "next/link";
 import Image from "next/image";
-import { RootState } from "@/app/redux/reducers";
+// import { RootState } from "@/app/redux/reducers";
 
 interface CartModalProps {
   open: boolean;
@@ -21,9 +21,9 @@ const CartModal: React.FC<CartModalProps> = ({
   removeItem,
 }) => {
   const theme = useTheme();
-  const cartItemsFromRedux = useSelector(
-    (state: RootState) => state.cart.cartItems
-  );
+  // const cartItemsFromRedux = useSelector(
+  //   (state: RootState) => state.cart.cartItems
+  // );
   return (
     <Popper open={open} anchorEl={anchorEl} transition>
       {({ TransitionProps }) => (
@@ -56,7 +56,7 @@ const CartModal: React.FC<CartModalProps> = ({
               </div>
               <hr className="mt-5" />
 
-              <div className="mt-6 space-y-4">
+              {/* <div className="mt-6 space-y-4">
                 {cartItemsFromRedux.length > 0 ? (
                   cartItemsFromRedux.map((item, index) => (
                     <Link
@@ -102,9 +102,9 @@ const CartModal: React.FC<CartModalProps> = ({
                     Your cart is empty.
                   </p>
                 )}
-              </div>
+              </div> */}
               <hr />
-              <div className="flex justify-between my-5 px-8">
+              {/* <div className="flex justify-between my-5 px-8">
                 <p>SubTotal:</p>
                 <p className="text-red-500 font-bold">
                   ৳
@@ -116,7 +116,7 @@ const CartModal: React.FC<CartModalProps> = ({
                     )
                     .toFixed(2)}
                 </p>
-              </div>
+              </div> */}
               <hr />
               <div className="uppercase p-3">
                 <div className="mt-6">

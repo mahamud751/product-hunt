@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useAuth } from "@/services/hooks/auth";
+// import { useAuth } from "@/services/hooks/auth";
 import { Notification } from "@/services/types";
 import Link from "next/link";
 
@@ -27,7 +27,7 @@ const NotificationPopper: React.FC<NotificationPopperProps> = ({
   onClose,
 }) => {
   const theme = useTheme();
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
   const [filteredNotifications, setFilteredNotifications] = useState<
     Notification[]
@@ -37,63 +37,63 @@ const NotificationPopper: React.FC<NotificationPopperProps> = ({
   const [readCount, setReadCount] = useState<number>(0);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
-  const fetchNotifications = async () => {
-    if (!user || !user.email) {
-      console.error("User is not logged in");
-      return;
-    }
+  // const fetchNotifications = async () => {
+  //   // if (!user || !user.email) {
+  //   //   console.error("User is not logged in");
+  //   //   return;
+  //   // }
 
-    setLoading(true);
-    try {
-      const response = await axios.get<{
-        data: Notification[];
-        total: number;
-        perPage: number;
-      }>(
-        `${process.env.NEXT_PUBLIC_BASEURL}/v1/notifications?email=${user.email}`
-      );
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.get<{
+  //       data: Notification[];
+  //       total: number;
+  //       perPage: number;
+  //     }>(
+  //       `${process.env.NEXT_PUBLIC_BASEURL}/v1/notifications?email=${user.email}`
+  //     );
 
-      const notifications = response.data.data;
-      setAllNotifications(notifications);
+  //     const notifications = response.data.data;
+  //     setAllNotifications(notifications);
 
-      const read = notifications.filter(
-        (notification) => notification.status === "read"
-      ).length;
-      const unread = notifications.filter(
-        (notification) => notification.status === "unread"
-      ).length;
+  //     // const read = notifications.filter(
+  //     //   (notification) => notification.status === "read"
+  //     // ).length;
+  //     // const unread = notifications.filter(
+  //     //   (notification) => notification.status === "unread"
+  //     // ).length;
 
-      setReadCount(read);
-      setUnreadCount(unread);
+  //     // setReadCount(read);
+  //     // setUnreadCount(unread);
 
-      setFilteredNotifications(notifications);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      setAllNotifications([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setFilteredNotifications(notifications);
+  //   } catch (error) {
+  //     console.error("Error fetching notifications:", error);
+  //     setAllNotifications([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  // useEffect(() => {
+  //   fetchNotifications();
+  // }, []);
 
-  useEffect(() => {
-    let filteredData = allNotifications;
+  // useEffect(() => {
+  //   let filteredData = allNotifications;
 
-    if (filter === "read") {
-      filteredData = allNotifications.filter(
-        (notification) => notification.status === "read"
-      );
-    } else if (filter === "unread") {
-      filteredData = allNotifications.filter(
-        (notification) => notification.status === "unread"
-      );
-    }
+  //   if (filter === "read") {
+  //     filteredData = allNotifications.filter(
+  //       (notification) => notification.status === "read"
+  //     );
+  //   } else if (filter === "unread") {
+  //     filteredData = allNotifications.filter(
+  //       (notification) => notification.status === "unread"
+  //     );
+  //   }
 
-    setFilteredNotifications(filteredData);
-  }, [filter, allNotifications]);
+  //   setFilteredNotifications(filteredData);
+  // }, [filter, allNotifications]);
 
   const handleFilterChange = (status: string) => {
     setFilter(status);
@@ -103,26 +103,26 @@ const NotificationPopper: React.FC<NotificationPopperProps> = ({
     setFilter("all");
   };
 
-  const markNotificationAsRead = async (notificationId: string) => {
-    if (!user || !user.email) {
-      console.error("User is not logged in");
-      return;
-    }
+  // const markNotificationAsRead = async (notificationId: string) => {
+  //   if (!user || !user.email) {
+  //     console.error("User is not logged in");
+  //     return;
+  //   }
 
-    try {
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_BASEURL}/v1/notifications/${notificationId}`,
-        {
-          status: "read",
-        }
-      );
+  //   try {
+  //     await axios.patch(
+  //       `${process.env.NEXT_PUBLIC_BASEURL}/v1/notifications/${notificationId}`,
+  //       {
+  //         status: "read",
+  //       }
+  //     );
 
-      fetchNotifications();
-      onClose();
-    } catch (error) {
-      console.error("Error updating notification status:", error);
-    }
-  };
+  //     fetchNotifications();
+  //     onClose();
+  //   } catch (error) {
+  //     console.error("Error updating notification status:", error);
+  //   }
+  // };
 
   const textColor = theme.palette.mode === "dark" ? "white" : "black";
 
@@ -218,7 +218,7 @@ const NotificationPopper: React.FC<NotificationPopperProps> = ({
               </Grid>
             </Grid>
 
-            {loading ? (
+            {/* {loading ? (
               <Box display="flex" justifyContent="center" alignItems="center">
                 <CircularProgress />
               </Box>
@@ -283,7 +283,7 @@ const NotificationPopper: React.FC<NotificationPopperProps> = ({
                   </Grid>
                 ))}
               </Grid>
-            )}
+            )} */}
 
             <Button
               onClick={onClose}

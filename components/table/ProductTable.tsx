@@ -265,7 +265,7 @@ const ProductTable: React.FC<ProductTableClientProps> = ({
                   <TableCell>{product?.name}</TableCell>
                   <TableCell>
                     <Image
-                      src={product?.logo}
+                      src={product?.logo ?? ""}
                       alt={`${product.name} Logo`}
                       width={50}
                       height={50}
