@@ -3,7 +3,7 @@ import ProductItem from "./product-item";
 
 interface ActiveProductsProps {
   activeProducts: any;
-  header: string;
+  header?: string;
   total?: number;
 }
 
@@ -84,7 +84,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
 
   return (
     <div className="w-full">
-      <div className="flex items-center border-b pb-3">
+      <div className={`flex items-center  pb-3 ${header && "border-b"}`}>
         <h1 className="text-xl font-medium">
           {header} {total && "(" + total + ")"}
         </h1>

@@ -213,11 +213,11 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
               )}
             </div>
           </div>
-          <h2 className="text-gray-600 py-6">{currentProduct.description}</h2>
+          <h2 className="text-gray-600 py-6">{currentProduct?.description}</h2>
 
           <div className="md:flex justify-between items-center">
             <div className="flex gap-x-2">
-              {currentProduct.categories.map((category: any) => (
+              {currentProduct?.categories?.map((category: any) => (
                 <Link
                   href={`/category/${category.toLowerCase()}`}
                   key={category}
@@ -248,7 +248,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
             </div>
           </div>
 
-          <CarouselComponent productImages={currentProduct.images} />
+          <CarouselComponent productImages={currentProduct?.images} />
 
           <h1 className="font-semibold pt-10">Community Feedback</h1>
 
@@ -298,7 +298,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                       <h1 className="text-gray-600 font-semibold cursor-pointer">
                         {comment.user}
                       </h1>
-                      {comment.userId === currentProduct.userId && (
+                      {comment?.userId === currentProduct?.userId && (
                         <Badge className="bg-[#88aaff]">Creator</Badge>
                       )}
 
@@ -307,8 +307,8 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                       </div>
                     </div>
 
-                    {(comment.userId === authenticatedUser?.user?.id ||
-                      currentProduct.userId ===
+                    {(comment?.userId === authenticatedUser?.user?.id ||
+                      currentProduct?.userId ===
                         authenticatedUser?.user?.id) && (
                       <PiTrash
                         onClick={() => handleDeleteComment(comment.id)}

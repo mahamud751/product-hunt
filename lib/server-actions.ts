@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { DateTime } from "luxon";
 import { features } from "process";
 
-const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
+const getDateRange = (filter: "day" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
 
   const now = DateTime.now().setZone(timeZone);
@@ -17,11 +17,6 @@ const getDateRange = (filter: "day" | "yesterday" | "week" | "month") => {
     case "day":
       startDate = now.startOf("day");
       endDate = now.endOf("day");
-      break;
-
-    case "yesterday":
-      startDate = now.minus({ days: 1 }).startOf("day");
-      endDate = now.minus({ days: 1 }).endOf("day");
       break;
 
     case "week":
@@ -492,9 +487,7 @@ export const rejectProduct = async (productId: string, reason: string) => {
   }
 };
 
-export const getFilteredProducts = async (
-  filter: "day" | "yesterday" | "week" | "month"
-) => {
+export const getFilteredProducts = async (filter: "day" | "week" | "month") => {
   const { startDate, endDate } = getDateRange(filter);
 
   const products = await db.product.findMany({
@@ -569,7 +562,7 @@ export const getActiveProducts = async () => {
 };
 
 export const getTopUpvotedProducts = async (
-  filter: "day" | "yesterday" | "week" | "month"
+  filter: "day" | "week" | "month"
 ) => {
   const products = await getFilteredProducts(filter);
 
