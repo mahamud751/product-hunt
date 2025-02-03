@@ -24,8 +24,8 @@ const FeaturedCard = () => {
             <p className="font-bold text-lg ms-4 mt-2">Efficient App</p>
           </div>
           <p className="info mt-3">
-            Not all Open Source alternatives are equal -- Narrow down the
-            best,without the bulish't
+            Not all Open Source alternatives are equal -- Narrow down the best,
+            without the bulish&apos;t
           </p>
 
           <div className="mt-5 w-full">
