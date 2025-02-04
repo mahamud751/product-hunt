@@ -3,58 +3,101 @@ import AlternativeCard from "@/components/home/AlternativeCard";
 import FeaturedCard from "@/components/home/FeaturedCard";
 import HeroSection from "@/components/home/HeroSecion";
 import PromoCard from "@/components/home/PromoCard";
-import {
-  getFilteredProducts,
-  getProducts,
-  // getTopUpvotedProducts,
-} from "@/lib/server-actions";
+import { getFilteredProducts, getProducts } from "@/lib/server-actions";
+import { Grid, Typography, Divider } from "@mui/material";
 
 const Home = async () => {
   const filteredTodayProducts = await getFilteredProducts("day");
   const filteredWeekProducts = await getFilteredProducts("week");
   const filteredMonthProducts = await getFilteredProducts("month");
-
   const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
   return (
     <>
+      {/* Hero Section */}
       <HeroSection />
-      <div className="md:w-4/5 mx-auto py-10 px-6 grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-40">
-        <div className="space-y-8">
-          <div>
-            <ActiveProducts
-              activeProducts={filteredTodayProducts}
-              header="Top Products Launching Today"
-              total={filteredTodayProducts?.length}
-            />
-          </div>
-          <div>
-            <ActiveProducts
-              activeProducts={filteredWeekProducts}
-              header="Last Week's Top Startups"
-              total={filteredWeekProducts?.length}
-            />
-          </div>
-          <div>
-            <ActiveProducts
-              activeProducts={filteredMonthProducts}
-              header="Last Month's Top Startups"
-              total={filteredMonthProducts?.length}
-            />
-          </div>
-        </div>
+      <div className="md:w-4/5 mx-auto px-4 sm:px-8 py-8">
+        <Grid
+          container
+          spacing={12}
+          sx={{
+            padding: { xs: "12px", md: "24px" },
+          }}
+        >
+          {/* Left Column */}
+          <Grid item xs={12} md={8}>
+            <Grid container direction="column" spacing={4}>
+              <Grid item>
+                <ActiveProducts
+                  activeProducts={filteredTodayProducts}
+                  header="Top Products Launching Today"
+                  total={filteredTodayProducts?.length}
+                />
+              </Grid>
+              <Grid item>
+                <ActiveProducts
+                  activeProducts={filteredWeekProducts}
+                  header="Last Week's Top Startups"
+                  total={filteredWeekProducts?.length}
+                />
+              </Grid>
+              <Grid item>
+                <ActiveProducts
+                  activeProducts={filteredMonthProducts}
+                  header="Last Month's Top Startups"
+                  total={filteredMonthProducts?.length}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
 
-        <div>
-          <h1 className="text-xl font-medium mb-3">Featured</h1>
-          <hr className="border-dotted border-gray-950 mb-8" />
-          <FeaturedCard />
-          <ActiveProducts activeProducts={featuredProducts.products} />
-          <h1 className="text-xl font-medium mb-3">Product Deals</h1>
-          <hr className="border-dotted border-gray-950 mb-8" />
-          <PromoCard />
-        </div>
+          {/* Right Column */}
+          <Grid item xs={12} md={4}>
+            <Grid container direction="column" spacing={4}>
+              {/* Featured Section */}
+              <Grid item>
+                <Typography
+                  variant="h6"
+                  fontWeight="medium"
+                  gutterBottom
+                  mb={2}
+                >
+                  Featured
+                </Typography>
+                <Divider
+                  sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
+                />
+                <FeaturedCard />
+                <ActiveProducts activeProducts={featuredProducts.products} />
+              </Grid>
+
+              {/* Product Deals Section */}
+              <Grid item>
+                <Typography
+                  variant="h6"
+                  fontWeight="medium"
+                  gutterBottom
+                  mb={4}
+                >
+                  Product Deals
+                </Typography>
+                <Divider
+                  sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
+                />
+                <PromoCard />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </div>
-      <AlternativeCard />
+      {/* Alternative Card Section */}
+      <Grid container className="p-3 md:p-[24px]" sx={{ margin: "0 auto" }}>
+        <Grid item xs={12}>
+          <AlternativeCard />
+        </Grid>
+      </Grid>
+
+      {/* Main Content Grid */}
     </>
   );
 };

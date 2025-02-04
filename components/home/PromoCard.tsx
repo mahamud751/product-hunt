@@ -32,7 +32,7 @@ const PromoCard = () => {
   };
   return (
     <div
-      className="rounded-xl text-gray-600 border-[#C1AEFB] border-2"
+      className="rounded-xl text-gray-600 border-[#C1AEFB] border-2 mt-8"
       style={{
         boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
       }}
@@ -60,7 +60,7 @@ const PromoCard = () => {
               </div>
               <p className="font-bold text-sm ms-4 mt-2"></p>
               <div>
-                <button className=" flex justify-between px-2 py-1 button  bg-slate-950 hover:bg-indigo-800 rounded-md text-white font-medium text-lg text-center no-underline">
+                <button className=" flex justify-between px-2 py-1 button  bg-[#9876ff] text-white font-medium text-lg text-center no-underline">
                   <span className="text-sm"> 50% OFF</span>
                 </button>
               </div>

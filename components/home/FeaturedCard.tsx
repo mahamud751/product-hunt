@@ -3,7 +3,7 @@ import React from "react";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 const FeaturedCard = () => {
   return (
-    <div className="rounded-xl shadow-lg bg-blue-100 text-gray-600 max-w-sm">
+    <div className="rounded-xl shadow-lg bg-blue-100 text-gray-600 max-w-sm mt-10">
       <div className="pt-10  rounded-lg relative">
         <span className="pricing absolute top-[-20px] left-5 bg-blue-200 rounded-sm flex items-center px-3 py-2 text-lg font-semibold text-blue-700">
           Ad
