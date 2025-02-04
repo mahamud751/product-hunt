@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/navbar/navbar";
 import Spinner from "@/components/spinner";
 import { getNotifications, getProductsByUserId } from "@/lib/server-actions";
@@ -28,6 +29,7 @@ const HomeLayout = async ({
 
           {children}
         </Suspense>
+        <Footer />
       </body>
     </html>
   );

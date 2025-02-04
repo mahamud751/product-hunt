@@ -1,6 +1,8 @@
 import ActiveProducts from "@/components/active-products";
+import AlternativeCard from "@/components/home/AlternativeCard";
 import FeaturedCard from "@/components/home/FeaturedCard";
 import HeroSection from "@/components/home/HeroSecion";
+import PromoCard from "@/components/home/PromoCard";
 import {
   getFilteredProducts,
   getProducts,
@@ -17,7 +19,6 @@ const Home = async () => {
   return (
     <>
       <HeroSection />
-
       <div className="md:w-4/5 mx-auto py-10 px-6 grid grid-cols-1 md:grid-cols-[3fr_1fr] gap-40">
         <div className="space-y-8">
           <div>
@@ -48,8 +49,12 @@ const Home = async () => {
           <hr className="border-dotted border-gray-950 mb-8" />
           <FeaturedCard />
           <ActiveProducts activeProducts={featuredProducts.products} />
+          <h1 className="text-xl font-medium mb-3">Product Deals</h1>
+          <hr className="border-dotted border-gray-950 mb-8" />
+          <PromoCard />
         </div>
       </div>
+      <AlternativeCard />
     </>
   );
 };
