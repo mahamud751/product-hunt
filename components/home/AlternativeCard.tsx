@@ -77,7 +77,7 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
   alternatives,
 }) => {
   return (
-    <div className="rounded-xl shadow-lg bg-blue-100 text-gray-600 mt-2">
+    <div className="rounded-xl shadow-lg bg-[#FAFAFA] text-gray-600 mt-2">
       <div className="pt-2 rounded-lg relative">
         <div className="px-5 py-2">
           <div className="flex">

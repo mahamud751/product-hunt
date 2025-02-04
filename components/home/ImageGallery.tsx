@@ -48,7 +48,7 @@ const ImageGallery: React.FC = () => {
     const interval = setInterval(() => {
       const nextIndex = (selectedIndex + 1) % images.length;
       setSelectedIndex(nextIndex);
-    }, 2000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [selectedIndex, images.length]);
@@ -58,17 +58,17 @@ const ImageGallery: React.FC = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-3/4 h-[300px]">
+    <div className="flex flex-col md:flex-row md:gap-8 items-center justify-center">
+      <div className="w-full md:w-3/4 h-[200px] sm:h-[300px]">
         <HeroCard {...images[selectedIndex]} fullDetails />
       </div>
 
-      <div className="w-1/2 flex flex-col justify-start space-y-3 ms-3">
+      <div className="w-full md:w-1/2 flex flex-wrap justify-start gap-3 mt-4 md:mt-0">
         {images.map((imageData, index) => (
           <div
             key={index}
             onClick={() => handleCardClick(index)}
-            className={`cursor-pointer h-[100px]  `}
+            className={`cursor-pointer h-[80px] sm:h-[100px] w-full sm:w-1/2 md:w-full`}
           >
             <HeroCard {...imageData} fullDetails={false} />
           </div>

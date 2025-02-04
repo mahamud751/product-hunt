@@ -21,7 +21,7 @@ const HeroCard: React.FC<HeroCardProps> = ({
 }) => {
   return (
     <div
-      className={`overflow-hidden relative w-full rounded-xl aspect-[16/9] ${
+      className={`overflow-hidden relative w-full rounded-xl  ${
         fullDetails ? "h-[316px]" : "h-[100px]"
       }`}
       style={{

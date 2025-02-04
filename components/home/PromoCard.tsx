@@ -31,7 +31,12 @@ const PromoCard = () => {
     setOpen(false);
   };
   return (
-    <div className="rounded-xl shadow-lg bg-blue-100 text-gray-600">
+    <div
+      className="rounded-xl text-gray-600 border-[#C1AEFB] border-2"
+      style={{
+        boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
+      }}
+    >
       <div className="pt-2  rounded-lg relative">
         <div className="px-5 py-2">
           <div className="flex justify-between">
