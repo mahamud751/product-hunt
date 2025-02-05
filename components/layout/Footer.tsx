@@ -19,19 +19,19 @@ const Footer: React.FC = () => {
                   Alternatives
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Categories
+                  All Categories
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Self-hosted
+                  AI & Assistants
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Tech Stacks
+                  Work & Productivity
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Topics
+                  Marketing & Sales
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Topics
+                  Social Meida Tools
                 </Link>
               </nav>
             </div>
@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
                   About Us
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Blog
+                  Our Blog
                 </Link>
                 <Link href="#" className="hover:opacity-75">
                   Advertise
@@ -53,21 +53,39 @@ const Footer: React.FC = () => {
                   Add a Free Listing
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Stack Analyzer
+                  Auto Submit
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  Privacy Policy
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  Terms & Condtion
                 </Link>
               </nav>
             </div>
             <div className="text-center sm:text-left">
-              <p className="font-bold text-md">Other Products:</p>
+              <p className="font-bold text-md">Platforms:</p>
               <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-gray-400">
                 <Link href="#" className="hover:opacity-75">
-                  DevSuite
+                  Leaderboard
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Superstash
+                  Community
                 </Link>
                 <Link href="#" className="hover:opacity-75">
-                  Chipmunk Theme
+                  Winner Borad
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  How it Works
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  Newsletter
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  Become An
+                </Link>
+                <Link href="#" className="hover:opacity-75">
+                  Affiliate
                 </Link>
               </nav>
             </div>
@@ -75,8 +93,8 @@ const Footer: React.FC = () => {
             <div className="text-center sm:text-left block flex-col sm:flex-row justify-center sm:justify-start">
               <p className="font-bold text-md">Subscribe to our newsletter</p>
               <p className="mt-2 text-sm text-gray-400">
-                Join 2,100+ other members and get updates on new open source
-                tools.
+                Join 2,100+ other members and get updates on new products and
+                startups.
               </p>
               <div className="flex items-center mt-12 border-[#eaeaea] w-[100%] text-sm border rounded-lg">
                 <input

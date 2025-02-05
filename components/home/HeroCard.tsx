@@ -22,7 +22,7 @@ const HeroCard: React.FC<HeroCardProps> = ({
   return (
     <div
       className={`overflow-hidden relative w-full rounded-xl  ${
-        fullDetails ? "h-[316px]" : "h-[100px]"
+        fullDetails ? "h-[316px]" : "h-[144px]"
       }`}
       style={{
         backgroundImage: `url(${imageUrl})`,
