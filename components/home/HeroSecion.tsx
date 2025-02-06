@@ -3,7 +3,7 @@ import ImageGallery from "./ImageGallery";
 
 const HeroSection = () => {
   return (
-    <div className="mx-auto px-4 sm:px-8 py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 text-[12px]">
+    <div className="mx-auto py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 text-[12px]">
       {/* Text Section */}
       <div className="space-y-5">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
