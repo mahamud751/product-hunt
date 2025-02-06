@@ -57,17 +57,15 @@ const ImageGallery: React.FC = () => {
     setSelectedIndex(index);
   };
 
-  // Filter out the selected image from the right side gallery
   const filteredImages = images.filter((_, index) => index !== selectedIndex);
 
   return (
     <div className="flex flex-col md:flex-row md:gap-8 items-center justify-center">
-      {/* Left Side: Selected Image */}
       <div className="w-full md:w-3/4">
+        <p className="text-md font-bold">Featured Today</p>
         <HeroCard {...images[selectedIndex]} fullDetails />
       </div>
 
-      {/* Right Side: Remaining Images */}
       <div className="w-full md:w-1/2 flex flex-wrap justify-start gap-2">
         {filteredImages.map((imageData, index) => (
           <div
