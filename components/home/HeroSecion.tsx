@@ -4,7 +4,6 @@ import ImageGallery from "./ImageGallery";
 const HeroSection = () => {
   return (
     <div className="mx-auto py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 text-[12px]">
-      {/* Text Section */}
       <div className="space-y-5">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
           <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-600 mr-2">
@@ -22,7 +21,6 @@ const HeroSection = () => {
           <p className="mt-[20px] sm:mt-[40px]">Join 2,100+ AI enthusiasts</p>
         </div>
 
-        {/* Input Section */}
         <div className="flex flex-wrap items-center">
           <input
             type="email"
