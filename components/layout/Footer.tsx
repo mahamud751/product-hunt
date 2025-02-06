@@ -4,17 +4,15 @@ import Link from "next/link";
 import React from "react";
 
 const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <>
-      <footer
-        className="text-white px-0 md:mx-60"
-        style={{ background: "linear-gradient(to right, #020304, #071e37)" }}
-      >
+      <footer className=" px-0 md:mx-24" style={{ background: "" }}>
         <div className=" px-4 py-16 sm:px-6 lg:px-12">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="text-center sm:text-left">
               <p className="font-extrabold text-md">Browse:</p>
-              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-gray-400">
+              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-[#999]">
                 <Link href="#" className="hover:opacity-75">
                   Alternatives
                 </Link>
@@ -39,7 +37,7 @@ const Footer: React.FC = () => {
             {/* Account Section */}
             <div className="text-center sm:text-left">
               <p className="font-bold text-md">Quick Links:</p>
-              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-gray-400">
+              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-[#999]">
                 <Link href="#" className="hover:opacity-75">
                   About Us
                 </Link>
@@ -65,7 +63,7 @@ const Footer: React.FC = () => {
             </div>
             <div className="text-center sm:text-left">
               <p className="font-bold text-md">Platforms:</p>
-              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-gray-400">
+              <nav className="flex flex-col mt-4 space-y-3 text-[14px] font-bold text-[#999]">
                 <Link href="#" className="hover:opacity-75">
                   Leaderboard
                 </Link>
@@ -92,11 +90,11 @@ const Footer: React.FC = () => {
 
             <div className="text-center sm:text-left block flex-col sm:flex-row justify-center sm:justify-start">
               <p className="font-bold text-md">Subscribe to our newsletter</p>
-              <p className="mt-2 text-sm text-gray-400">
+              <p className="mt-2 text-sm text-[#999]">
                 Join 2,100+ other members and get updates on new products and
                 startups.
               </p>
-              <div className="flex items-center mt-12 border-[#eaeaea] w-[100%] text-sm border rounded-lg">
+              <div className="flex items-center mt-12 border-[#eaeaea] w-[270px] text-sm border rounded-lg">
                 <input
                   type="email"
                   className="min-h-[20px]  p-2 text-white   rounded-l-lg bg-transparent focus:border-[#3898EC] focus:outline-none"
@@ -163,9 +161,14 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          <p className="mt-12 text-xs text-center text-gray-400">
-            &copy; 2024 KorboJoy. All rights reserved.
-          </p>
+          <div className="flex justify-between">
+            <p className="mt-12 text-xs text-center text-[#999]">
+              &copy; {currentYear} Product Hunt. All rights reserved.
+            </p>
+            <p className="mt-12 text-xs text-center text-[#999]">
+              This website may contain affiliate links
+            </p>
+          </div>
         </div>
       </footer>
     </>

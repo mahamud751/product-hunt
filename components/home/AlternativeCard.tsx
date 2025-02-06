@@ -77,10 +77,10 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
   alternatives,
 }) => {
   return (
-    <div className="rounded-xl shadow-lg bg-[#FAFAFA] text-gray-600 mt-2">
+    <div className="rounded-xl shadow-lg bg-[#ffffff] text-gray-600 mt-2 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#f9fafb] hover:to-[#f3f4f6]">
       <div className="pt-2 rounded-lg relative">
         <div className="px-5 py-2">
-          <div className="flex">
+          <div className="flex items-center">
             <div>
               <Image
                 src={image}
@@ -92,8 +92,8 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
             </div>
             <p className="font-bold text-md ms-4 mt-2 text-black">{title}</p>
           </div>
-          <p className="mt-5">{description}</p>
-          <p className="mt-4">{alternatives}</p>
+          <p className="mt-5 text-gray-700">{description.slice(0, 120)}...</p>
+          <p className="mt-4 text-sm text-gray-500">{alternatives}</p>
         </div>
       </div>
     </div>
@@ -102,7 +102,7 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
 
 const AlternativeCardList: React.FC = () => {
   return (
-    <div className="w-full md:w-5/5 mx-auto px-6 py-8 ">
+    <div className="w-full mx-auto py-8 ">
       <Grid container spacing={4}>
         {data.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>

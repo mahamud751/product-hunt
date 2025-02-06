@@ -3,22 +3,22 @@ import ImageGallery from "./ImageGallery";
 
 const HeroSection = () => {
   return (
-    <div className="md:w-5/5 mx-auto px-4 sm:px-8 py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 bg-black text-[12px]">
+    <div className="mx-auto px-4 sm:px-8 py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 text-[12px]">
       {/* Text Section */}
       <div className="space-y-5">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
           <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-600 mr-2">
             The Launchpad
           </span>
           for AI Founders.
         </h1>
 
-        <p className="text-base text-gray-200 sm:mt-5">
+        <p className="text-base sm:mt-5">
           Launch your product, gain credibility, and scale fast with a thriving
           AI community.
         </p>
 
-        <div className="text-white">
+        <div>
           <p className="mt-[20px] sm:mt-[40px]">Join 2,100+ AI enthusiasts</p>
         </div>
 
@@ -26,7 +26,7 @@ const HeroSection = () => {
         <div className="flex flex-wrap items-center">
           <input
             type="email"
-            className="min-h-[50px] w-full md:w-[60%] p-4 text-white text-sm border border-[#5e4dcd] rounded-l-lg bg-transparent focus:border-[#3898EC] focus:outline-none"
+            className="min-h-[50px] w-full md:w-[60%] p-4 text-sm border border-[#5e4dcd] rounded-l-lg bg-transparent focus:border-[#3898EC] focus:outline-none"
             id="Email"
             name="Email"
             placeholder="Enter your email"

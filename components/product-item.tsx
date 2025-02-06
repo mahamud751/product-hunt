@@ -19,12 +19,16 @@ interface ProductItemProps {
   product: any;
   authenticatedUser: any;
   total?: number;
+  commentShow?: boolean;
+  index?: number;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({
   product,
   authenticatedUser,
   total,
+  commentShow,
+  index,
 }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -115,13 +119,13 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           <div className="ml-4">
             <div className="md:flex items-center gap-x-2">
+              <h1 className="text-sm font-semibold">{index! + 1}.</h1>
               <h1 className="text-sm font-semibold">{product?.name}</h1>
-
               <div
                 onClick={handleArrowClick}
                 className="hidden md:flex cursor-pointer"
               >
-                <PiArrowBendDoubleUpRight />
+                <PiArrowBendDoubleUpRight className="text-[12px]" />
               </div>
             </div>
             <div className="hidden md:flex gap-x-2 items-center">
@@ -129,12 +133,14 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <p className="text-gray-500 text-xs md:text-sm pr-2">
                 {product?.headline.slice(0, 40)}
               </p>
-              {/* <div className="text-xs text-gray-500 flex gap-x-1 items-center">
-                {product.commentsLength}
-                <PiChatCircle />
-              </div> */}
+              {commentShow && (
+                <div className="text-xs text-gray-500 flex gap-x-1 items-center">
+                  {product.commentsLength}
+                  <PiChatCircle />
+                </div>
+              )}
 
-              {/* {product.categories.map((category: string) => (
+              {product?.categories?.map((category: string) => (
                 <div key={category} className="text-xs text-gray-500">
                   <div className="flex gap-x-1 items-center">
                     <div className="mr-1">•</div>
@@ -147,7 +153,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
                     </Link>
                   </div>
                 </div>
-              ))} */}
+              ))}
 
               {/* <div className="text-xs text-gray-500">
                 <div className="flex gap-x-1 items-center">

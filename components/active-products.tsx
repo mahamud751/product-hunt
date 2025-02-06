@@ -5,12 +5,14 @@ interface ActiveProductsProps {
   activeProducts: any;
   header?: string;
   total?: number;
+  commentShow?: boolean;
 }
 
 const ActiveProducts: React.FC<ActiveProductsProps> = async ({
   activeProducts,
   header,
   total,
+  commentShow,
 }) => {
   const authenticatedUser = await auth();
 
@@ -91,12 +93,14 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
       </div>
 
       <div className="space-y-2 py-6 flex flex-col">
-        {formattedActiveProducts?.map((product: any) => (
+        {formattedActiveProducts?.map((product: any, index: number) => (
           <ProductItem
             key={product.id}
+            index={index}
             product={product}
             authenticatedUser={authenticatedUser}
             total={total}
+            commentShow={commentShow}
           />
         ))}
       </div>

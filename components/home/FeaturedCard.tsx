@@ -3,8 +3,8 @@ import React from "react";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 const FeaturedCard = () => {
   return (
-    <div className="rounded-xl shadow-lg bg-blue-100 text-gray-600 max-w-sm mt-10">
-      <div className="pt-10  rounded-lg relative">
+    <div className="rounded-xl shadow-xl  text-gray-600 mt-10">
+      <div className="pt-4 rounded-lg relative">
         <span className="pricing absolute top-[-20px] left-5 bg-blue-200 rounded-sm flex items-center px-3 py-2 text-lg font-semibold text-blue-700">
           Ad
         </span>
@@ -23,13 +23,13 @@ const FeaturedCard = () => {
             </div>
             <p className="font-bold text-lg ms-4 mt-2">Efficient App</p>
           </div>
-          <p className="info mt-3">
+          <p className="mt-2 text-sm">
             Not all Open Source alternatives are equal -- Narrow down the best,
             without the bulish&apos;t
           </p>
 
-          <div className="mt-5 w-full">
-            <button className=" flex justify-between p-2 button w-full bg-slate-950 hover:bg-indigo-800 rounded-md text-white font-medium text-lg text-center py-2 no-underline">
+          <div className="mt-2 w-full">
+            <button className="flex justify-between px-10 button w-full bg-slate-950 hover:bg-indigo-800 rounded-md text-white font-medium text-lg text-center py-3 no-underline">
               <span className="text-sm"> Visit Efficient App</span>
               <ArrowOutwardIcon sx={{ fontSize: 14 }} />
             </button>

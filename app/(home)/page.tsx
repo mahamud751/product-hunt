@@ -13,10 +13,10 @@ const Home = async () => {
   const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
   return (
-    <div className="px-0 md:mx-56">
+    <div className="px-0 md:mx-36">
       {/* Hero Section */}
       <HeroSection />
-      <div className="md:w-5/5 mx-auto sm:px-8 py-8">
+      <div className="mx-auto py-8">
         <Grid
           container
           spacing={12}
@@ -32,6 +32,7 @@ const Home = async () => {
                   activeProducts={filteredTodayProducts}
                   header="Top Products Launching Today"
                   total={filteredTodayProducts?.length}
+                  commentShow={true}
                 />
               </Grid>
               <Grid item>
@@ -39,6 +40,7 @@ const Home = async () => {
                   activeProducts={filteredWeekProducts}
                   header="Last Week's Top Startups"
                   total={filteredWeekProducts?.length}
+                  commentShow={true}
                 />
               </Grid>
               <Grid item>
@@ -46,6 +48,7 @@ const Home = async () => {
                   activeProducts={filteredMonthProducts}
                   header="Last Month's Top Startups"
                   total={filteredMonthProducts?.length}
+                  commentShow={true}
                 />
               </Grid>
             </Grid>
@@ -56,19 +59,17 @@ const Home = async () => {
             <Grid container direction="column" spacing={4}>
               {/* Featured Section */}
               <Grid item>
-                <Typography
-                  variant="h6"
-                  fontWeight="medium"
-                  gutterBottom
-                  mb={2}
-                >
+                <Typography variant="h6" fontWeight="medium" gutterBottom>
                   Featured
                 </Typography>
                 <Divider
                   sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
                 />
                 <FeaturedCard />
-                <ActiveProducts activeProducts={featuredProducts.products} />
+                <ActiveProducts
+                  activeProducts={featuredProducts.products}
+                  commentShow={false}
+                />
               </Grid>
 
               {/* Product Deals Section */}
