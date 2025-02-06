@@ -41,7 +41,7 @@ const HeroCard: React.FC<HeroCardProps> = ({
             <p className="font-bold text-md ms-4 mt-2 text-black">{title}</p>
           </div>
           <div className="flex justify-between">
-            <p className="mt-3 text-[14px] text-gray-700">
+            <p className="mt-3 text-[12px] text-gray-700">
               {headline!.slice(0, 120)}...
             </p>
             <button
