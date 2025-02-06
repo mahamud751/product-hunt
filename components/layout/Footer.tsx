@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <>
       <footer
-        className="text-white"
+        className="text-white px-0 md:mx-60"
         style={{ background: "linear-gradient(to right, #020304, #071e37)" }}
       >
         <div className=" px-4 py-16 sm:px-6 lg:px-12">

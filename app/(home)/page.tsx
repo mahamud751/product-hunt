@@ -4,7 +4,7 @@ import FeaturedCard from "@/components/home/FeaturedCard";
 import HeroSection from "@/components/home/HeroSecion";
 import PromoCard from "@/components/home/PromoCard";
 import { getFilteredProducts, getProducts } from "@/lib/server-actions";
-import { Grid, Typography, Divider } from "@mui/material";
+import { Grid, Typography, Divider, Container } from "@mui/material";
 
 const Home = async () => {
   const filteredTodayProducts = await getFilteredProducts("day");
@@ -13,7 +13,7 @@ const Home = async () => {
   const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
   return (
-    <>
+    <div className="px-0 md:mx-56">
       {/* Hero Section */}
       <HeroSection />
       <div className="md:w-5/5 mx-auto sm:px-8 py-8">
@@ -98,7 +98,7 @@ const Home = async () => {
       </Grid>
 
       {/* Main Content Grid */}
-    </>
+    </div>
   );
 };
 

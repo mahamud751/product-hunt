@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <div className="border-b py-2 md:py-0 px-4 md:px-6">
+    <div className="border-b py-2 md:py-0 px-4 md:px-56">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Logo />
@@ -44,7 +44,10 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center text-sm space-x-6 cursor-pointer">
           {authenticatedUser ? (
             <>
-              <Submit products={products} authenticatedUser={authenticatedUser} />
+              <Submit
+                products={products}
+                authenticatedUser={authenticatedUser}
+              />
               <NotificationIcon notifications={notifications} />
               <Avatar authenticatedUser={authenticatedUser} />
             </>
