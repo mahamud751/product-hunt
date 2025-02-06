@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
         className="text-white"
         style={{ background: "linear-gradient(to right, #020304, #071e37)" }}
       >
-        <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+        <div className=" px-4 py-16 sm:px-6 lg:px-12">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <div className="text-center sm:text-left">
               <p className="font-extrabold text-md">Browse:</p>

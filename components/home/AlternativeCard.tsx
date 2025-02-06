@@ -102,7 +102,7 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
 
 const AlternativeCardList: React.FC = () => {
   return (
-    <div className="w-full md:w-4/5 mx-auto px-12 py-8 ">
+    <div className="w-full md:w-5/5 mx-auto px-6 py-8 ">
       <Grid container spacing={4}>
         {data.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>

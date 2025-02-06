@@ -16,12 +16,12 @@ const Home = async () => {
     <>
       {/* Hero Section */}
       <HeroSection />
-      <div className="md:w-4/5 mx-auto px-4 sm:px-8 py-8">
+      <div className="md:w-5/5 mx-auto sm:px-8 py-8">
         <Grid
           container
           spacing={12}
           sx={{
-            padding: { xs: "12px", md: "24px" },
+            padding: {},
           }}
         >
           {/* Left Column */}
@@ -91,7 +91,7 @@ const Home = async () => {
         </Grid>
       </div>
       {/* Alternative Card Section */}
-      <Grid container className="p-3 md:p-[24px]" sx={{ margin: "0 auto" }}>
+      <Grid container className="" sx={{ margin: "0 auto" }}>
         <Grid item xs={12}>
           <AlternativeCard />
         </Grid>
