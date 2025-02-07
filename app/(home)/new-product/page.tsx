@@ -456,8 +456,8 @@ const NewProduct = () => {
         releaseDate: formattedDate,
         promoExpire: formattedExpireDate,
         images: list,
-        categoryId: categoryId,
-        alternativeId: alternativeId,
+        categoryId: categoryId!,
+        alternativeId: alternativeId!,
       });
       setStep(5);
     } catch (error) {
