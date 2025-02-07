@@ -94,7 +94,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         slug,
         twitter,
         discord,
-        category: categories,
+        categoryId: categories,
         logo: uploadedLogoUrl || product.logo,
         images:
           uploadedProductImages.length > 0
