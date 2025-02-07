@@ -7,17 +7,34 @@ const NewCategory = () => {
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleName = (e: any) => {
     setName(e.target.value);
+  };
+  const handleUrl = (e: any) => {
+    setUrl(e.target.value);
+  };
+  const handleTitle = (e: any) => {
+    setTitle(e.target.value);
+  };
+  const handleDescription = (e: any) => {
+    setDescription(e.target.value);
   };
 
   const submitProduct = async () => {
     setLoading(true);
 
     try {
-      await createCategory(name);
-      toast("Product created successfully!");
+      await createCategory({
+        name,
+        url,
+        title,
+        description,
+      });
+      toast("Category created successfully!");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -34,10 +51,39 @@ const NewCategory = () => {
           <input
             type="text"
             value={name}
-            maxLength={30}
             className="border rounded-md p-2 w-full mt-2 focus:outline-none"
             onChange={handleName}
-            placeholder="Simply the name of the product"
+            placeholder="Simply the name of the category"
+          />
+        </div>
+        <div className="mt-10">
+          <h2 className="font-medium">Url</h2>
+          <input
+            type="text"
+            value={url}
+            className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+            onChange={handleUrl}
+            placeholder="http://example.com"
+          />
+        </div>
+        <div className="mt-10">
+          <h2 className="font-medium">Title</h2>
+          <input
+            type="text"
+            value={title}
+            className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+            onChange={handleTitle}
+            placeholder="Simply the title of the category"
+          />
+        </div>
+        <div className="mt-10">
+          <h2 className="font-medium">Description</h2>
+          <textarea
+            rows={8}
+            value={description}
+            className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+            onChange={handleDescription}
+            placeholder="Simply the description of the category"
           />
         </div>
         <button

@@ -92,6 +92,8 @@ const NewProduct = () => {
       setCategories(data);
     });
   }, []);
+  console.log(categories);
+
   const [alternative, setAlternative] = useState<Alternative[]>([]);
   useEffect(() => {
     getActiveAlternative().then((data) => {
@@ -128,15 +130,26 @@ const NewProduct = () => {
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(
+    null
+  );
+
   const [selectedAlternative, setSelectedAlterive] = useState<string | null>(
     null
   );
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [subCategoryId, setSubCategoryId] = useState<string | null>(null);
+
   const [alternativeId, setAlternativeId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchSubQuery, setSearchSubQuery] = useState("");
   const [searchAlternativeQuery, setAlternativeSearchQuery] = useState("");
   const [uploadedProductImages, setUploadedProductImages] = useState<string[]>(
     []
+  );
+
+  const findMatchCategory = categories.find(
+    (category: Category) => category.id === categoryId
   );
 
   const handleHeadlineChange = (e: any) => {
@@ -458,6 +471,7 @@ const NewProduct = () => {
         images: list,
         categoryId: categoryId!,
         alternativeId: alternativeId!,
+        subcategoryId: subCategoryId!,
       });
       setStep(5);
     } catch (error) {
@@ -586,10 +600,49 @@ const NewProduct = () => {
                   onChange={(event, newValue) => {
                     if (newValue && typeof newValue === "object") {
                       setSelectedCategory(newValue.label);
-                      setCategoryId(newValue.id); // Store the categoryId for sending in your payload
+                      setCategoryId(newValue?.id ?? null);
                     } else {
                       setSelectedCategory(null);
                       setCategoryId(null);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Search Categories"
+                      fullWidth
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Select Sub Category</h2>
+              <div className="pt-4">
+                <Autocomplete
+                  options={
+                    findMatchCategory?.subcategories?.map((category) => ({
+                      label: category.name,
+                      id: category.id,
+                    })) || []
+                  }
+                  value={
+                    selectedSubCategory
+                      ? {
+                          label: selectedSubCategory,
+                          id: findMatchCategory?.toString(),
+                        }
+                      : null
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue && typeof newValue === "object") {
+                      setSelectedSubCategory(newValue.label);
+                      setSubCategoryId(newValue?.id ?? null);
+                    } else {
+                      setSelectedSubCategory(null);
+                      setSubCategoryId(null);
                     }
                   }}
                   renderInput={(params) => (
@@ -623,7 +676,7 @@ const NewProduct = () => {
                   onChange={(event, newValue) => {
                     if (newValue && typeof newValue === "object") {
                       setSelectedAlterive(newValue.label);
-                      setAlternativeId(newValue.id); // Store the categoryId for sending in your payload
+                      setAlternativeId(newValue.id || null);
                     } else {
                       setSelectedAlterive(null);
                       setAlternativeId(null);

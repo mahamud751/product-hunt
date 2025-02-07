@@ -176,6 +176,33 @@ const CategoryTable: React.FC<CategoryTableClientProps> = ({
                 >
                   Name
                 </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                  }}
+                >
+                  Title
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                  }}
+                >
+                  Url
+                </TableCell>
+                <TableCell
+                  sx={{
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                  }}
+                >
+                  Description
+                </TableCell>
 
                 <TableCell
                   sx={{
@@ -209,7 +236,12 @@ const CategoryTable: React.FC<CategoryTableClientProps> = ({
                   }}
                 >
                   <TableCell>{category?.name}</TableCell>
-                  <ProductStatus status={category?.status ?? ""} />
+                  <TableCell>{category?.title}</TableCell>
+                  <TableCell>{category?.url}</TableCell>
+                  <TableCell>{category?.description}</TableCell>
+                  <ProductStatus
+                    status={category?.status ?? ("DEFAULT_STATUS" as Status)}
+                  />
                   <TableCell>
                     <Edit
                       color="warning"

@@ -60,17 +60,36 @@ export interface User {
 }
 
 export interface Category {
-  id: string;
+  id?: string;
   name: string;
-  status: Status;
-  products: Product[];
+  status?: Status;
+  url: string;
+  title: string;
+  description: string;
+  products?: Product[];
+  subcategories?: Subcategory[];
 }
 
-export interface Alternative {
-  id: string;
+export type Subcategory = {
+  id?: string;
   name: string;
-  status: Status;
-  products: Product[];
+  url: string;
+  title: string;
+  description: string;
+  status?: Status;
+  categoryId?: string;
+  category?: Category;
+  products?: Product[];
+};
+
+export interface Alternative {
+  id?: string;
+  name: string;
+  status?: Status;
+  url: string;
+  title: string;
+  description: string;
+  products?: Product[];
 }
 
 export interface Product {
@@ -92,6 +111,8 @@ export interface Product {
   categoryId: string;
   alternative?: string;
   alternativeId?: string;
+  subcategoryId?: string;
+  subcategory?: Subcategory;
   linekdin?: string;
   verified?: boolean;
   featured?: boolean;

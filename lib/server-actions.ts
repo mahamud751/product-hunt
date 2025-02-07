@@ -1,7 +1,7 @@
 "use server";
-
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { Alternative, Category, Subcategory } from "@/services/types";
 import { DateTime } from "luxon";
 import { features } from "process";
 
@@ -68,6 +68,7 @@ interface ProductData {
   discord: string;
   images: string[];
   categoryId?: string;
+  subcategoryId?: string;
   alternativeId?: string;
   rank?: number;
 }
@@ -823,23 +824,37 @@ export const getProductBySlug = async (slug: string) => {
   }
 };
 
-export const createCategory = async (name: string) => {
+export const createCategory = async ({
+  name,
+  url,
+  title,
+  description,
+}: Category): Promise<any> => {
   try {
-    const newCategory = await db.category.create({
+    const category = await db.category.create({
       data: {
         name,
+        url,
+        title,
+        description,
+        status: "ACTIVE",
       },
     });
 
-    return newCategory;
+    return category;
   } catch (error) {
-    console.error("Error creating category:", error);
-    throw new Error("Could not create category");
+    console.error(error);
+    return null;
   }
 };
 
 export const getActiveCategory = async (): Promise<any> => {
-  const category = await db.category.findMany({});
+  const category = await db.category.findMany({
+    include: {
+      products: true,
+      subcategories: true,
+    },
+  });
 
   return category;
 };
@@ -861,6 +876,10 @@ export const getCategories = async (
     skip,
     take,
     where,
+    include: {
+      products: true,
+      subcategories: true,
+    },
   });
 
   const totalCategories = await db.category.count({ where });
@@ -900,24 +919,142 @@ export const updateCategoryStatus = async (
   return updatedCategory;
 };
 
-// Create a new alternative
-export const createAlternative = async (name: string) => {
+export const createSubCategory = async ({
+  name,
+  url,
+  title,
+  description,
+  categoryId,
+}: Subcategory): Promise<any> => {
   try {
-    const newAlternative = await db.alternative.create({
+    const category = await db.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+    if (!category) {
+      throw new Error("Category not found");
+    }
+    const subcategory = await db.subcategory.create({
       data: {
         name,
+        url,
+        title,
+        description,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+        status: "ACTIVE",
       },
     });
 
-    return newAlternative;
+    return subcategory;
   } catch (error) {
-    console.error("Error creating alternative:", error);
-    throw new Error("Could not create alternative");
+    console.error(error);
+    return null;
   }
 };
 
+export const getActiveSubCategory = async (): Promise<any> => {
+  const subcategory = await db.subcategory.findMany({
+    include: {
+      products: true,
+      category: true,
+    },
+  });
+
+  return subcategory;
+};
+
+export const getSubCategories = async (
+  page: number,
+  rowsPerPage: number,
+  status?: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const skip = page * rowsPerPage;
+  const take = rowsPerPage;
+
+  const where: any = {};
+
+  if (status) {
+    where.status = status;
+  }
+  const subcategory = await db.subcategory.findMany({
+    skip,
+    take,
+    where,
+  });
+
+  const totalSubCategories = await db.subcategory.count({ where });
+
+  return { subcategory, totalSubCategories };
+};
+
+export const updateSubCategoryStatus = async (
+  subcategoryId: string,
+  status: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const authenticatedUser = await auth();
+
+  if (!authenticatedUser) {
+    throw new Error("You must be signed in to update a subcategory status");
+  }
+
+  const subcategory = await db.subcategory.findUnique({
+    where: {
+      id: subcategoryId,
+    },
+  });
+
+  if (!subcategory) {
+    throw new Error("SubCategory not found");
+  }
+
+  const updatedCategory = await db.subcategory.update({
+    where: {
+      id: subcategoryId,
+    },
+    data: {
+      status,
+    },
+  });
+
+  return updatedCategory;
+};
+
+export const createAlternative = async ({
+  name,
+  url,
+  title,
+  description,
+}: Alternative): Promise<any> => {
+  try {
+    const alternative = await db.alternative.create({
+      data: {
+        name,
+        url,
+        title,
+        description,
+        status: "ACTIVE",
+      },
+    });
+
+    return alternative;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+// Create a new alternative
+
 export const getActiveAlternative = async (): Promise<any> => {
-  const alternative = await db.alternative.findMany({});
+  const alternative = await db.alternative.findMany({
+    include: {
+      products: true,
+    },
+  });
 
   return alternative;
 };

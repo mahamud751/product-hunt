@@ -25,10 +25,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { Alternative, Status } from "@/services/types";
+import { Category, Status, Subcategory } from "@/services/types";
 import { Edit } from "@mui/icons-material";
 
-import { getAlternatives, getCategories } from "@/lib/server-actions";
+import { getCategories, getSubCategories } from "@/lib/server-actions";
 import CategoryStatusUpdater from "../statusUpdate/categoryStatus";
 import ProductStatus from "../status/productStatus";
 
@@ -44,45 +44,45 @@ const modalStyle = {
   p: 0,
 };
 
-interface AlternativeTableClientProps {
-  alternatives: Alternative[];
-  totalAlternatives: number;
+interface SubCategoryTableClientProps {
+  subcategory: Subcategory[];
+  totalSubCategories: number;
   initialPage: number;
   initialRowsPerPage: number;
 }
 
-const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
-  alternatives,
-  totalAlternatives,
+const SubCategoryTable: React.FC<SubCategoryTableClientProps> = ({
+  subcategory,
+  totalSubCategories,
   initialPage,
   initialRowsPerPage,
 }) => {
   const [page, setPage] = useState(initialPage);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [openModal, setOpenModal] = useState(false);
-  const [activeAlternative, setActiveAlternative] =
-    useState<Alternative | null>(null);
+  const [activeSubCategory, setActiveSubCategory] =
+    useState<Subcategory | null>(null);
   const [tabValue, setTabValue] = useState(0);
 
   const [statusFilter, setStatusFilter] = useState<Status | "">("");
-  const [alternativeData, setAlternativeData] =
-    useState<Alternative[]>(alternatives);
+  const [subCategoryData, setSubCategoryData] =
+    useState<Category[]>(subcategory);
 
-  const [filteredTotalAlternative, setFilteredTotalAlternative] =
-    useState(totalAlternatives);
+  const [filteredTotalSubCategory, setFilteredTotalSubCategory] =
+    useState(totalSubCategories);
 
   useEffect(() => {
-    const fetchFilteredAlternative = async () => {
+    const fetchFilteredCategory = async () => {
       const {
-        alternatives: filteredAlternative,
-        totalAlternatives: filteredTotal,
-      } = await getAlternatives(page, rowsPerPage, statusFilter || undefined);
+        subcategory: filteredSubCategory,
+        totalSubCategories: filteredTotal,
+      } = await getSubCategories(page, rowsPerPage, statusFilter || undefined);
 
-      setAlternativeData(filteredAlternative as Alternative[]);
-      setFilteredTotalAlternative(filteredTotal);
+      setSubCategoryData(filteredSubCategory as Category[]);
+      setFilteredTotalSubCategory(filteredTotal);
     };
 
-    fetchFilteredAlternative();
+    fetchFilteredCategory();
   }, [page, rowsPerPage, statusFilter]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -96,14 +96,14 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
     setPage(0);
   };
 
-  const handleOpenModal = (category: Alternative) => {
-    setActiveAlternative(category);
+  const handleOpenModal = (category: Category) => {
+    setActiveSubCategory(category);
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setActiveAlternative(null);
+    setActiveSubCategory(null);
   };
 
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -207,6 +207,7 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
                 >
                   Description
                 </TableCell>
+
                 <TableCell
                   sx={{
                     color: "#FFFFFF",
@@ -228,9 +229,9 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {alternativeData?.map((data, index) => (
+              {subCategoryData?.map((category, index) => (
                 <TableRow
-                  key={data.id}
+                  key={category.id}
                   sx={{
                     backgroundColor: index % 2 === 0 ? "#FFFFFF" : "#F5F5F5", // Alternate row colors
                     "&:hover": {
@@ -238,18 +239,18 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
                     },
                   }}
                 >
-                  <TableCell>{data?.name}</TableCell>
-                  <TableCell>{data?.title}</TableCell>
-                  <TableCell>{data?.url}</TableCell>
-                  <TableCell>{data?.description}</TableCell>
+                  <TableCell>{category?.name}</TableCell>
+                  <TableCell>{category?.title}</TableCell>
+                  <TableCell>{category?.url}</TableCell>
+                  <TableCell>{category?.description}</TableCell>
                   <ProductStatus
-                    status={data?.status ?? ("DEFAULT" as Status)}
+                    status={category?.status ?? ("DEFAULT_STATUS" as Status)}
                   />
                   <TableCell>
                     <Edit
                       color="warning"
                       className="mx-2 cursor-pointer"
-                      onClick={() => handleOpenModal(data)}
+                      onClick={() => handleOpenModal(category)}
                     />
                   </TableCell>
                 </TableRow>
@@ -260,7 +261,7 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={filteredTotalAlternative}
+          count={filteredTotalSubCategory}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -340,8 +341,8 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
                   Item Status
                 </Typography>
                 <CategoryStatusUpdater
-                  categoryId={activeAlternative?.id ?? ""}
-                  status={activeAlternative?.status ?? Status.PENDING}
+                  categoryId={activeSubCategory?.id ?? ""}
+                  status={activeSubCategory?.status ?? Status.PENDING}
                 />
               </Box>
             )}
@@ -352,4 +353,4 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
   );
 };
 
-export default AlternativeTable;
+export default SubCategoryTable;

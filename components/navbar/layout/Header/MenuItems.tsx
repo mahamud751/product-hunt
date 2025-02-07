@@ -66,6 +66,19 @@ export const adminMenuItems: MenuItem[] = [
 
     submenus: [
       {
+        text: "Product List",
+        path: "/admin/product-list",
+      },
+    ],
+  },
+
+  {
+    text: "Category",
+    icon: <CategoryIcon className="text-yellow-500" />,
+    path: "/admin/category",
+
+    submenus: [
+      {
         text: "Add Category",
         path: "/admin/category-add",
       },
@@ -74,6 +87,22 @@ export const adminMenuItems: MenuItem[] = [
         path: "/admin/category-list",
       },
       {
+        text: "Add Sub Category",
+        path: "/admin/subCategory-add",
+      },
+      {
+        text: "Sub Category List",
+        path: "/admin/subCategory-list",
+      },
+    ],
+  },
+  {
+    text: "Alternative",
+    icon: <Sell className="text-blue-600" />,
+    path: "/alternative",
+
+    submenus: [
+      {
         text: "Add Alternative",
         path: "/admin/alternative-add",
       },
@@ -81,53 +110,8 @@ export const adminMenuItems: MenuItem[] = [
         text: "Alternative List",
         path: "/admin/alternative-list",
       },
-      {
-        text: "Product List",
-        path: "/admin/product-list",
-      },
     ],
   },
-
-  // {
-  //   text: "Category",
-  //   icon: <CategoryIcon className="text-yellow-500" />,
-  //   path: "/category",
-
-  //   submenus: [
-  //     {
-  //       text: "Add Category",
-  //       path: "/add-category",
-  //     },
-  //     {
-  //       text: "Category List",
-  //       path: "/category-list",
-  //     },
-  //     {
-  //       text: "Add SubCategory",
-  //       path: "/add-subCategory",
-  //     },
-  //     {
-  //       text: "Subcategory List",
-  //       path: "/subCategory-list",
-  //     },
-  //   ],
-  // },
-  // {
-  //   text: "Variant",
-  //   icon: <Sell className="text-blue-600" />,
-  //   path: "/variant",
-
-  //   submenus: [
-  //     {
-  //       text: "Add Variant",
-  //       path: "/add-variant",
-  //     },
-  //     {
-  //       text: "Variant List",
-  //       path: "/variant-list",
-  //     },
-  //   ],
-  // },
 
   // {
   //   text: "Blog",
