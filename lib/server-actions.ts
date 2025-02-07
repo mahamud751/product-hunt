@@ -67,7 +67,8 @@ interface ProductData {
   twitter: string;
   discord: string;
   images: string[];
-  category?: string;
+  categoryId?: string;
+  alternativeId?: string;
   rank?: number;
 }
 
@@ -91,13 +92,31 @@ export const createProduct = async ({
   twitter,
   discord,
   images,
-  category,
+  categoryId,
+  alternativeId,
 }: ProductData): Promise<any> => {
   try {
     const authenticatedUser = await auth();
 
     if (!authenticatedUser) {
       throw new Error("You must be signed in to create a product");
+    }
+
+    const category = await db.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+    if (!category) {
+      throw new Error("Category not found");
+    }
+    const alternative = await db.alternative.findUnique({
+      where: {
+        id: alternativeId,
+      },
+    });
+    if (!alternative) {
+      throw new Error("Category not found");
     }
 
     const userId = authenticatedUser.user?.id;
@@ -124,19 +143,16 @@ export const createProduct = async ({
         twitter,
         discord,
         status: "PENDING",
-        category: category
-          ? {
-              connectOrCreate: {
-                where: { name: category }, // Check if the category already exists
-                create: { name: category }, // Create the category if it doesn't exist
-              },
-            }
-          : {
-              connectOrCreate: {
-                where: { name: "Uncategorized" }, // Default category name
-                create: { name: "Uncategorized" }, // Create the default category
-              },
-            },
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
+        alternative: {
+          connect: {
+            id: alternativeId,
+          },
+        },
         images: {
           createMany: {
             data: images?.map((image) => ({ url: image })),
@@ -807,18 +823,127 @@ export const getProductBySlug = async (slug: string) => {
   }
 };
 
-export const getCategories = async () => {
-  const categories = await db.category.findMany({
-    where: {
-      products: {
-        some: {
-          status: "ACTIVE",
-        },
+export const createCategory = async (name: string) => {
+  try {
+    const newCategory = await db.category.create({
+      data: {
+        name,
       },
+    });
+
+    return newCategory;
+  } catch (error) {
+    console.error("Error creating category:", error);
+    throw new Error("Could not create category");
+  }
+};
+
+export const getActiveCategory = async (): Promise<any> => {
+  const category = await db.category.findMany({});
+
+  return category;
+};
+
+export const getCategories = async (
+  page: number,
+  rowsPerPage: number,
+  status?: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const skip = page * rowsPerPage;
+  const take = rowsPerPage;
+
+  const where: any = {};
+
+  if (status) {
+    where.status = status;
+  }
+  const categories = await db.category.findMany({
+    skip,
+    take,
+    where,
+  });
+
+  const totalCategories = await db.category.count({ where });
+
+  return { categories, totalCategories };
+};
+
+export const updateCategoryStatus = async (
+  categoryId: string,
+  status: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const authenticatedUser = await auth();
+
+  if (!authenticatedUser) {
+    throw new Error("You must be signed in to update a category status");
+  }
+
+  const category = await db.category.findUnique({
+    where: {
+      id: categoryId,
     },
   });
 
-  return categories;
+  if (!category) {
+    throw new Error("Category not found");
+  }
+
+  const updatedCategory = await db.category.update({
+    where: {
+      id: categoryId,
+    },
+    data: {
+      status,
+    },
+  });
+
+  return updatedCategory;
+};
+
+// Create a new alternative
+export const createAlternative = async (name: string) => {
+  try {
+    const newAlternative = await db.alternative.create({
+      data: {
+        name,
+      },
+    });
+
+    return newAlternative;
+  } catch (error) {
+    console.error("Error creating alternative:", error);
+    throw new Error("Could not create alternative");
+  }
+};
+
+export const getActiveAlternative = async (): Promise<any> => {
+  const alternative = await db.alternative.findMany({});
+
+  return alternative;
+};
+
+export const getAlternatives = async (
+  page: number,
+  rowsPerPage: number,
+  status?: "PENDING" | "ACTIVE" | "REJECTED"
+) => {
+  const skip = page * rowsPerPage;
+  const take = rowsPerPage;
+
+  const where: any = {};
+
+  if (status) {
+    where.status = status;
+  }
+  const alternatives = await db.alternative.findMany({
+    skip,
+    take,
+    where,
+  });
+
+  const totalAlternatives = await db.alternative.count({ where });
+
+  return { alternatives, totalAlternatives };
 };
 
 export const getProductsByCategoryName = async (category: string) => {

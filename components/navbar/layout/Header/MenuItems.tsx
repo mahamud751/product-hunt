@@ -64,7 +64,28 @@ export const adminMenuItems: MenuItem[] = [
     icon: <DryCleaningIcon className="text-red-500" />,
     path: "/admin/products",
 
-    submenus: [],
+    submenus: [
+      {
+        text: "Add Category",
+        path: "/admin/category-add",
+      },
+      {
+        text: "Category List",
+        path: "/admin/category-list",
+      },
+      {
+        text: "Add Alternative",
+        path: "/admin/alternative-add",
+      },
+      {
+        text: "Alternative List",
+        path: "/admin/alternative-list",
+      },
+      {
+        text: "Product List",
+        path: "/admin/product-list",
+      },
+    ],
   },
 
   // {

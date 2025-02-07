@@ -62,6 +62,14 @@ export interface User {
 export interface Category {
   id: string;
   name: string;
+  status: Status;
+  products: Product[];
+}
+
+export interface Alternative {
+  id: string;
+  name: string;
+  status: Status;
   products: Product[];
 }
 
@@ -82,6 +90,8 @@ export interface Product {
   userId: string;
   status: Status;
   categoryId: string;
+  alternative?: string;
+  alternativeId?: string;
   linekdin?: string;
   verified?: boolean;
   featured?: boolean;

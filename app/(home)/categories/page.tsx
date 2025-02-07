@@ -2,7 +2,7 @@ import { getCategories } from "@/lib/server-actions";
 import Link from "next/link";
 
 const Categories = async () => {
-  const categories = await getCategories();
+  const { categories } = await getCategories(0, 10);
 
   return (
     <div className="xl:w-3/5 w-4/5 pt-6 md:py-10 mx-auto px-6 md:px-0">
@@ -16,11 +16,12 @@ const Categories = async () => {
 
       <div>
         <div className="pt-10 grid grid-cols-2 gap-6">
-          {categories.map((category: any) => (
-            <Link
-              href={`/category/${category.name.toLowerCase()}`}
-              key={category.id}
-              className="space-x-10 p-5 rounded-xl
+          {categories &&
+            categories.map((category: any) => (
+              <Link
+                href={`/category/${category.name.toLowerCase()}`}
+                key={category.id}
+                className="space-x-10 p-5 rounded-xl
                  shadow-md bg-orange-100
                   hover:scale-105
                   hover:cursor-pointer
@@ -29,15 +30,15 @@ const Categories = async () => {
                     ease-in-out
                   
                   "
-            >
-              <div className="md:flex justify-between">
-                <h2 className="md:text-2xl font-semibold">{category.name}</h2>
-                <p className="hover:underline cursor-pointer text-sm">
-                  View all products
-                </p>
-              </div>
-            </Link>
-          ))}
+              >
+                <div className="md:flex justify-between">
+                  <h2 className="md:text-2xl font-semibold">{category.name}</h2>
+                  <p className="hover:underline cursor-pointer text-sm">
+                    View all products
+                  </p>
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
     </div>

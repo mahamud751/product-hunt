@@ -53,44 +53,54 @@ model User {
 model Category {
   id       String    @id @default(cuid())
   name     String    @unique
+  status   Status    @default(ACTIVE)
+  products Product[]
+}
+
+model Alternative {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  status   Status    @default(ACTIVE)
   products Product[]
 }
 
 model Product {
-  id           String         @id @default(cuid())
-  name         String
-  slug         String         @unique
-  headline     String
-  rank         Int
-  description  String
-  logo         String
-  releaseDate  String
-  website      String
-  twitter      String
-  discord      String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  userId       String
-  status       Status         @default(PENDING)
-  categoryId   String
-  linekdin     String
-  price        String
-  promoCode    String
-  promoExpire  String
-  promoOffer   String
-  suggestUrl   String
-  tags         String
-  videoLink    String
-  weburl       String
-  verified     Boolean        @default(false)
-  top          Boolean        @default(false)
-  featured     Boolean        @default(false)
-  comments     Comment[]
-  images       Image[]
-  notification Notification[]
-  category     Category       @relation(fields: [categoryId], references: [id])
-  user         User           @relation(fields: [userId], references: [id])
-  upvotes      Upvote[]
+  id            String         @id @default(cuid())
+  name          String
+  slug          String         @unique
+  headline      String
+  rank          Int
+  description   String
+  logo          String
+  releaseDate   String
+  website       String
+  twitter       String
+  discord       String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userId        String
+  status        Status         @default(PENDING)
+  categoryId    String
+  alternativeId String?
+  linekdin      String
+  price         String
+  promoCode     String
+  promoExpire   String
+  promoOffer    String
+  suggestUrl    String
+  tags          String
+  videoLink     String
+  weburl        String
+  verified      Boolean        @default(false)
+  top           Boolean        @default(false)
+  featured      Boolean        @default(false)
+  comments      Comment[]
+  images        Image[]
+  notification  Notification[]
+  category      Category       @relation(fields: [categoryId], references: [id])
+  alternative   Alternative?   @relation(fields: [alternativeId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+  upvotes       Upvote[]
 
   @@index([userId])
   @@index([status])

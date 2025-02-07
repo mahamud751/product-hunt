@@ -12,13 +12,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { createProduct } from "@/lib/server-actions";
+import {
+  createProduct,
+  getActiveAlternative,
+  getActiveCategory,
+  getAlternatives,
+  getCategories,
+} from "@/lib/server-actions";
 import { cn } from "@/lib/utils";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   PiPackage,
   PiListBullets,
@@ -38,35 +44,8 @@ import {
 } from "react-icons/pi";
 import { toast } from "sonner";
 import ImagesUploader from "@/components/custom-imgae-upload-multiple";
+import { Alternative, Category, Status } from "@/services/types";
 
-const categories = [
-  "Media",
-  "Blockchain",
-  "Cloud",
-  "Commerce",
-  "Cybersecurity",
-  "Data",
-  "Design",
-  "Photography",
-  "E-commerce",
-  "Education",
-  "Entertainment",
-  "Video",
-  "Finance",
-  "Social",
-  "Health",
-  "Fitness",
-  "Marketing",
-  "Music",
-  "Productivity",
-  "Engineering",
-  "Sales",
-  "Sports",
-  "Travel",
-  "Bootstrapped",
-  "Art",
-  "Analytics",
-];
 const steps = [
   {
     id: 1,
@@ -107,6 +86,19 @@ const steps = [
 ];
 
 const NewProduct = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  useEffect(() => {
+    getActiveCategory().then((data) => {
+      setCategories(data);
+    });
+  }, []);
+  const [alternative, setAlternative] = useState<Alternative[]>([]);
+  useEffect(() => {
+    getActiveAlternative().then((data) => {
+      setAlternative(data);
+    });
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -136,7 +128,13 @@ const NewProduct = () => {
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedAlternative, setSelectedAlterive] = useState<string | null>(
+    null
+  );
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [alternativeId, setAlternativeId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchAlternativeQuery, setAlternativeSearchQuery] = useState("");
   const [uploadedProductImages, setUploadedProductImages] = useState<string[]>(
     []
   );
@@ -458,7 +456,8 @@ const NewProduct = () => {
         releaseDate: formattedDate,
         promoExpire: formattedExpireDate,
         images: list,
-        category: selectedCategory?.trim() || undefined,
+        categoryId: categoryId,
+        alternativeId: alternativeId,
       });
       setStep(5);
     } catch (error) {
@@ -575,10 +574,23 @@ const NewProduct = () => {
               <h2 className="font-medium">Select Category</h2>
               <div className="pt-4">
                 <Autocomplete
-                  options={categories}
-                  value={selectedCategory}
+                  options={categories?.map((category) => ({
+                    label: category.name,
+                    id: category.id,
+                  }))}
+                  value={
+                    selectedCategory
+                      ? { label: selectedCategory, id: categories.toString() }
+                      : null
+                  }
                   onChange={(event, newValue) => {
-                    setSelectedCategory(newValue);
+                    if (newValue && typeof newValue === "object") {
+                      setSelectedCategory(newValue.label);
+                      setCategoryId(newValue.id); // Store the categoryId for sending in your payload
+                    } else {
+                      setSelectedCategory(null);
+                      setCategoryId(null);
+                    }
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -589,7 +601,45 @@ const NewProduct = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   )}
-                  isOptionEqualToValue={(option, value) => option === value}
+                />
+              </div>
+            </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Select Alternative</h2>
+              <div className="pt-4">
+                <Autocomplete
+                  options={alternative?.map((category) => ({
+                    label: category.name,
+                    id: category.id,
+                  }))}
+                  value={
+                    selectedAlternative
+                      ? {
+                          label: selectedAlternative,
+                          id: alternative.toString(),
+                        }
+                      : null
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue && typeof newValue === "object") {
+                      setSelectedAlterive(newValue.label);
+                      setAlternativeId(newValue.id); // Store the categoryId for sending in your payload
+                    } else {
+                      setSelectedAlterive(null);
+                      setAlternativeId(null);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Search Categories"
+                      fullWidth
+                      onChange={(e) =>
+                        setAlternativeSearchQuery(e.target.value)
+                      }
+                    />
+                  )}
                 />
               </div>
             </div>
