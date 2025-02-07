@@ -33,13 +33,14 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
       userId,
       status,
       images,
-      categories,
+      category,
       comments,
       upvotes,
+      price,
     } = product;
 
     const imageUrls = images?.map((image: any) => image?.url);
-    const categoryNames = categories?.name;
+    const categoryNames = category?.name!;
     const commentsCount = comments ? comments.length : 0;
 
     const commentText = comments
@@ -73,8 +74,9 @@ const ActiveProducts: React.FC<ActiveProductsProps> = async ({
       updatedAt,
       userId,
       status,
+      price,
       images: imageUrls,
-      categories: categoryNames,
+      category: categoryNames,
       commentsLength: commentsCount,
       commentData: commentText,
       upvoters: upvotesData,

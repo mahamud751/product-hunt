@@ -9,6 +9,8 @@ import { Grid, Typography, Divider, Container } from "@mui/material";
 const Home = async () => {
   const filteredTodayProducts = await getFilteredProducts("day");
   const filteredWeekProducts = await getFilteredProducts("week");
+  console.log("filteredWeekProducts", filteredWeekProducts);
+
   const filteredMonthProducts = await getFilteredProducts("month");
   const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
