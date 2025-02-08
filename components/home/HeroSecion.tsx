@@ -33,10 +33,6 @@ const HeroSection = () => {
           className="flex overflow-hidden gap-1 max-w-sm text-sm font-medium rounded-lg border border-solid border-neutral-200"
         >
           <div className="relative flex-grow">
-            <label htmlFor="emailInput" className="sr-only">
-              {" "}
-              placeholder="Enter your email"
-            </label>
             <input
               id="emailInput"
               type="email"
