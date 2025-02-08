@@ -25,7 +25,7 @@ const HeroSection = () => {
         </p>
 
         <div>
-          <p className="mt-[20px] sm:mt-[40px]">Join 2,100+ AI enthusiasts</p>
+          <p className="mt-[20px] sm:mt-[40px]">Join 3,100+ AI enthusiasts</p>
         </div>
 
         <form
