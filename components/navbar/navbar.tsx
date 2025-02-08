@@ -30,10 +30,12 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <div className="border-b py-2 md:py-0 px-4 md:px-32">
+    <div className="border-b py-2 md:py-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Logo />
+          <div className="ms-[-10px]">
+            <Logo />
+          </div>
           <Search />
         </div>
 

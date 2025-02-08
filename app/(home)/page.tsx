@@ -14,19 +14,12 @@ const Home = async () => {
   const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
   return (
-    <div className="px-0 md:mx-36">
+    <div>
       {/* Hero Section */}
       <HeroSection />
-      <div className="mx-auto py-8">
-        <Grid
-          container
-          spacing={12}
-          sx={{
-            padding: {},
-          }}
-        >
-          {/* Left Column */}
-          <Grid item xs={12} md={8}>
+      <div className="w-full mx-auto py-8 ">
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={8} lg={8}>
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <ActiveProducts
@@ -54,9 +47,7 @@ const Home = async () => {
               </Grid>
             </Grid>
           </Grid>
-
-          {/* Right Column */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={4} lg={4}>
             <Grid container direction="column" spacing={4}>
               {/* Featured Section */}
               <Grid item>
@@ -92,6 +83,7 @@ const Home = async () => {
           </Grid>
         </Grid>
       </div>
+
       {/* Alternative Card Section */}
       <Grid container className="" sx={{ margin: "0 auto" }}>
         <Grid item xs={12}>

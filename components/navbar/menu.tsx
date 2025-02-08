@@ -27,23 +27,21 @@ const Menu = () => {
         </Link>
 
         <div
-        onMouseEnter={() => setShowCommunityMenu(true)}
-        onMouseLeave={() => setShowCommunityMenu(false)}
-        className="hover:text-[#ff6154] py-4"
-        
+          onMouseEnter={() => setShowCommunityMenu(true)}
+          onMouseLeave={() => setShowCommunityMenu(false)}
+          className="hover:text-[#ff6154] py-4"
         >
-            Community {showCommunityMenu && <CommunityMenu />}
+          Community {showCommunityMenu && <CommunityMenu />}
         </div>
 
         <div className="hover:text-[#ff6154] py-4">Advertise</div>
 
         <div
-        onMouseEnter={() => setShowAboutMenu(true)}
-        onMouseLeave={() => setShowAboutMenu(false)}
-        className="hover:text-[#ff6154] py-4"
-        
+          onMouseEnter={() => setShowAboutMenu(true)}
+          onMouseLeave={() => setShowAboutMenu(false)}
+          className="hover:text-[#ff6154] py-4"
         >
-            About {showAboutMenu && <AboutMenu />}
+          About {showAboutMenu && <AboutMenu />}
         </div>
       </div>
     </div>

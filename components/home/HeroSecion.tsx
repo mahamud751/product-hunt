@@ -1,9 +1,16 @@
+"use client";
 import React from "react";
 import ImageGallery from "./ImageGallery";
 
 const HeroSection = () => {
+  const [email, setEmail] = React.useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // onSubmit(email);
+  };
   return (
-    <div className="mx-auto py-8 grid grid-cols-1 md:grid-cols-[5fr_7fr] gap-10 md:gap-20 text-[12px]">
+    <div className="mx-auto py-8 grid grid-cols-1 md:grid-cols-[4fr_7fr] gap-2 md:gap-7 text-[12px]">
       <div className="space-y-5">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
           <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-600 mr-2">
@@ -21,19 +28,32 @@ const HeroSection = () => {
           <p className="mt-[20px] sm:mt-[40px]">Join 2,100+ AI enthusiasts</p>
         </div>
 
-        <div className="flex flex-wrap items-center">
-          <input
-            type="email"
-            className="min-h-[50px] w-full md:w-[60%] p-4 text-sm border border-[#5e4dcd] rounded-l-lg bg-transparent focus:border-[#3898EC] focus:outline-none"
-            id="Email"
-            name="Email"
-            placeholder="Enter your email"
-            autoComplete="off"
-          />
-          <button className="min-h-[54px] wmd:w-auto -full px-4 py-2 text-white text-sm bg-[#5e4dcd] rounded-r-lg mt-2 md:mt-0 cursor-pointer transition-colors duration-300 ease-in-out hover:bg-[#5e5dcd]">
-            Join now
+        <form
+          onSubmit={handleSubmit}
+          className="flex overflow-hidden gap-1 max-w-sm text-sm font-medium rounded-lg border border-solid border-neutral-200"
+        >
+          <div className="relative flex-grow">
+            <label htmlFor="emailInput" className="sr-only">
+              {" "}
+              placeholder="Enter your email"
+            </label>
+            <input
+              id="emailInput"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full px-4 py-3.5 bg-white rounded-lg text-neutral-600 text-opacity-50"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-5 py-2.5 my-auto leading-none text-center text-white bg-orange-800 rounded-md"
+          >
+            Join Now
           </button>
-        </div>
+        </form>
       </div>
 
       {/* Image Gallery */}

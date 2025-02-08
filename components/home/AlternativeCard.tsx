@@ -77,24 +77,22 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
   alternatives,
 }) => {
   return (
-    <div className="rounded-xl shadow-lg bg-[#ffffff] text-gray-600 mt-2 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-gradient-to-r hover:from-[#f9fafb] hover:to-[#f3f4f6]">
-      <div className="pt-2 rounded-lg relative">
-        <div className="px-5 py-2">
-          <div className="flex items-center">
-            <div>
-              <Image
-                src={image}
-                alt="logo"
-                width={1000}
-                height={1000}
-                className="h-10 w-10 rounded-md"
-              />
-            </div>
-            <p className="font-bold text-md ms-4 mt-2 text-black">{title}</p>
-          </div>
-          <p className="mt-5 text-gray-700">{description.slice(0, 120)}...</p>
-          <p className="mt-4 text-sm text-gray-500">{alternatives}</p>
-        </div>
+    <div className="flex flex-col items-start px-5 py-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200">
+      <div className="flex gap-3 text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800">
+        <Image
+          src={image}
+          alt="logo"
+          width={1000}
+          height={1000}
+          className="object-contain shrink-0 w-9 rounded-md aspect-square"
+        />
+        <div className="my-auto">{title}</div>
+      </div>
+      <div className="self-stretch mt-5 text-sm leading-5 text-neutral-600 h-[40px]">
+        {description.slice(0, 120)}
+      </div>
+      <div className="mt-6 text-xs leading-none text-stone-500">
+        {alternatives} alternatives
       </div>
     </div>
   );
@@ -103,7 +101,7 @@ const AlternativeCard: React.FC<AlternativeCardProps> = ({
 const AlternativeCardList: React.FC = () => {
   return (
     <div className="w-full mx-auto py-8 ">
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {data.map((item) => (
           <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>
             <AlternativeCard

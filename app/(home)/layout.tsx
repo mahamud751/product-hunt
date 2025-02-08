@@ -1,8 +1,10 @@
 import { auth } from "@/auth";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer/Footer";
+
 import Navbar from "@/components/navbar/navbar";
 import Spinner from "@/components/spinner";
 import { getNotifications, getProductsByUserId } from "@/lib/server-actions";
+import { Container } from "@mui/material";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -20,16 +22,18 @@ const HomeLayout = async ({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body>
-        <Suspense fallback={<Spinner />}>
-          <Navbar
-            authenticatedUser={authenticatedUser}
-            notifications={notifications}
-            products={products}
-          />
+        <Container className="px-8 xl:px-28">
+          <Suspense fallback={<Spinner />}>
+            <Navbar
+              authenticatedUser={authenticatedUser}
+              notifications={notifications}
+              products={products}
+            />
 
-          {children}
-        </Suspense>
-        <Footer />
+            {children}
+          </Suspense>
+          <Footer />
+        </Container>
       </body>
     </html>
   );
