@@ -79,9 +79,15 @@ model Alternative {
   url         String
   title       String
   description String
+  logo        String
   status      Status    @default(ACTIVE)
   products    Product[]
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt @default(now()) 
 }
+
+
 
 model Product {
   id            String         @id @default(cuid())

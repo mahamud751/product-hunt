@@ -1,22 +1,24 @@
+import Image from "next/image";
 import React from "react";
 
-const AlternativeCard = () => {
+const AlternativeCard = ({ data }: { data: any }) => {
   return (
     <div className="mt-4">
-      <div className="flex flex-col items-start px-5 py-4 rounded-lg border border-solid bg-neutral-50 border-neutral-200 max-w-[307px]">
+      <div className="flex flex-col items-start px-5 py-4 rounded-lg border border-solid bg-neutral-50 border-neutral-200">
         <div className="flex gap-3 text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800">
-          <img
-            loading="lazy"
-            src={
-              "https://cdn.builder.io/api/v1/image/assets/TEMP/d3c96baf1a9156d9e9177c49da40e64b0c2def4b47d217ea16e3890c6cdadb1b?placeholderIfAbsent=true&apiKey=e4c55b3835e0471b869cabb50a0b8cd9"
-            }
-            alt={` icon`}
-            className="object-contain shrink-0 w-9 rounded-md aspect-square"
-          />
-          <div className="my-auto">Notion</div>
+          <button className="box-border flex flex-col justify-center items-center p-1.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+            <Image
+              src={data?.logo}
+              alt="logo"
+              width={1000}
+              height={1000}
+              className="object-contain w-9 h-9 rounded aspect-square max-md:h-[22px] max-md:w-[22px] max-sm:w-5 max-sm:h-5"
+            />
+          </button>
+          <div className="my-auto">{data?.name}</div>
         </div>
-        <div className="self-stretch mt-5 text-sm leading-5 text-neutral-600">
-          An all-in-one workspace for note-taking, project management, knowledge
+        <div className="self-stretch mt-5 text-sm leading-5 text-neutral-600 h-[32px]">
+          {data.description.slice(0, 75)}...
         </div>
         <div className="mt-6 text-xs leading-none text-stone-500">
           16 alternatives

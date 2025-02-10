@@ -78,7 +78,7 @@ const AlternativeTable: React.FC<AlternativeTableClientProps> = ({
         totalAlternatives: filteredTotal,
       } = await getAlternatives(page, rowsPerPage, statusFilter || undefined);
 
-      setAlternativeData(filteredAlternative as Alternative[]);
+      setAlternativeData(filteredAlternative as unknown as Alternative[]);
       setFilteredTotalAlternative(filteredTotal);
     };
 

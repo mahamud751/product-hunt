@@ -1,6 +1,8 @@
 "use client";
+import LogoUploader from "@/components/custom-image-upload";
 import { createAlternative } from "@/lib/server-actions";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 const NewAlternative = () => {
@@ -10,6 +12,7 @@ const NewAlternative = () => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
   const handleName = (e: any) => {
     setName(e.target.value);
@@ -23,15 +26,29 @@ const NewAlternative = () => {
   const handleDescription = (e: any) => {
     setDescription(e.target.value);
   };
+  const handleLogoUpload = useCallback((url: any) => {
+    setUploadedLogoUrl(url);
+  }, []);
 
   const submitProduct = async () => {
     setLoading(true);
 
     try {
+      const file = uploadedLogoUrl;
+
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "upload");
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dtpvtjiry/image/upload",
+        data
+      );
+      const { secure_url } = uploadRes.data;
       await createAlternative({
         name,
         url,
         title,
+        logo: secure_url,
         description,
       });
       toast("Alternative created successfully!");
@@ -85,6 +102,25 @@ const NewAlternative = () => {
             onChange={handleDescription}
             placeholder="Simply the description of the category"
           />
+        </div>
+        <div className="mt-10">
+          <h2 className="font-medium">Logo</h2>
+          {uploadedLogoUrl ? (
+            <div style={{ marginTop: 16 }}>
+              <img
+                src={uploadedLogoUrl}
+                alt="Uploaded Logo"
+                style={{
+                  width: 100,
+                  height: 100,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                }}
+              />
+            </div>
+          ) : (
+            <LogoUploader endpoint="productLogo" onChange={handleLogoUpload} />
+          )}
         </div>
         <button
           onClick={submitProduct}

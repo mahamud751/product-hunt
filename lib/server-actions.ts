@@ -203,6 +203,26 @@ export const getProducts = async (
   return { products, totalProducts };
 };
 
+export const getPromoProducts = async () => {
+  const promoProducts = await db.product.findMany({
+    where: {
+      promoCode: {
+        not: "",
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      category: true,
+      subcategory: true,
+      alternative: true,
+    },
+  });
+
+  return promoProducts;
+};
+
 export const updateProduct = async (
   productId: string,
   {
@@ -1028,6 +1048,7 @@ export const createAlternative = async ({
   name,
   url,
   title,
+  logo,
   description,
 }: Alternative): Promise<any> => {
   try {
@@ -1036,6 +1057,7 @@ export const createAlternative = async ({
         name,
         url,
         title,
+        logo,
         description,
         status: "ACTIVE",
       },
@@ -1062,7 +1084,9 @@ export const getActiveAlternative = async (): Promise<any> => {
 export const getAlternatives = async (
   page: number,
   rowsPerPage: number,
-  status?: "PENDING" | "ACTIVE" | "REJECTED"
+  status?: "PENDING" | "ACTIVE" | "REJECTED",
+  searchQuery?: string,
+  sortOrder?: string
 ) => {
   const skip = page * rowsPerPage;
   const take = rowsPerPage;
@@ -1072,10 +1096,40 @@ export const getAlternatives = async (
   if (status) {
     where.status = status;
   }
+
+  if (searchQuery) {
+    where.name = {
+      contains: searchQuery,
+      mode: "insensitive",
+    };
+  }
+
+  const orderBy: any = {};
+  if (sortOrder) {
+    switch (sortOrder) {
+      case "Latest":
+        orderBy.createdAt = "desc";
+        break;
+      case "NameAsc":
+        orderBy.name = "asc";
+        break;
+      case "NameDesc":
+        orderBy.name = "desc";
+        break;
+      default:
+        orderBy.views = "desc";
+        break;
+    }
+  }
+
   const alternatives = await db.alternative.findMany({
     skip,
     take,
     where,
+    orderBy,
+    include: {
+      products: true,
+    },
   });
 
   const totalAlternatives = await db.alternative.count({ where });

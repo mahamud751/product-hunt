@@ -88,6 +88,8 @@ export interface Alternative {
   status?: Status;
   url: string;
   title: string;
+  logo: string;
+  views?: number;
   description: string;
   products?: Product[];
 }
