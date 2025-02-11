@@ -1,5 +1,7 @@
 import { Product } from "@/services/types";
+import { useState } from "react";
 
+// Badge Component for Discount
 interface BadgeProps {
   text: string;
   variant?: "default" | "discount";
@@ -13,10 +15,13 @@ const Badge: React.FC<BadgeProps> = ({ text, variant = "default" }) => {
   };
 
   return (
-    <div className={`${baseClasses} ${variantClasses[variant]}`}>{text}</div>
+    <div className={`${baseClasses} ${variantClasses[variant]}`}>
+      {text}% OFF
+    </div>
   );
 };
 
+// PriceInfo Component
 interface PriceInfoProps {
   discount: string;
   originalPrice: string;
@@ -26,69 +31,87 @@ const PriceInfo: React.FC<PriceInfoProps> = ({ discount, originalPrice }) => {
   return (
     <div className="flex gap-3 mt-4 whitespace-nowrap">
       <div className="text-sm font-medium leading-none text-gray-800">
-        {discount}
+        ${discount}
       </div>
-      <div className="text-xs leading-none text-gray-400">{originalPrice}</div>
+      <div className="text-xs leading-none text-gray-400">${originalPrice}</div>
     </div>
   );
 };
 
+// CouponSection Component
 interface CouponSectionProps {
   couponCode: string;
 }
 
 const CouponSection: React.FC<CouponSectionProps> = ({ couponCode }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy coupon code", err);
+    }
+  };
+
   return (
     <div className="flex gap-5 justify-between self-stretch mt-2 text-xs leading-none text-gray-800">
       <div className="overflow-hidden px-2.5 py-1.5 my-auto whitespace-nowrap bg-gray-100 rounded">
         {couponCode}
       </div>
-      <button className="flex gap-1.5 px-3.5 py-1.5 font-light text-center bg-white rounded-md border border-solid">
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/f823f8adf51d0feee4675d0c9db1656f686cd70297a60967bc6cc5167b4751b2?placeholderIfAbsent=true&apiKey=e4c55b3835e0471b869cabb50a0b8cd9"
-          alt=""
-          className="object-contain shrink-0 w-3 aspect-square"
-        />
-        <span>Use Coupon</span>
+      <button
+        onClick={handleCopy}
+        className="flex gap-1.5 px-3.5 py-1.5 font-light text-center bg-white rounded-md border border-solid"
+      >
+        <span>{copied ? "Copied!" : "Use Coupon"}</span>
       </button>
     </div>
   );
 };
 
+// PromoPageCard Component (Main)
 interface MarketSeerCardProps {
-  data: Product[];
+  data: Product;
 }
 
-export const PromoPageCard = ({ data }) => {
+export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
+  const promoPrice = (
+    parseFloat(data?.price) *
+    (1 - parseFloat(data.promoOffer || "0") / 100)
+  ).toFixed(2);
+
   return (
     <div className="flex flex-col items-start px-5 py-4 rounded-lg border border-solid bg-neutral-50 border-neutral-200">
       <div className="flex gap-5 justify-between self-stretch w-full font-semibold">
         <img
           loading="lazy"
-          src={data?.logo}
-          alt="Market Seer logo"
+          src={data?.logo || "/default-logo.png"}
+          alt="Product logo"
           className="object-contain shrink-0 w-8 rounded aspect-square"
         />
         <div className="flex gap-1.5 self-start">
-          <Badge text={data?.category?.name} />
-          <Badge text={data.dis} variant="discount" />
+          <Badge text={data?.category?.name || "Category"} />
+          <Badge text={data.promoOffer || "0"} variant="discount" />
         </div>
       </div>
+
       <div className="flex gap-2 mt-3.5 text-sm font-medium leading-none text-black">
-        <div className="grow my-auto">{data.name}</div>
+        <div className="grow my-auto">{data?.name}</div>
         <img
           loading="lazy"
-          src={data?.logo}
-          alt=""
+          src={data?.logo || "/default-logo.png"}
+          alt="Product logo"
           className="object-contain shrink-0 w-4 aspect-square"
         />
       </div>
       <div className="mt-2.5 text-xs leading-none text-gray-500">
-        {data?.headline}
+        {data?.headline || "No description available"}
       </div>
-      <PriceInfo discount={data?.promoOffer} originalPrice={data?.price} />
-      <CouponSection couponCode={data?.promoCode} />
+
+      <PriceInfo discount={promoPrice} originalPrice={data?.price || "0"} />
+      <CouponSection couponCode={data?.promoCode || "No Coupon"} />
     </div>
   );
 };

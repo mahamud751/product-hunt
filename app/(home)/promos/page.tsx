@@ -1,35 +1,48 @@
-"use client"; // ensure it's a client-side component
-import AlternativeCard from "@/components/alternative/AlternativeCard";
-import PaginationComponent from "@/components/alternative/Pagination";
-import PromoCard from "@/components/home/PromoCard";
-import { PromoPageCard } from "@/components/promos/PromoPageCard";
-import { getAlternatives, getPromoProducts } from "@/lib/server-actions";
-import { Category, Product } from "@/services/types";
+"use client";
+import { getPromoProducts } from "@/lib/server-actions";
+import { Product } from "@/services/types";
 import { Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { PromoPageCard } from "@/components/promos/PromoPageCard";
 
 const Page = () => {
   const [categories, setCategories] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // to track loading state
+  const [error, setError] = useState<string | null>(null); // to handle errors
+
   useEffect(() => {
-    getPromoProducts().then((data) => {
-      setCategories(data);
-    });
+    // Fetch promo products and set data
+    const fetchData = async () => {
+      try {
+        const data = await getPromoProducts();
+        setCategories(data as unknown as Product[]); // Convert to unknown first, then to Product[]
+      } catch (err) {
+        setError("Failed to fetch data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Display loading state
+  }
+
+  if (error) {
+    return <div>{error}</div>; // Display error if there's an issue
+  }
 
   return (
     <div>
       <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
         Browse Open Source Software Alternatives
       </h1>
-      {/* <p className="text-xm mt-3 text-[#4D4D4D]">
-        Discover top open source alternatives to {totalAlternatives} popular
-        proprietary software tools.
-      </p> */}
 
-      {/* Alternative Cards */}
       <Grid container columnSpacing={2} className="mb-10">
-        {categories.map((data, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+        {categories.map((data) => (
+          <Grid item xs={12} sm={6} md={4} key={data.id}>
             <PromoPageCard data={data} />
           </Grid>
         ))}

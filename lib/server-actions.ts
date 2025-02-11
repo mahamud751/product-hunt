@@ -57,6 +57,7 @@ interface ProductData {
   promoCode: string;
   videoLink: string;
   price: string;
+  priceOption: string;
   slug: string;
   headline: string;
   description: string;
@@ -95,6 +96,7 @@ export const createProduct = async ({
   images,
   categoryId,
   alternativeId,
+  priceOption,
 }: ProductData): Promise<any> => {
   try {
     const authenticatedUser = await auth();
@@ -133,6 +135,7 @@ export const createProduct = async ({
         promoCode,
         videoLink,
         price,
+        priceOption,
         rank: 0,
         slug,
         headline,

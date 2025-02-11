@@ -119,7 +119,8 @@ export interface Product {
   verified?: boolean;
   featured?: boolean;
   top?: boolean;
-  price?: string;
+  priceOption: string;
+  price: string;
   promoCode?: string;
   promoExpire?: string;
   promoOffer?: string;

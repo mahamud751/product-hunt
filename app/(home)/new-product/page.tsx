@@ -121,6 +121,7 @@ const NewProduct = () => {
   const [website, setWebsite] = useState("");
   const [twitter, setTwitter] = useState("");
   const [discord, setDiscord] = useState("");
+  const [priceOption, setPriceOption] = useState("");
 
   const [date, setDate] = React.useState<Date | undefined>(new Date());
   const [promoExpireDate, setPromoExpireDate] = React.useState<
@@ -173,6 +174,9 @@ const NewProduct = () => {
   };
   const handleVideoLinkChange = (e: any) => {
     setVideoLink(e.target.value);
+  };
+  const handlePriceOptionChange = (e: any) => {
+    setPriceOption(e.target.value);
   };
   const handlePriceChange = (e: any) => {
     setPrice(e.target.value);
@@ -404,6 +408,7 @@ const NewProduct = () => {
     setVideoLink("");
     setPrice("");
     setSlug("");
+    setPriceOption("");
     setHeadline("");
     setShortDescription("");
     setDate(new Date());
@@ -458,6 +463,7 @@ const NewProduct = () => {
         promoOffer,
         promoCode,
         videoLink,
+        priceOption,
         price,
         slug,
         headline,
@@ -914,10 +920,10 @@ const NewProduct = () => {
             className="space-y-10"
           >
             <div className="mt-10">
-              <h2 className="font-medium">Select Price</h2>
+              <h2 className="font-medium">Select Price Option</h2>
               <Select
-                value={price}
-                onChange={handlePriceChange}
+                value={priceOption}
+                onChange={handlePriceOptionChange}
                 fullWidth
                 className="mt-2"
               >
@@ -930,6 +936,16 @@ const NewProduct = () => {
                 <MenuItem value={"lifetime"}>Lifetime deal</MenuItem>
                 {/* Add more options as needed */}
               </Select>
+            </div>
+            <div className="mt-10">
+              <h2 className="font-medium">Price</h2>
+              <input
+                type="text"
+                value={price}
+                className="border rounded-md p-2 w-full mt-2 focus:outline-none"
+                onChange={handlePriceChange}
+                placeholder="Enter  price "
+              />
             </div>
             <div className="mt-10">
               <h2 className="font-medium">Promo Name</h2>
