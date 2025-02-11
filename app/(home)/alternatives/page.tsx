@@ -11,7 +11,7 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("NameAsc");
-  const rowsPerPage = 10;
+  const rowsPerPage = 9;
 
   useEffect(() => {
     const fetchAlternatives = async () => {
