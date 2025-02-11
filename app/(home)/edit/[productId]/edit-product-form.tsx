@@ -34,6 +34,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
 
   const [videoLink, setVideoLink] = useState(product.videoLink);
   const [price, setPrice] = useState(product.price);
+  const [priceOption, setPriceOption] = useState(product.price);
   const [headline, setHeadline] = useState(product.headline);
   const [description, setDescription] = useState(product.description);
   const [releaseDate, setReleaseDate] = useState(product.releaseDate);
@@ -85,6 +86,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         promoOffer,
         promoCode,
         videoLink,
+        priceOption,
         price,
         promoExpire,
         headline,
@@ -259,10 +261,20 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
           <input
             type="text"
             className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
+            value={priceOption}
+            onChange={(e) => setPriceOption(e.target.value)}
+          />
+        </div>
+        <div>
+          <div className="font-medium">Price</div>
+          <input
+            type="text"
+            className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
+
         <div>
           <div className="font-medium">Promo Expire Date</div>
           <input
