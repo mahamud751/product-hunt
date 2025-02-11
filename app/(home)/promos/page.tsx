@@ -61,9 +61,9 @@ const Page = () => {
                 color={
                   selectedCategory === category?.id ? "primary" : "inherit"
                 }
-                className="w-[120px]"
+                className="w-[220px text-[12px]"
               >
-                {category?.name?.slice(0, 15)}
+                {category?.name?.slice(0, 10)}
               </Button>
             </Grid>
           ))}
@@ -71,8 +71,8 @@ const Page = () => {
       </div>
 
       <Grid container columnSpacing={2} className="mb-10">
-        {categories.length > 0 ? (
-          categories.map((data) => (
+        {categories?.length > 0 ? (
+          categories?.map((data) => (
             <Grid item xs={12} sm={6} md={4} key={data?.id}>
               <PromoPageCard data={data} />
             </Grid>
