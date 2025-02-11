@@ -7,9 +7,8 @@ import Link from "next/link";
 import { getAlternatives } from "@/lib/server-actions";
 
 const AlternativeCard = ({ item }: { item: any }) => {
-  console.log("item", item);
   return (
-    <div className="flex flex-col items-start px-5 py-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-sm hover:border-neutral-300">
+    <div className="flex flex-col items-start px-5 py-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15">
       <div className="flex gap-3 text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800">
         <button className="box-border flex flex-col justify-center items-center p-1.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
           <Image
@@ -35,7 +34,7 @@ const AlternativeCard = ({ item }: { item: any }) => {
 
 const AlternativeCardList: React.FC = () => {
   const [alternatives, setAlternatives] = useState<any[]>([]);
-  const rowsPerPage = 10;
+  const rowsPerPage = 9;
 
   useEffect(() => {
     const fetchAlternatives = async () => {

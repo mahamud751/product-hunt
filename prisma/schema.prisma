@@ -81,6 +81,9 @@ model Alternative {
   title       String
   url         String
   logo        String
+  views       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   products    Product[]
 }
 
@@ -102,7 +105,6 @@ model Product {
   status        Status         @default(PENDING)
   categoryId    String
   linekdin      String
-  priceOption   String
   price         String
   promoCode     String
   promoExpire   String
@@ -116,6 +118,7 @@ model Product {
   verified      Boolean        @default(false)
   alternativeId String?
   subcategoryId String?
+  priceOption   String
   comments      Comment[]
   images        Image[]
   notification  Notification[]

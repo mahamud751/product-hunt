@@ -89,7 +89,7 @@ export interface Alternative {
   url: string;
   title: string;
   logo: string;
-  views?: number;
+  views: Number;
   description: string;
   products?: Product[];
 }

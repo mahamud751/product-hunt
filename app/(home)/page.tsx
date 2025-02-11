@@ -5,6 +5,8 @@ import HeroSection from "@/components/home/HeroSecion";
 import PromoCard from "@/components/home/PromoCard";
 import { getFilteredProducts, getProducts } from "@/lib/server-actions";
 import { Grid, Typography, Divider, Container } from "@mui/material";
+import Image from "next/image";
+import Link from "next/link";
 
 const Home = async () => {
   const filteredTodayProducts = await getFilteredProducts("day");
@@ -66,14 +68,28 @@ const Home = async () => {
 
               {/* Product Deals Section */}
               <Grid item>
-                <Typography
-                  variant="h6"
-                  fontWeight="medium"
-                  gutterBottom
-                  mb={4}
-                >
-                  Product Deals
-                </Typography>
+                <div className="flex justify-between">
+                  <Typography
+                    variant="h6"
+                    fontWeight="medium"
+                    gutterBottom
+                    mb={2}
+                  >
+                    Product Deals
+                  </Typography>
+                  <Link href={"/promos"}>
+                    <button className="flex gap-1.5 px-1 py-2 text-sm font-medium leading-none bg-white rounded-md border border-solid border-neutral-200 text-neutral-600">
+                      <span className="grow">View all</span>
+                      <Image
+                        src="/images/SVG.png"
+                        alt="alternatives"
+                        className="object-contain shrink-0 aspect-[1.07] w-[15px]"
+                        width={200}
+                        height={200}
+                      />
+                    </button>
+                  </Link>
+                </div>
                 <Divider
                   sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
                 />

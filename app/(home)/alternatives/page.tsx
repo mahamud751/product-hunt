@@ -72,8 +72,8 @@ const Page = () => {
             onChange={handleSortChange}
             className="px-4 py-3.5 w-full text-sm font-medium leading-none bg-white rounded-lg border border-solid border-neutral-200 text-neutral-600"
           >
-            {/* <option value="Popularity">Order by Popularity</option>
-            <option value="Latest">Order by Latest</option> */}
+            <option value="Popularity">Order by Popularity</option>
+            <option value="Latest">Order by Latest</option>
             <option value="NameAsc">Order by Name A-Z</option>
             <option value="NameDesc">Order by Name Z-A</option>
           </select>

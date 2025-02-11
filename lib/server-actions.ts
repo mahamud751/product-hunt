@@ -1120,8 +1120,11 @@ export const getAlternatives = async (
       case "NameDesc":
         orderBy.name = "desc";
         break;
+      case "Popularity":
+        orderBy.views = "desc"; // Sorting by views if it's an Int
+        break;
       default:
-        orderBy.views = "desc";
+        orderBy.views = "desc"; // Default to sorting by views
         break;
     }
   }

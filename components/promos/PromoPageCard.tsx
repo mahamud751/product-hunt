@@ -7,16 +7,14 @@ interface BadgeProps {
 }
 
 const Badge: React.FC<BadgeProps> = ({ text, variant = "default" }) => {
-  const baseClasses = "px-3 py-1.5 text-xs rounded-md";
+  const baseClasses = "px-2 py-1 text-xs rounded-md";
   const variantClasses = {
     default: "text-gray-500 bg-gray-50 border border-solid border-slate-200",
     discount: "text-white bg-violet-500 shadow-[0px_1px_3px_rgba(0,0,0,0.1)]",
   };
 
   return (
-    <div className={`${baseClasses} ${variantClasses[variant]}`}>
-      {text}% OFF
-    </div>
+    <div className={`${baseClasses} ${variantClasses[variant]}`}>{text}</div>
   );
 };
 
@@ -88,8 +86,8 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
           className="object-contain shrink-0 w-8 rounded aspect-square"
         />
         <div className="flex gap-1.5 self-start">
-          <Badge text={data?.category?.name || "Category"} />
-          <Badge text={data?.promoOffer || "0"} variant="discount" />
+          <Badge text={`${data?.category?.name.slice(0, 12)}` || "Category"} />
+          <Badge text={`${data?.promoOffer}% OFF` || "0"} variant="discount" />
         </div>
       </div>
 
@@ -103,11 +101,13 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
         />
       </div>
       <div className="mt-2.5 text-xs leading-none text-gray-500">
-        {data?.headline?.slice(0, 75) || "No description available"}
+        {data?.headline?.slice(0, 35) || "No description available"}
       </div>
 
       <PriceInfo discount={promoPrice} originalPrice={data?.price || "0"} />
-      <CouponSection couponCode={data?.promoCode || "No Coupon"} />
+      <CouponSection
+        couponCode={data?.promoCode?.slice(0, 20) || "No Coupon"}
+      />
     </div>
   );
 };
