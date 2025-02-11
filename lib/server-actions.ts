@@ -206,12 +206,13 @@ export const getProducts = async (
   return { products, totalProducts };
 };
 
-export const getPromoProducts = async () => {
+export const getPromoProducts = async (categoryId?: string) => {
   const promoProducts = await db.product.findMany({
     where: {
       promoCode: {
         not: "",
       },
+      categoryId: categoryId || undefined, // filter by category if provided
     },
     orderBy: {
       createdAt: "desc",

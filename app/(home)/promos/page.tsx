@@ -1,21 +1,29 @@
 "use client";
 import { getPromoProducts } from "@/lib/server-actions";
-import { Product } from "@/services/types";
-import { Grid } from "@mui/material";
+import { getActiveCategory } from "@/lib/server-actions";
+import { Product, Category } from "@/services/types";
+import { Grid, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PromoPageCard } from "@/components/promos/PromoPageCard";
 
 const Page = () => {
-  const [categories, setCategories] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // to track loading state
-  const [error, setError] = useState<string | null>(null); // to handle errors
+  const [categories, setCategories] = useState<any[]>([]); // Products to display
+  const [allCategories, setAllCategories] = useState<Category[]>([]); // All categories to display as buttons
+  const [loading, setLoading] = useState<boolean>(true); // To track loading state
+  const [error, setError] = useState<string | null>(null); // To handle errors
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Selected category for filtering
 
+  // Fetch categories and products
   useEffect(() => {
-    // Fetch promo products and set data
     const fetchData = async () => {
       try {
-        const data = await getPromoProducts();
-        setCategories(data as unknown as Product[]); // Convert to unknown first, then to Product[]
+        // Fetch categories (for buttons)
+        const categoriesData = await getActiveCategory();
+        setAllCategories(categoriesData);
+
+        // Fetch promo products (with optional category filter)
+        const data = await getPromoProducts(selectedCategory || undefined);
+        setCategories(data);
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
@@ -24,7 +32,12 @@ const Page = () => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedCategory]); // Re-fetch products when selectedCategory changes
+
+  // Handle category button click to filter products
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId); // Update selected category
+  };
 
   if (loading) {
     return <div>Loading...</div>; // Display loading state
@@ -39,6 +52,23 @@ const Page = () => {
       <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
         Browse Open Source Software Alternatives
       </h1>
+
+      <div className="mb-5">
+        {/* Render category buttons */}
+        <Grid container spacing={2}>
+          {allCategories.map((category) => (
+            <Grid item key={category.id}>
+              <Button
+                variant="outlined"
+                onClick={() => category.id && handleCategoryClick(category.id)}
+                color={selectedCategory === category.id ? "primary" : "inherit"}
+              >
+                {category.name}
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
 
       <Grid container columnSpacing={2} className="mb-10">
         {categories.map((data) => (
