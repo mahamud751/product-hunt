@@ -8,7 +8,7 @@ export default async function Alternatives() {
   return (
     <div>
       <AlternativeTable
-        alternatives={alternatives as Alternative[]}
+        alternatives={alternatives as unknown as Alternative[]}
         totalAlternatives={totalAlternatives}
         initialPage={0}
         initialRowsPerPage={10}
