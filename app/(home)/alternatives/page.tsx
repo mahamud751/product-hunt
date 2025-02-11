@@ -1,4 +1,4 @@
-"use client"; // ensure it's a client-side component
+"use client";
 import AlternativeCard from "@/components/alternative/AlternativeCard";
 import PaginationComponent from "@/components/alternative/Pagination";
 import { getAlternatives } from "@/lib/server-actions";

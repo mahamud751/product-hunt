@@ -41,6 +41,11 @@ const Page = () => {
     setViewAll(true);
   };
 
+  const handleShowAll = () => {
+    setSelectedCategory(null);
+    setViewAll(false);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -74,6 +79,16 @@ const Page = () => {
 
       <div className="mb-5 mt-3">
         <Grid container spacing={2}>
+          <div className="mt-4 ms-4">
+            <Button
+              variant="outlined"
+              onClick={handleShowAll}
+              color={selectedCategory === null ? "primary" : "inherit"}
+              className="px-3.5 py-2 text-xs leading-none text-center text-gray-700 whitespace-nowrap bg-gray-100 rounded-full transition-all cursor-pointer select-none duration-[0.2s] ease-[ease-in-out] w-fit max-md:px-3 max-md:py-2 max-md:text-xs max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
+            >
+              All
+            </Button>
+          </div>
           {allCategories?.map((category) => (
             <Grid item key={category?.id}>
               <Button
@@ -113,7 +128,7 @@ const Page = () => {
         <div className="flex justify-center mt-10 mb-36">
           <Button
             onClick={handleViewAll}
-            className="px-6 py-3 text-sm font-medium  bg-gray-100 rounded-md cursor-pointer select-none duration-[0.2s] ease-[ease] text-slate-900 transition-[background-color]"
+            className="px-6 py-3 text-sm font-medium bg-gray-100 rounded-md cursor-pointer select-none duration-[0.2s] ease-[ease] text-slate-900 transition-[background-color]"
           >
             View All Deals
           </Button>
