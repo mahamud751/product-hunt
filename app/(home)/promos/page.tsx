@@ -1,4 +1,4 @@
-import { Product } from "@/services/types";
+"use client";
 import { Grid, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PromoPageCard } from "@/components/promos/PromoPageCard";
