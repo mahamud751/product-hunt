@@ -1,27 +1,23 @@
-"use client";
-import { getPromoProducts } from "@/lib/server-actions";
-import { getActiveCategory } from "@/lib/server-actions";
-import { Product, Category } from "@/services/types";
+import { Product } from "@/services/types";
 import { Grid, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { PromoPageCard } from "@/components/promos/PromoPageCard";
+import { getPromoProducts, getActiveCategory } from "@/lib/server-actions";
+import { Category } from "@/services/types";
 
 const Page = () => {
-  const [categories, setCategories] = useState<any[]>([]); // Products to display
-  const [allCategories, setAllCategories] = useState<Category[]>([]); // All categories to display as buttons
-  const [loading, setLoading] = useState<boolean>(true); // To track loading state
-  const [error, setError] = useState<string | null>(null); // To handle errors
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // Selected category for filtering
+  const [categories, setCategories] = useState<any[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Fetch categories and products
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch categories (for buttons)
         const categoriesData = await getActiveCategory();
         setAllCategories(categoriesData);
 
-        // Fetch promo products (with optional category filter)
         const data = await getPromoProducts(selectedCategory || undefined);
         setCategories(data);
       } catch (err) {
@@ -32,19 +28,19 @@ const Page = () => {
     };
 
     fetchData();
-  }, [selectedCategory]); // Re-fetch products when selectedCategory changes
+  }, [selectedCategory]);
 
-  // Handle category button click to filter products
   const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(categoryId); // Update selected category
+    setSelectedCategory(categoryId);
+    setLoading(true);
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading state
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Display error if there's an issue
+    return <div>{error}</div>;
   }
 
   return (
@@ -54,16 +50,20 @@ const Page = () => {
       </h1>
 
       <div className="mb-5">
-        {/* Render category buttons */}
         <Grid container spacing={2}>
-          {allCategories.map((category) => (
-            <Grid item key={category.id}>
+          {allCategories?.map((category) => (
+            <Grid item key={category?.id}>
               <Button
                 variant="outlined"
-                onClick={() => category.id && handleCategoryClick(category.id)}
-                color={selectedCategory === category.id ? "primary" : "inherit"}
+                onClick={() =>
+                  category?.id && handleCategoryClick(category?.id)
+                }
+                color={
+                  selectedCategory === category?.id ? "primary" : "inherit"
+                }
+                className="w-[120px]"
               >
-                {category.name}
+                {category?.name?.slice(0, 15)}
               </Button>
             </Grid>
           ))}
@@ -71,11 +71,19 @@ const Page = () => {
       </div>
 
       <Grid container columnSpacing={2} className="mb-10">
-        {categories.map((data) => (
-          <Grid item xs={12} sm={6} md={4} key={data.id}>
-            <PromoPageCard data={data} />
+        {categories.length > 0 ? (
+          categories.map((data) => (
+            <Grid item xs={12} sm={6} md={4} key={data?.id}>
+              <PromoPageCard data={data} />
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs={12}>
+            <div className="flex justify-center items-center h-64 bg-gray-100 rounded-lg">
+              <p className="text-lg text-gray-500">No data found</p>
+            </div>
           </Grid>
-        ))}
+        )}
       </Grid>
     </div>
   );

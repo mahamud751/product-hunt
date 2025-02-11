@@ -1,7 +1,6 @@
 import { Product } from "@/services/types";
 import { useState } from "react";
 
-// Badge Component for Discount
 interface BadgeProps {
   text: string;
   variant?: "default" | "discount";
@@ -21,7 +20,6 @@ const Badge: React.FC<BadgeProps> = ({ text, variant = "default" }) => {
   );
 };
 
-// PriceInfo Component
 interface PriceInfoProps {
   discount: string;
   originalPrice: string;
@@ -38,7 +36,6 @@ const PriceInfo: React.FC<PriceInfoProps> = ({ discount, originalPrice }) => {
   );
 };
 
-// CouponSection Component
 interface CouponSectionProps {
   couponCode: string;
 }
@@ -71,7 +68,6 @@ const CouponSection: React.FC<CouponSectionProps> = ({ couponCode }) => {
   );
 };
 
-// PromoPageCard Component (Main)
 interface MarketSeerCardProps {
   data: Product;
 }
@@ -79,7 +75,7 @@ interface MarketSeerCardProps {
 export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
   const promoPrice = (
     parseFloat(data?.price) *
-    (1 - parseFloat(data.promoOffer || "0") / 100)
+    (1 - parseFloat(data?.promoOffer || "0") / 100)
   ).toFixed(2);
 
   return (
@@ -93,7 +89,7 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
         />
         <div className="flex gap-1.5 self-start">
           <Badge text={data?.category?.name || "Category"} />
-          <Badge text={data.promoOffer || "0"} variant="discount" />
+          <Badge text={data?.promoOffer || "0"} variant="discount" />
         </div>
       </div>
 
