@@ -107,7 +107,7 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
         />
       </div>
       <div className="mt-2.5 text-xs leading-none text-gray-500">
-        {data?.headline || "No description available"}
+        {data?.headline?.slice(0, 75) || "No description available"}
       </div>
 
       <PriceInfo discount={promoPrice} originalPrice={data?.price || "0"} />
