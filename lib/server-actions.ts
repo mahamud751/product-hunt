@@ -212,7 +212,7 @@ export const getPromoProducts = async (categoryId?: string) => {
       promoCode: {
         not: "",
       },
-      categoryId: categoryId || undefined, // filter by category if provided
+      categoryId: categoryId || undefined,
     },
     orderBy: {
       createdAt: "desc",
