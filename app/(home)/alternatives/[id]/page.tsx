@@ -60,7 +60,7 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                 {alternative?.title}
               </p>
               <p className="text-lg leading-loose text-neutral-600 mt-2">
-                {alternative?.description}
+                {alternative?.description.slice(0, 200)}
               </p>
             </div>
 
@@ -90,7 +90,7 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                     </h1>
                   </div>
                   <p className="text-lg leading-loose text-neutral-600 mt-2">
-                    {data?.headline}
+                    {data?.headline.slice(0, 120)}
                   </p>
                   <p className="text-lg leading-loose text-neutral-600 mt-2">
                     {data?.description.slice(0, 200)}
