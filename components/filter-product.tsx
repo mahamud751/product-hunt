@@ -1,5 +1,6 @@
 "use client";
 import { getFilteredProducts } from "@/lib/server-actions";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface Product {
@@ -74,10 +75,12 @@ const FilteredProducts: React.FC<FilteredProductsProps> = ({ products }) => {
             key={product.id}
             className="bg-white border rounded-lg shadow-md p-4"
           >
-            <img
+            <Image
               src={product.logo || "/default-product-image.jpg"}
               alt={product.name}
               className="w-full h-40 object-cover rounded-md mb-4"
+              width={250}
+              height={250}
             />
             <h3 className="text-xl font-semibold">{product.name}</h3>
             <p className="text-sm text-gray-600">{product.headline}</p>

@@ -1,8 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { Autocomplete, TextField, Chip, Select, MenuItem } from "@mui/material";
-// import { ImagesUploader } from "@/components/images-uploader";
+import { Autocomplete, TextField, Select, MenuItem } from "@mui/material";
 import LogoUploader from "@/components/custom-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -16,35 +15,28 @@ import {
   createProduct,
   getActiveAlternative,
   getActiveCategory,
-  getAlternatives,
-  getCategories,
 } from "@/lib/server-actions";
 import { cn } from "@/lib/utils";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   PiPackage,
-  PiListBullets,
   PiNotepad,
-  PiImages,
-  PiCalendarBlank,
   PiLink,
   PiEye,
   PiLinkedinLogo,
 } from "react-icons/pi";
 import {
   PiCalendar,
-  PiDiscordLogoFill,
   PiPlanet,
   PiTwitterLogoFill,
   PiXCircleFill,
 } from "react-icons/pi";
 import { toast } from "sonner";
 import ImagesUploader from "@/components/custom-imgae-upload-multiple";
-import { Alternative, Category, Status } from "@/services/types";
+import { Alternative, Category } from "@/services/types";
 
 const steps = [
   {
@@ -53,21 +45,21 @@ const steps = [
     icon: PiPackage,
     color: "#F44336",
     lightColor: "#FFECEC",
-  }, // Light red background
+  },
   {
     id: 2,
     label: "Media",
     icon: PiLink,
     color: "#3F51B5",
     lightColor: "#EDEFFF",
-  }, // Light blue background
+  },
   {
     id: 3,
     label: "Pricing & Promo",
     icon: PiNotepad,
     color: "#4CAF50",
     lightColor: "#E8F5E9",
-  }, // Light green background
+  },
   {
     id: 4,
     label: "Checklist",
@@ -193,10 +185,6 @@ const NewProduct = () => {
     setTwitter(e.target.value);
   };
 
-  // const handleDiscordChange = (e: any) => {
-  //   setDiscord(e.target.value);
-  // };
-
   const handleShortDescriptionChange = (e: any) => {
     setShortDescription(e.target.value.slice(0, 300));
   };
@@ -206,28 +194,12 @@ const NewProduct = () => {
     const truncatedName = productName.slice(0, 30);
     setName(truncatedName);
 
-    //create slug from product name
-
     const slugValue = truncatedName
       .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/\./g, "-"); // Replace periods with hyphens in the slug
+      .replace(/\s+/g, "-")
+      .replace(/\./g, "-");
     setSlug(slugValue);
   };
-
-  // const filteredCategories = categories.filter((category) =>
-  //   category.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
-  // const handleCategoryToggle = (category: string) => {
-  //   if (selectedCategories.includes(category)) {
-  //     setSelectedCategories((prevCategories) =>
-  //       prevCategories.filter((prevCategory) => prevCategory !== category)
-  //     );
-  //   } else if (selectedCategories.length < 3) {
-  //     setSelectedCategories((prevCategories) => [...prevCategories, category]);
-  //   }
-  // };
 
   const handleLogoUpload = useCallback((url: any) => {
     setUploadedLogoUrl(url);
@@ -855,7 +827,7 @@ const NewProduct = () => {
               <h2 className="font-medium">Logo</h2>
               {uploadedLogoUrl ? (
                 <div style={{ marginTop: 16 }}>
-                  <img
+                  <Image
                     src={uploadedLogoUrl}
                     alt="Uploaded Logo"
                     style={{
@@ -864,6 +836,8 @@ const NewProduct = () => {
                       objectFit: "cover",
                       borderRadius: 8,
                     }}
+                    width={100}
+                    height={100}
                   />
                 </div>
               ) : (

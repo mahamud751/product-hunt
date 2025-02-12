@@ -2,6 +2,7 @@
 import LogoUploader from "@/components/custom-image-upload";
 import { createAlternative } from "@/lib/server-actions";
 import axios from "axios";
+import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { toast } from "sonner";
 
@@ -107,7 +108,7 @@ const NewAlternative = () => {
           <h2 className="font-medium">Logo</h2>
           {uploadedLogoUrl ? (
             <div style={{ marginTop: 16 }}>
-              <img
+              <Image
                 src={uploadedLogoUrl}
                 alt="Uploaded Logo"
                 style={{
@@ -116,6 +117,8 @@ const NewAlternative = () => {
                   objectFit: "cover",
                   borderRadius: 8,
                 }}
+                width={100}
+                height={100}
               />
             </div>
           ) : (

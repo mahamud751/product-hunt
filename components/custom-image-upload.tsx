@@ -4,6 +4,7 @@ import { Button, Typography, Box, IconButton } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import Image from "next/image";
 
 interface LogoUploaderProps {
   endpoint: string;
@@ -62,7 +63,7 @@ const LogoUploader: React.FC<LogoUploaderProps> = ({ endpoint, onChange }) => {
     >
       {uploadedFile ? (
         <>
-          <img
+          <Image
             src={uploadedFile}
             alt="Uploaded Logo"
             style={{
@@ -71,6 +72,8 @@ const LogoUploader: React.FC<LogoUploaderProps> = ({ endpoint, onChange }) => {
               objectFit: "cover",
               borderRadius: 8,
             }}
+            width={100}
+            height={100}
           />
           <IconButton color="error" onClick={handleRemoveFile}>
             <DeleteIcon />
