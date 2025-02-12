@@ -93,7 +93,7 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                     {data?.headline}
                   </p>
                   <p className="text-lg leading-loose text-neutral-600 mt-2">
-                    {data?.description}
+                    {data?.description.slice(0, 200)}
                   </p>
                   <button className="flex mb-20 gap-5 justify-between px-4 py-4 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900">
                     <span className="my-auto">Read more</span>
