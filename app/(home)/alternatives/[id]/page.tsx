@@ -57,10 +57,12 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                 Open Source {alternative?.name} Alternatives
               </h1>
               <p className="text-lg leading-loose text-neutral-600 mt-2">
-                {alternative?.title.slice(0, 80)}
+                {alternative?.title.slice(0, 80)}{" "}
+                {alternative?.title.length > 80 && "..."}
               </p>
               <p className="text-lg leading-loose text-neutral-600 mt-8">
-                {alternative?.description.slice(0, 200)}
+                {alternative?.description.slice(0, 200)}{" "}
+                {alternative?.description.length > 200 && "..."}
               </p>
             </div>
 
@@ -91,9 +93,11 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                   </div>
                   <p className="text-lg leading-loose text-neutral-600 mt-2">
                     {data?.headline.slice(0, 120)}
+                    {data?.headline.length > 120 && "..."}
                   </p>
                   <p className="text-lg leading-loose text-neutral-600 mt-2">
                     {data?.description.slice(0, 200)}
+                    {data?.description.length > 200 && "..."}
                   </p>
                   <button className="flex mb-20 gap-5 justify-between px-4 py-4 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900">
                     <span className="my-auto">Read more</span>
@@ -120,7 +124,7 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                   <div
                     key={index}
                     className="hover:bg-[#F5F5F5] active:bg-[#F5F5F5] rounded-lg text-neutral-500 my-1 cursor-pointer"
-                    onClick={() => scrollToProduct(index)} // Scroll to corresponding product on click
+                    onClick={() => scrollToProduct(index)}
                   >
                     <div className="flex justify-between items-center px-3 py-3 text-sm">
                       <div className="flex gap-2.5 items-center">
