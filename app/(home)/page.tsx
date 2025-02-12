@@ -48,7 +48,7 @@ const Home = async () => {
                   header="Last Month's Top Startups"
                   total={filteredMonthProducts?.length}
                   commentShow={true}
-                  authenticatedUser={authenticatedUser} // Pass authenticated user
+                  authenticatedUser={authenticatedUser}
                 />
               </Grid>
             </Grid>

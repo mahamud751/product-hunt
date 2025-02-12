@@ -1073,10 +1073,22 @@ export const createAlternative = async ({
     return null;
   }
 };
-// Create a new alternative
 
 export const getActiveAlternative = async (): Promise<any> => {
   const alternative = await db.alternative.findMany({
+    include: {
+      products: true,
+    },
+  });
+
+  return alternative;
+};
+
+export const getSingleAlternative = async (id: string): Promise<any> => {
+  const alternative = await db.alternative.findUnique({
+    where: {
+      id,
+    },
     include: {
       products: true,
     },

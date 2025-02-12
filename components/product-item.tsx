@@ -136,9 +136,12 @@ const ProductItem: React.FC<ProductItemProps> = ({
               <p className="text-gray-500 text-xs md:text-sm pr-2">
                 {product?.category}
               </p>
-              <p className="text-gray-500 text-xs md:text-sm pr-2">
-                {product?.price}
-              </p>
+              {commentShow && (
+                <p className="text-gray-500 text-xs md:text-sm pr-2">
+                  {product?.price}
+                </p>
+              )}
+
               {commentShow && (
                 <div className="text-xs text-gray-500 flex gap-x-1 items-center">
                   {product.commentsLength}
