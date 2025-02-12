@@ -3,23 +3,22 @@ import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import { getSingleAlternative } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
 
-interface AlternativeDetailsProps {
-  params: {
-    id: string;
-  };
-}
+const AlternativeDetails = ({ params }: { params: { id: string } }) => {
+  const searchParams = useSearchParams();
 
-const AlternativeDetails = ({ params: { id } }: AlternativeDetailsProps) => {
+  const id = searchParams.get("id");
+
   const [alternative, setAlternative] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const productRefs = useRef<HTMLDivElement[]>([]); // Array of refs for products on the left grid
+  const productRefs = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     const fetchAlternativeDetails = async () => {
       try {
-        const data = await getSingleAlternative(id);
+        const data = await getSingleAlternative(id as string);
         setAlternative(data);
       } catch (error) {
         console.error("Error fetching alternative details:", error);

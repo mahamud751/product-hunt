@@ -1,15 +1,20 @@
 "use client";
 import Image from "next/image";
-
 import React, { useEffect, useState } from "react";
-
 import { Grid } from "@mui/material";
 import Link from "next/link";
 import { getAlternatives } from "@/lib/server-actions";
+import { cleanName } from "@/lib/utils";
 
 const AlternativeCard = ({ item }: { item: any }) => {
+  const cleanedName = cleanName(item.name);
   return (
-    <Link href={`/alternatives/${item.id}`}>
+    <Link
+      href={{
+        pathname: `/alternatives/${encodeURIComponent(cleanedName)}`,
+        query: { id: item.id },
+      }}
+    >
       <div className="flex flex-col items-start px-5 py-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15">
         <div className="flex gap-3 text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800">
           <button className="box-border flex flex-col justify-center items-center p-1.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
