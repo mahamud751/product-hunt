@@ -57,9 +57,9 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
                 Open Source {alternative?.name} Alternatives
               </h1>
               <p className="text-lg leading-loose text-neutral-600 mt-2">
-                {alternative?.title}
+                {alternative?.title.slice(0, 80)}
               </p>
-              <p className="text-lg leading-loose text-neutral-600 mt-2">
+              <p className="text-lg leading-loose text-neutral-600 mt-8">
                 {alternative?.description.slice(0, 200)}
               </p>
             </div>
