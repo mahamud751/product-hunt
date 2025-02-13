@@ -45,7 +45,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
   const [shareModalModalVisible, setShareModalVisible] = useState(false);
 
   const [comments, setComments] = useState(
-    currentProduct.commentData.map((comment: any) => ({
+    currentProduct?.commentData?.map((comment: any) => ({
       ...comment,
       replies: comment.replies || [],
     })) || []
@@ -70,12 +70,13 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
       await updateComment(commentId, {
         replies: [
           // add the new reply to the replies array
-          ...comments?.find((comment: any) => comment.id === commentId).replies,
+          ...comments?.find((comment: any) => comment?.id === commentId)
+            .replies,
           {
-            user: authenticatedUser.user.name,
+            user: authenticatedUser?.user?.name,
             body: reply,
             profile: authenticatedUser?.user?.image,
-            userId: authenticatedUser.user.id,
+            userId: authenticatedUser?.user?.id,
             timestamp: new Date().toISOString(),
           },
         ],
@@ -89,10 +90,10 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                 ...comment,
                 replies: [
                   {
-                    user: authenticatedUser.user.name,
+                    user: authenticatedUser?.user?.name,
                     replies: reply,
                     profile: authenticatedUser?.user?.image,
-                    userId: authenticatedUser.user.id,
+                    userId: authenticatedUser?.user?.id,
                     timestamp: new Date().toISOString(),
                   },
                 ],
@@ -129,10 +130,10 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
       setComments([
         ...comments,
         {
-          user: authenticatedUser.user.name,
+          user: authenticatedUser?.user?.name,
           body: commentText,
           profile: authenticatedUser?.user?.image,
-          userId: authenticatedUser.user.id,
+          userId: authenticatedUser?.user?.id,
           timestamp: new Date().toISOString(),
         },
       ]);
@@ -307,7 +308,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
                       )}
 
                       <div className="text-gray-500 text-xs">
-                        {new Date(comment.timestamp).toDateString()}
+                        {new Date(comment?.timestamp).toDateString()}
                       </div>
                     </div>
 

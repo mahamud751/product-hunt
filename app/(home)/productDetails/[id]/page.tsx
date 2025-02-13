@@ -1,5 +1,7 @@
 "use client";
+import { auth } from "@/auth";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
+import ProductModalContent from "@/components/product-modal-content";
 import { getProductById } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
 import Image from "next/image";
@@ -9,18 +11,24 @@ import React, { useEffect, useState, useRef } from "react";
 const ProductsDetails = ({ params }: { params: { id: string } }) => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
+  const [authenticatedUser, setAuthenticatedUser] = useState<any>(null);
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current slide
   const [activeTab, setActiveTab] = useState("Overview"); // Track the active tab
   const productRefs = useRef<HTMLDivElement[]>([]);
+  const [totalUpvotes, setTotalUpvotes] = useState(product?.upvotes || 0);
+  const [hasUpvoted, setHasUpvoted] = useState(
+    product?.upvoters?.includes(authenticatedUser?.user.id)
+  );
 
   useEffect(() => {
     const fetchAlternativeDetails = async () => {
       try {
         const data = await getProductById(id as string);
         setProduct(data);
+        const user = await auth(); // Fetch the authenticated user
+        setAuthenticatedUser(user);
       } catch (error) {
         console.error("Error fetching product details:", error);
       } finally {
@@ -113,6 +121,14 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
                 &#10095;
               </button>
             </div>
+            <ProductModalContent
+              currentProduct={product}
+              authenticatedUser={authenticatedUser}
+              setTotalUpvotes={setTotalUpvotes}
+              totalUpvotes={totalUpvotes}
+              hasUpvoted={hasUpvoted}
+              setHasUpvoted={setHasUpvoted}
+            />
           </div>
         );
       case "Launches":
