@@ -134,6 +134,9 @@ export interface Product {
   category: Category;
   user: User;
   upvotes: Upvote[];
+  isMaker: boolean;
+  makers: string[];
+  photos: string[];
 }
 
 export interface Image {
@@ -166,6 +169,7 @@ export interface Comment {
   replies?: any; // Use a more specific type if `replies` has a defined structure
   product: Product;
   user: User;
+  rating: number;
 }
 
 export interface Notification {

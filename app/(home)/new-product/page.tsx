@@ -1,7 +1,15 @@
 "use client";
 
 import axios from "axios";
-import { Autocomplete, TextField, Select, MenuItem } from "@mui/material";
+import {
+  Autocomplete,
+  TextField,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+  Chip,
+} from "@mui/material";
 import LogoUploader from "@/components/custom-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -15,6 +23,7 @@ import {
   createProduct,
   getActiveAlternative,
   getActiveCategory,
+  getUsers,
 } from "@/lib/server-actions";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -27,6 +36,7 @@ import {
   PiLink,
   PiEye,
   PiLinkedinLogo,
+  PiListBullets,
 } from "react-icons/pi";
 import {
   PiCalendar,
@@ -36,7 +46,7 @@ import {
 } from "react-icons/pi";
 import { toast } from "sonner";
 import ImagesUploader from "@/components/custom-imgae-upload-multiple";
-import { Alternative, Category } from "@/services/types";
+import { Alternative, Category, User } from "@/services/types";
 
 const steps = [
   {
@@ -55,13 +65,20 @@ const steps = [
   },
   {
     id: 3,
+    label: "Makers",
+    icon: PiListBullets,
+    color: "#9E9E9E",
+    lightColor: "#FAFAFA",
+  },
+  {
+    id: 4,
     label: "Pricing & Promo",
     icon: PiNotepad,
     color: "#4CAF50",
     lightColor: "#E8F5E9",
   },
   {
-    id: 4,
+    id: 5,
     label: "Checklist",
     icon: PiEye,
     color: "#FF9800",
@@ -84,7 +101,12 @@ const NewProduct = () => {
       setCategories(data);
     });
   }, []);
-  console.log(categories);
+  const [users, setUsers] = useState<any[]>([]);
+  useEffect(() => {
+    getUsers().then((data) => {
+      setUsers(data);
+    });
+  }, []);
 
   const [alternative, setAlternative] = useState<Alternative[]>([]);
   useEffect(() => {
@@ -123,6 +145,7 @@ const NewProduct = () => {
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(
     null
   );
@@ -132,14 +155,18 @@ const NewProduct = () => {
   );
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [subCategoryId, setSubCategoryId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
 
   const [alternativeId, setAlternativeId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSubQuery, setSearchSubQuery] = useState("");
+  const [searchUser, setSearchUser] = useState("");
   const [searchAlternativeQuery, setAlternativeSearchQuery] = useState("");
   const [uploadedProductImages, setUploadedProductImages] = useState<string[]>(
     []
   );
+  const [isMaker, setIsMaker] = useState<boolean>(true);
+  const [makers, setMakers] = useState<string[]>([]);
 
   const findMatchCategory = categories.find(
     (category: Category) => category.id === categoryId
@@ -429,6 +456,7 @@ const NewProduct = () => {
       await createProduct({
         name,
         tags,
+
         linekdin,
         weburl,
         suggestUrl,
@@ -442,16 +470,19 @@ const NewProduct = () => {
         website,
         twitter,
         discord,
+        makers,
+        isMaker,
+        images: list,
         description: shortDescription,
         logo: secure_url,
         releaseDate: formattedDate,
         promoExpire: formattedExpireDate,
-        images: list,
+        photos: list,
         categoryId: categoryId!,
         alternativeId: alternativeId!,
         subcategoryId: subCategoryId!,
       });
-      setStep(5);
+      setStep(6);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -847,6 +878,7 @@ const NewProduct = () => {
                 />
               )}
             </div>
+
             <div className="mt-4">
               <div className="font-medium">
                 Product Images ( upload atleast 3 images )
@@ -886,6 +918,63 @@ const NewProduct = () => {
           </motion.div>
         )}
         {step === 3 && (
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
+            transition={{ duration: 0.3 }}
+            className="space-y-10"
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isMaker}
+                  onChange={(e) => setIsMaker(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Is Maker"
+            />
+            <div className="mt-10">
+              <h2 className="font-medium">Select Makers</h2>
+              <div className="pt-4">
+                <Autocomplete
+                  options={users?.map((user) => ({
+                    label: user.name,
+                    id: user.id,
+                  }))}
+                  value={
+                    selectedUser
+                      ? {
+                          label: selectedUser,
+                          id: users.toString(),
+                        }
+                      : null
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue && typeof newValue === "object") {
+                      setSelectedUser(newValue.label);
+                      setUserId(newValue.id || null);
+                    } else {
+                      setSelectedUser(null);
+                      setUserId(null);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Search Makers"
+                      fullWidth
+                      onChange={(e) => setSearchUser(e.target.value)}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {step === 4 && (
           <motion.div
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
@@ -977,7 +1066,7 @@ const NewProduct = () => {
           </motion.div>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <motion.div
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
@@ -1098,7 +1187,7 @@ const NewProduct = () => {
           </motion.div>
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <div className="space-y-10">
             <div className="text-4xl font-semibold"> Congratulations 🎉 </div>
             <div className="text-xl font-light mt-4 leading-8 ">

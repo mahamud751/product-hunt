@@ -1,8 +1,10 @@
 "use client";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import { getSingleAlternative } from "@/lib/server-actions";
+import { cleanName } from "@/lib/utils";
 import { Grid } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -67,51 +69,63 @@ const AlternativeDetails = ({ params }: { params: { id: string } }) => {
             </div>
 
             <div>
-              {alternative?.products?.map((data: any, index: number) => (
-                <div
-                  className="mt-4"
-                  key={index}
-                  //@ts-ignore
-                  ref={(el) => (productRefs.current[index] = el!)}
-                >
-                  <div className="flex">
-                    <p className="ms-[-60px] text-4xl font-semibold tracking-tighter leading-none">
-                      #{index + 1}
-                    </p>
-                    <div className="ms-6">
-                      <Image
-                        src={data?.logo}
-                        alt={data?.name}
-                        width={200}
-                        height={200}
-                        className="object-contain shrink-0 w-9 h-9 rounded aspect-square max-md:w-8 max-md:h-8 max-sm:w-7 max-sm:h-7"
-                      />
+              {alternative?.products?.map((data: any, index: number) => {
+                const cleanedName = cleanName(data.name);
+                return (
+                  <div
+                    className="mt-4"
+                    key={index}
+                    //@ts-ignore
+                    ref={(el) => (productRefs.current[index] = el!)}
+                  >
+                    <div className="flex">
+                      <p className="ms-[-60px] text-4xl font-semibold tracking-tighter leading-none">
+                        #{index + 1}
+                      </p>
+                      <div className="ms-6">
+                        <Image
+                          src={data?.logo}
+                          alt={data?.name}
+                          width={200}
+                          height={200}
+                          className="object-contain shrink-0 w-9 h-9 rounded aspect-square max-md:w-8 max-md:h-8 max-sm:w-7 max-sm:h-7"
+                        />
+                      </div>
+                      <h1 className="ms-4 text-4xl font-semibold tracking-tighter leading-none">
+                        {data?.name}
+                      </h1>
                     </div>
-                    <h1 className="ms-4 text-4xl font-semibold tracking-tighter leading-none">
-                      {data?.name}
-                    </h1>
+                    <p className="text-lg leading-loose text-neutral-600 mt-2">
+                      {data?.headline.slice(0, 120)}
+                      {data?.headline.length > 120 && "..."}
+                    </p>
+                    <p className="text-lg leading-loose text-neutral-600 mt-2">
+                      {data?.description.slice(0, 200)}
+                      {data?.description.length > 200 && "..."}
+                    </p>
+                    <Link
+                      href={{
+                        pathname: `/productDetails/${encodeURIComponent(
+                          cleanedName
+                        )}`,
+                        query: { id: data.id },
+                      }}
+                    >
+                      <button className="flex mb-20 gap-5 justify-between px-4 py-4 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900">
+                        <span className="my-auto">Read more</span>
+                        <Image
+                          loading="lazy"
+                          src="/images/SVG.png"
+                          alt=""
+                          className="object-contain shrink-0 aspect-square w-[15px]"
+                          width={200}
+                          height={200}
+                        />
+                      </button>
+                    </Link>
                   </div>
-                  <p className="text-lg leading-loose text-neutral-600 mt-2">
-                    {data?.headline.slice(0, 120)}
-                    {data?.headline.length > 120 && "..."}
-                  </p>
-                  <p className="text-lg leading-loose text-neutral-600 mt-2">
-                    {data?.description.slice(0, 200)}
-                    {data?.description.length > 200 && "..."}
-                  </p>
-                  <button className="flex mb-20 gap-5 justify-between px-4 py-4 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900">
-                    <span className="my-auto">Read more</span>
-                    <Image
-                      loading="lazy"
-                      src="/images/SVG.png"
-                      alt=""
-                      className="object-contain shrink-0 aspect-square w-[15px]"
-                      width={200}
-                      height={200}
-                    />
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Grid>
 

@@ -72,6 +72,9 @@ interface ProductData {
   subcategoryId?: string;
   alternativeId?: string;
   rank?: number;
+  isMaker: boolean;
+  photos: string[];
+  makers: string[];
 }
 
 export const createProduct = async ({
@@ -97,6 +100,9 @@ export const createProduct = async ({
   categoryId,
   alternativeId,
   priceOption,
+  isMaker,
+  makers,
+  photos,
 }: ProductData): Promise<any> => {
   try {
     const authenticatedUser = await auth();
@@ -146,6 +152,9 @@ export const createProduct = async ({
         website,
         twitter,
         discord,
+        isMaker,
+        makers,
+        photos,
         status: "PENDING",
         category: {
           connect: {
@@ -622,7 +631,8 @@ export const getTopUpvotedProducts = async (
 
 export const commentOnProduct = async (
   productId: string,
-  commentText: string
+  commentText: string,
+  rating: number
 ) => {
   try {
     const authenticatedUser = await auth();
@@ -644,6 +654,7 @@ export const commentOnProduct = async (
         createdAt: new Date(),
         productId,
         userId,
+        rating,
         body: commentText,
         profilePicture: profilePicture,
       },
