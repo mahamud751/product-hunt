@@ -118,7 +118,11 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
   const handleCommentSubmit = async () => {
     try {
       // call the comment server action with the product id and the comment text
-      await commentOnProduct(currentProduct.id, commentText);
+      await commentOnProduct(
+        currentProduct.id,
+        commentText,
+        currentProduct.rating
+      );
 
       //reset the comment text
       setCommentText("");
