@@ -38,6 +38,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
 
     fetchAlternativeDetails();
   }, [id]);
+  console.log(product);
 
   const scrollToProduct = (index: number) => {
     productRefs.current[index]?.scrollIntoView({

@@ -119,11 +119,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
   const handleCommentSubmit = async () => {
     try {
       // call the comment server action with the product id and the comment text
-      await commentOnProduct(
-        currentProduct.id,
-        commentText,
-        currentProduct.rating
-      );
+      await commentOnProduct(currentProduct?.id, commentText, 2);
 
       //reset the comment text
       setCommentText("");
@@ -132,6 +128,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({
         {
           user: authenticatedUser?.user?.name,
           body: commentText,
+
           profile: authenticatedUser?.user?.image,
           userId: authenticatedUser?.user?.id,
           timestamp: new Date().toISOString(),
