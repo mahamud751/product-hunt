@@ -24,6 +24,8 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
   const router = useRouter();
 
   const [name, setName] = useState(product.name);
+  const [isMaker, setIsMaker] = useState(product.isMaker || false);
+  const [makers, setMakers] = useState(product.makers || []);
 
   const [tags, setTags] = useState(product.tags);
   const [linekdin, setLinekdin] = useState(product.linekdin);
@@ -102,6 +104,12 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
           uploadedProductImages.length > 0
             ? uploadedProductImages
             : product?.images?.map((image: any) => image?.url),
+        isMaker,
+        makers,
+        photos:
+          uploadedProductImages.length > 0
+            ? uploadedProductImages
+            : product?.photos?.map((image: any) => image),
       });
       toast(
         <>

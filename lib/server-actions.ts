@@ -249,6 +249,9 @@ export const updateProduct = async (
     twitter,
     discord,
     images,
+    isMaker,
+    makers,
+    photos,
   }: ProductData
 ) => {
   const authenticatedUser = await auth();
@@ -281,6 +284,9 @@ export const updateProduct = async (
       website,
       twitter,
       discord,
+      isMaker,
+      makers,
+      photos,
       images: {
         deleteMany: {
           productId,
