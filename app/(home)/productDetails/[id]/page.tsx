@@ -1,8 +1,9 @@
 "use client";
 import { auth } from "@/auth";
+import ActiveProducts from "@/components/active-products";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import ProductModalContent from "@/components/product-modal-content";
-import { getProductById } from "@/lib/server-actions";
+import { getProductById, getProducts } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -13,9 +14,10 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
   const id = searchParams.get("id");
   const [authenticatedUser, setAuthenticatedUser] = useState<any>(null);
   const [product, setProduct] = useState<any>(null);
+  const [featured, setFeatured] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0); // Track the current slide
-  const [activeTab, setActiveTab] = useState("Overview"); // Track the active tab
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("Overview");
   const productRefs = useRef<HTMLDivElement[]>([]);
   const [totalUpvotes, setTotalUpvotes] = useState(product?.upvotes || 0);
   const [hasUpvoted, setHasUpvoted] = useState(
@@ -27,7 +29,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
       try {
         const data = await getProductById(id as string);
         setProduct(data);
-        const user = await auth(); // Fetch the authenticated user
+        const user = await auth();
         setAuthenticatedUser(user);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -38,7 +40,20 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
 
     fetchAlternativeDetails();
   }, [id]);
-  console.log(product);
+  useEffect(() => {
+    const fetchFeaturedData = async () => {
+      try {
+        const data = await getProducts(0, 10, "ACTIVE", true);
+        setFeatured(data);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedData();
+  }, [id]);
 
   const scrollToProduct = (index: number) => {
     productRefs.current[index]?.scrollIntoView({
@@ -49,13 +64,13 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
 
   const handlePrevSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? product.photos.length - 1 : prevIndex - 1
+      prevIndex === 0 ? product?.photos?.length - 1 : prevIndex - 1
     );
   };
 
   const handleNextSlide = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === product.photos.length - 1 ? 0 : prevIndex + 1
+      prevIndex === product?.photos?.length - 1 ? 0 : prevIndex + 1
     );
   };
 
@@ -84,7 +99,6 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
               {product?.description?.length > 200 && "..."}
             </p>
             <div className="relative w-full h-auto mt-8">
-              {/* Slider container */}
               <div className="relative w-full h-[500px] flex justify-center items-center overflow-hidden">
                 {product?.photos?.map((data: any, index: number) => (
                   <div
@@ -150,9 +164,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
     <div>
       <div className="w-full mx-auto py-8">
         <Grid container spacing={3}>
-          {/* Left Side Grid */}
           <Grid item xs={12} sm={6} md={8} lg={8}>
-            {/* Tabs Section */}
             <div className="flex space-x-4 mb-8">
               {["Overview", "Launches", "Reviews", "Team", "Awards"].map(
                 (tab) => (
@@ -171,39 +183,24 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
               )}
             </div>
 
-            {/* Tab Content */}
             {renderTabContent()}
-
-            {/* Slider Implementation */}
           </Grid>
 
-          {/* Right Side Grid */}
           <Grid item xs={12} sm={6} md={4} lg={4}>
             <div className="mt-[120px] sticky top-10">
               <DetailsPageCard alternative={product} />
-              <div className="mt-7 px-6">
-                {product?.products?.map((data: any, index: number) => (
-                  <div
-                    key={index}
-                    className="hover:bg-[#F5F5F5] active:bg-[#F5F5F5] rounded-lg text-neutral-500 my-1 cursor-pointer"
-                    onClick={() => scrollToProduct(index)}
-                  >
-                    <div className="flex justify-between items-center px-3 py-3 text-sm">
-                      <div className="flex gap-2.5 items-center">
-                        <Image
-                          src={data?.logo}
-                          alt=""
-                          className="object-contain w-4 rounded aspect-[1.07] max-sm:w-3.5"
-                          width={150}
-                          height={150}
-                        />
-                        <div className="font-medium text-zinc-800">
-                          {data?.name}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+
+              <div className="mt-2">
+                <div className="text-sm rounded-lg border border-solid bg-neutral-50 border-neutral-200">
+                  <h2 className="text-lg font-semibold p-2">
+                    Featured Products
+                  </h2>
+                  <ActiveProducts
+                    activeProducts={featured?.products}
+                    commentShow={false}
+                    authenticatedUser={authenticatedUser}
+                  />
+                </div>
               </div>
             </div>
           </Grid>

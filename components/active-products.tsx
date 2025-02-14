@@ -96,13 +96,13 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
 
   return (
     <div className="w-full">
-      <div className={`flex items-center pb-3 ${header && "border-b"}`}>
+      <div className={`flex items-center  ${header && "border-b pb-3"}`}>
         <h1 className="text-xl font-medium">
           {header} {total && "(" + total + ")"}
         </h1>
       </div>
 
-      <div className="space-y-2 py-6 flex flex-col">
+      <div className="space-y-2 py-2 flex flex-col">
         {productsToShow?.map((product: any, index: number) => (
           <ProductItem
             key={product.id}
