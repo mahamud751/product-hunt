@@ -114,9 +114,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             alt="logo"
             width={1000}
             height={1000}
-            className={`h-12 w-12 rounded-md ${
-              commentShow ? "" : "mt-[-24px]"
-            }`}
+            className={`h-12 w-12 rounded-md ${commentShow ? "" : "mt-[-2px]"}`}
           />
 
           <div className="ml-4">
@@ -169,7 +167,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
                   </Link>
                 </div>
               </div>
-              <div className="mr-1">•</div>
+              {commentShow && <div className="mr-1">•</div>}
+
               {commentShow && (
                 <p className="text-gray-500 text-xs pr-2">
                   {product?.priceOption}
