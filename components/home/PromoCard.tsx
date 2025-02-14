@@ -7,9 +7,9 @@ import { getPromoProducts } from "@/lib/server-actions";
 
 const PromoCard = () => {
   const [categories, setCategories] = useState<any[]>([]);
-  // const [open, setOpen] = useState(false);
-  // const [message, setMessage] = useState("");
-  // const [severity, setSeverity] = useState<AlertColor>("success");
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState<AlertColor>("success");
 
   useEffect(() => {
     getPromoProducts().then((data) => {
@@ -17,27 +17,27 @@ const PromoCard = () => {
     });
   }, []);
 
-  // const handleCopy = async (promoCode: string) => {
-  //   try {
-  //     await navigator.clipboard.writeText(promoCode);
-  //     setMessage(`Copied: ${promoCode}`);
-  //     setSeverity("success");
-  //   } catch (err) {
-  //     setMessage("Failed to copy promo code. Please try again.");
-  //     setSeverity("error");
-  //   }
-  //   setOpen(true);
-  // };
+  const handleCopy = async (promoCode: string) => {
+    try {
+      await navigator.clipboard.writeText(promoCode);
+      setMessage(`Copied: ${promoCode}`);
+      setSeverity("success");
+    } catch (err) {
+      setMessage("Failed to copy promo code. Please try again.");
+      setSeverity("error");
+    }
+    setOpen(true);
+  };
 
-  // const handleClose = (
-  //   event: React.SyntheticEvent | Event,
-  //   reason?: string
-  // ) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-  //   setOpen(false);
-  // };
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <div className="grid grid-cols-1 gap-3 mt-4">
@@ -47,47 +47,47 @@ const PromoCard = () => {
           className="flex flex-col items-start px-2 py-1 col-span-4 transition-all duration-300 hover:shadow-md hover:scale-15"
         >
           <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
-            <div className="flex gap-3 items-center text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800 max-sm:text-base">
-              <button className="box-border flex flex-col justify-center items-center p-1.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+            <div className="flex gap-3 items-center tracking-tight leading-snug whitespace-nowrap">
+              <button className="box-border flex flex-col justify-center items-center p-0.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
                 <Image
                   src={product?.logo || "/default-image.jpg"}
                   alt={product?.name}
                   width={1000}
                   height={1000}
-                  className="object-contain w-6 h-6 rounded aspect-square max-md:h-[22px] max-md:w-[22px] max-sm:w-5 max-sm:h-5"
+                  className="object-contain w-9 h-9 rounded aspect-square"
                 />
               </button>
 
-              <div className="my-auto text-[14px]">
-                {product?.name.slice(0, 7)}
+              <div>
+                <h1 className="text-sm font-semibold">{product?.name}</h1>
+                <p className="text-gray-500 text-xs md:text-sm pr-2">
+                  {product?.headline.slice(0, 20)}
+                </p>
               </div>
             </div>
 
-            <button
-              // onClick={() => handleCopy(product?.promoCode || "No code")}
-              // endIcon={<FaCopy />}
+            <Button
+              onClick={() => handleCopy(product?.promoCode || "No code")}
+              endIcon={<FaCopy className="w-3 h-3" />}
               className="py-[6px] text-xs text-white rounded-[15px] bg-black bg-opacity-90 w-[50px]"
             >
               -{product?.promoOffer}%
-            </button>
+            </Button>
 
-            {/* <Snackbar
-                open={open}
-                autoHideDuration={3000}
+            <Snackbar
+              open={open}
+              autoHideDuration={3000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <Alert
                 onClose={handleClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                severity={severity}
+                sx={{ width: "100%" }}
               >
-                <Alert
-                  onClose={handleClose}
-                  severity={severity}
-                  sx={{ width: "100%" }}
-                >
-                  {message}
-                </Alert>
-              </Snackbar> */}
-          </div>
-          <div className="text-sm leading-5 text-neutral-600 max-sm:text-sm">
-            {product?.headline?.slice(0, 40) || "No description available"}
+                {message}
+              </Alert>
+            </Snackbar>
           </div>
         </div>
       ))}

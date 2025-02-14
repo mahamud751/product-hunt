@@ -41,6 +41,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
       comments,
       upvotes,
       price,
+      priceOption,
     } = product;
 
     const imageUrls = images?.map((image: any) => image?.url);
@@ -79,6 +80,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
       userId,
       status,
       price,
+      priceOption,
       images: imageUrls,
       category: categoryNames,
       commentsLength: commentsCount,
@@ -90,7 +92,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
 
   const productsToShow = showAll
     ? formattedActiveProducts
-    : formattedActiveProducts?.slice(0, 10);
+    : formattedActiveProducts?.slice(0, 5);
 
   return (
     <div className="w-full">
@@ -113,14 +115,18 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
         ))}
       </div>
 
-      {formattedActiveProducts?.length > 10 && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
-          >
-            {showAll ? "Show Less" : "Show More"}
-          </button>
+      {formattedActiveProducts?.length > 5 && (
+        <div className="flex mt-4">
+          <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
+          <div className="mt-[-25px] mx-3 w-[310px]">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="px-8 py-3 text-sm font-medium bg-white rounded-[25px] border-2 border-[#448EE6]"
+            >
+              {showAll ? "Show Less" : "Show More"}
+            </button>
+          </div>
+          <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
         </div>
       )}
     </div>

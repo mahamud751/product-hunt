@@ -1320,7 +1320,7 @@ export const isUserPremium = async () => {
     throw new Error("User ID is missing or invalid");
   }
 
-  const userId = authenticatedUser.user.id;
+  const userId = authenticatedUser?.user?.id;
 
   // get the user
 

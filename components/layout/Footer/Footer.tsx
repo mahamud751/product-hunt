@@ -40,15 +40,15 @@ const Footer: React.FC = () => {
         "Winner Borad",
         "How it Works",
         "Newsletter",
-        "Become An",
-        "Affiliate",
+        "Become An Affiliate",
       ],
     },
   ];
 
   return (
-    <footer className="pt-14 mx-auto my-0 border-t border-neutral-800 border-opacity-10 max-sm:py-8">
-      <div className="flex gap-5 max-md:flex-col">
+    <footer className="pt-14 my-0 border-t border-neutral-800 border-opacity-10 max-sm:py-8">
+      <div className="flex gap-5 max-md:flex-col md:flex-row-reverse">
+        {/* Left content on small devices, right on large screens */}
         <div className="flex flex-col w-[67%] md:w-[33%]">
           <div className="flex flex-col items-start w-full max-md:mt-10">
             <h2 className="text-base font-medium tracking-normal text-neutral-800">
@@ -63,10 +63,12 @@ const Footer: React.FC = () => {
             <SocialIcons />
           </div>
         </div>
-        <div className="flex flex-col ml-0 md:ml-5 w-[100%] md:w-[67%]">
+
+        {/* Right content on small devices, left on large screens */}
+        <div className="flex flex-col  w-[100%] md:w-[67%]">
           <div className="flex flex-col w-full max-md:mt-10 max-md:max-w-full">
-            <div className="max-w-full ms-0 md:ms-24">
-              <div className="flex gap-5 ">
+            <div className="max-w-full ms-0">
+              <div className="flex gap-5">
                 {linkColumns.map((column, index) => (
                   <LinkColumn
                     key={index}
@@ -79,13 +81,13 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer text */}
       <div className="flex justify-between w-[100%] mt-12">
         <p className="text-xs text-stone-500">
-          {" "}
           &copy; {currentYear} Product Hunt. All rights reserved.
         </p>
-
-        <p className="mb-12 text-xs  text-stone-500 ">
+        <p className="mb-12 text-xs text-stone-500">
           This website may contain affiliate links
         </p>
       </div>

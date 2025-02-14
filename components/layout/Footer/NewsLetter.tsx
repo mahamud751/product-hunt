@@ -11,7 +11,7 @@ const NewsletterForm: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex overflow-hidden gap-0.5 self-stretch px-0.5 py-px mt-4 text-sm font-medium rounded-lg border border-solid border-neutral-200 max-sm:flex-col max-sm:gap-2.5"
+      className="flex overflow-hidden gap-0.5 self-stretch px-0.5 mt-4 text-sm font-medium rounded-lg border border-solid border-neutral-200 max-sm:flex-col max-sm:gap-2.5"
     >
       <label htmlFor="email" className="sr-only">
         Enter your email
@@ -22,7 +22,7 @@ const NewsletterForm: React.FC = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
-        className="overflow-hidden grow px-3 py-2.5 bg-white rounded-md text-neutral-600 text-opacity-50 max-md:pr-5"
+        className="overflow-hidden grow px-3 py-0.5 bg-white rounded-md text-neutral-600 text-opacity-50 max-md:pr-5"
         required
       />
       <button

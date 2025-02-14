@@ -493,7 +493,7 @@ const NewProduct = () => {
   };
   return (
     <div className="flex justify-center py-8 md:py-20">
-      <div className="hidden md:block w-1/5 p-4">
+      <div className="hidden md:block w-1/2 p-4 md:p-0">
         <div className="space-y-4 sticky top-10">
           {steps.map((stepItem) => {
             const Icon = stepItem.icon;
@@ -521,7 +521,7 @@ const NewProduct = () => {
       </div>
 
       {/* Form content on the right side - Always visible */}
-      <div className="px-8 w-full md:w-2/5 ms-20">
+      <div className="px-3 w-full md:w-5/5 ms-20">
         {step === 1 && (
           <>
             <h1 className="text-4xl font-semibold"> New product</h1>

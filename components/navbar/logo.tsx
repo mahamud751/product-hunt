@@ -4,7 +4,7 @@ import Link from "next/link";
 const Logo = () => {
   return (
     <div>
-      <Link href={"/"} className="md:hidden">
+      <Link href="/" className="md:hidden">
         <Image
           src={"/logo/small-logo.png"}
           alt="logo"
@@ -14,7 +14,7 @@ const Logo = () => {
         />
       </Link>
 
-      <Link href={"/"} className="hidden md:block">
+      <Link href="/" className="hidden md:block">
         <Image src={"/logo/logo.png"} alt="logo" width={100} height={100} />
       </Link>
     </div>

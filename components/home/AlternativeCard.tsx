@@ -12,18 +12,18 @@ const AlternativeCard = ({ item }: { item: any }) => {
     <Link
       href={{
         pathname: `/alternatives/${encodeURIComponent(cleanedName)}`,
-        query: { id: item.id },
+        query: { id: item?.id },
       }}
     >
       <div className="flex flex-col items-start px-5 py-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15">
         <div className="flex gap-3 text-xl font-semibold tracking-tight leading-snug whitespace-nowrap text-neutral-800">
-          <button className="box-border flex flex-col justify-center items-center p-1.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+          <button className="box-border flex flex-col justify-center items-center p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
             <Image
               src={item?.logo}
               alt="logo"
               width={1000}
               height={1000}
-              className="object-contain w-6 h-6 rounded aspect-square max-md:h-[22px] max-md:w-[22px] max-sm:w-5 max-sm:h-5"
+              className="object-contain w-9 h-9 rounded aspect-square"
             />
           </button>
 
