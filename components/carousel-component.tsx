@@ -27,7 +27,7 @@ const CarouselComponent: React.FC<CarouselProps> = ({ productImages }) => {
     >
       <CarouselContent>
         {Array.from({
-          length: productImages.length,
+          length: productImages?.length,
         }).map((_, index) => (
           <CarouselItem
             key={index}
@@ -36,7 +36,7 @@ const CarouselComponent: React.FC<CarouselProps> = ({ productImages }) => {
     "
           >
             <Image
-            priority
+              priority
               src={productImages[index]}
               alt="product-image"
               width={500}

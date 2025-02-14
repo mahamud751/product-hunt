@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import ActiveProducts from "@/components/active-products";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import ProductModalContent from "@/components/product-modal-content";
+import DetailsCard from "@/components/productDetails/DetailsCard";
+import ProductComment from "@/components/productDetails/ProductComment";
 import ProductFeaturedCard from "@/components/productDetails/ProductFeaturedCard";
 import { getProductById, getProducts } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
@@ -74,13 +76,11 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
       case "Overview":
         return (
           <div>
-            <h1 className="text-4xl font-semibold tracking-tighter leading-none">
-              {product?.name}
+            <DetailsCard product={product} />
+            <h1 className="text-xl font-semibold tracking-tighter leading-none mt-5">
+              What is {product?.name}
             </h1>
-            <p className="text-lg leading-loose text-neutral-600 mt-2">
-              {product?.headline?.slice(0, 80)}{" "}
-              {product?.headline?.length > 80 && "..."}
-            </p>
+
             <p className="text-lg leading-loose text-neutral-600 mt-8">
               {product?.description?.slice(0, 200)}{" "}
               {product?.description?.length > 200 && "..."}
@@ -123,7 +123,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
                 &#10095;
               </button>
             </div>
-            <ProductModalContent
+            <ProductComment
               currentProduct={product}
               authenticatedUser={authenticatedUser}
               setTotalUpvotes={setTotalUpvotes}
