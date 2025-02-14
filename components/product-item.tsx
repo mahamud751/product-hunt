@@ -134,7 +134,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
             <p className="text-gray-500 text-xs md:text-sm pr-2">
               {product?.headline.slice(0, 40)}
             </p>
-            <div className="hidden md:flex gap-x-2 items-center mt-1">
+            <div className="hidden md:flex gap-x-2 items-center">
               {/* <p className="hidden md:flex text-xs">-</p> */}
               <div className="text-xs text-gray-500 w-[120px]">
                 <div className="flex gap-x-1 items-center">

@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import ActiveProducts from "@/components/active-products";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import ProductModalContent from "@/components/product-modal-content";
+import ProductFeaturedCard from "@/components/productDetails/ProductFeaturedCard";
 import { getProductById, getProducts } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
 import Image from "next/image";
@@ -14,7 +15,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
   const id = searchParams.get("id");
   const [authenticatedUser, setAuthenticatedUser] = useState<any>(null);
   const [product, setProduct] = useState<any>(null);
-  const [featured, setFeatured] = useState<any>(null);
+
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Overview");
@@ -39,20 +40,6 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
     };
 
     fetchAlternativeDetails();
-  }, [id]);
-  useEffect(() => {
-    const fetchFeaturedData = async () => {
-      try {
-        const data = await getProducts(0, 10, "ACTIVE", true);
-        setFeatured(data);
-      } catch (error) {
-        console.error("Error fetching product details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeaturedData();
   }, [id]);
 
   const scrollToProduct = (index: number) => {
@@ -190,18 +177,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
             <div className="mt-[120px] sticky top-10">
               <DetailsPageCard alternative={product} />
 
-              <div className="mt-2">
-                <div className="text-sm rounded-lg border border-solid bg-neutral-50 border-neutral-200">
-                  <h2 className="text-lg font-semibold p-2">
-                    Featured Products
-                  </h2>
-                  <ActiveProducts
-                    activeProducts={featured?.products}
-                    commentShow={false}
-                    authenticatedUser={authenticatedUser}
-                  />
-                </div>
-              </div>
+              <ProductFeaturedCard />
             </div>
           </Grid>
         </Grid>

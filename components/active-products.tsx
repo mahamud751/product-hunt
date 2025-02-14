@@ -102,7 +102,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
         </h1>
       </div>
 
-      <div className="space-y-2 py-2 flex flex-col">
+      <div className="flex flex-col">
         {productsToShow?.map((product: any, index: number) => (
           <ProductItem
             key={product.id}
@@ -115,7 +115,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
         ))}
       </div>
 
-      {formattedActiveProducts?.length > 5 && (
+      {formattedActiveProducts?.length > 5 && commentShow && (
         <div className="flex mt-4">
           <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
           <div className="mt-[-25px] mx-3 w-[310px]">
