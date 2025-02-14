@@ -53,11 +53,7 @@ const ProductFeaturedCard = () => {
                 </div>
               </div>
             </div>
-
-            {/* Add <hr> after the last product */}
-            {index === featured?.products?.length - 1 && (
-              <hr className="w-full mt-4 border-t border-gray-200" />
-            )}
+            <hr className="w-full mt-4 border-t border-gray-200" />
           </div>
         ))}
       </div>

@@ -22,7 +22,7 @@ const DetailsPageCard: React.FC<NotionCardProps> = ({ alternative }) => {
       <div className="mt-5 leading-5 text-neutral-600">
         {alternative?.description.slice(0, 75)}...
       </div>
-      <button className="flex gap-5 justify-between self-stretch px-4 py-1.5 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900 w-full">
+      <button className="flex gap-5 justify-between self-stretch px-4 py-2.5 mt-6 font-medium leading-none text-white rounded-lg bg-stone-900 w-full">
         <span className="my-auto">Visit {alternative?.name}</span>
         <Image
           loading="lazy"
