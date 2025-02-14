@@ -27,11 +27,11 @@ const ProductFeaturedCard = () => {
 
   return (
     <div className="mt-2">
-      <div className="rounded-lg border border-solid bg-neutral-50 border-neutral-200">
-        {featured?.products?.map((product: any) => (
+      <div className="">
+        {featured?.products?.map((product: any, index: number) => (
           <div
             key={product.id}
-            className="flex flex-col items-start px-2 py-1 col-span-4 transition-all duration-300 hover:shadow-md hover:scale-15"
+            className="flex flex-col items-start px-2 py-1 col-span-4 transition-all duration-300"
           >
             <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
               <div className="flex gap-3 items-center tracking-tight leading-snug whitespace-nowrap">
@@ -53,6 +53,11 @@ const ProductFeaturedCard = () => {
                 </div>
               </div>
             </div>
+
+            {/* Add <hr> after the last product */}
+            {index === featured?.products?.length - 1 && (
+              <hr className="w-full mt-4 border-t border-gray-200" />
+            )}
           </div>
         ))}
       </div>
