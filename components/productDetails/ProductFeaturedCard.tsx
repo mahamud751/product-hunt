@@ -30,15 +30,15 @@ const ProductFeaturedCard = () => {
       <div className="">
         {featured?.products?.map((product: any, index: number) => (
           <div
-            key={product.id}
+            key={index}
             className="flex flex-col items-start px-2 py-1 col-span-4 transition-all duration-300"
           >
             <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
               <div className="flex gap-3 items-center tracking-tight leading-snug whitespace-nowrap">
-                <button className="box-border flex flex-col justify-center items-center p-0.5 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+                <button className="box-border flex flex-col justify-center items-center p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
                   <Image
-                    src={product?.logo || "/default-image.jpg"}
-                    alt={product?.name}
+                    src={product?.logo}
+                    alt="logo"
                     width={1000}
                     height={1000}
                     className="object-contain w-9 h-9 rounded aspect-square"

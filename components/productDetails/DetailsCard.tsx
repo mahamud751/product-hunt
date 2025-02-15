@@ -5,13 +5,16 @@ import React from "react";
 const DetailsCard = ({ product }: { product: Product }) => {
   return (
     <div className="flex p-6 gap-4 mx-auto my-0 bg-white max-w-[868px] max-md:p-5 max-sm:flex-col max-sm:p-4">
-      <Image
-        src={product?.logo ?? ""}
-        alt={product?.name || ""}
-        className="object-contain w-16 h-16 rounded-xl max-sm:w-12 max-sm:h-12"
-        width={1000}
-        height={1000}
-      />
+      <button className="box-border flex flex-col justify-center items-center p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+        <Image
+          src={product?.logo ?? ""}
+          alt="logo"
+          width={1000}
+          height={1000}
+          className="object-contain w-9 h-9 rounded aspect-square"
+        />
+      </button>
+
       <div className="flex-1">
         <div className="flex flex-wrap gap-5 justify-between items-start mb-3.5 max-md:gap-4 max-sm:flex-col">
           <div className="flex flex-col gap-1">
