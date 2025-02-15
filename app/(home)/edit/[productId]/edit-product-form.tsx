@@ -45,6 +45,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
   const [twitter, setTwitter] = useState(product.twitter);
   const [discord, setDiscord] = useState(product.discord);
   const [categories, setCategories] = useState(product.categories);
+  const [alternatives, setAlternatives] = useState(product.alternatives);
   const [slug, setSlug] = useState(product.slug);
 
   const handleLogoUpload = (url?: string) => {
@@ -99,6 +100,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         twitter,
         discord,
         categoryId: categories,
+        alternativeIds: alternatives,
         logo: uploadedLogoUrl || product.logo,
         images:
           uploadedProductImages.length > 0
