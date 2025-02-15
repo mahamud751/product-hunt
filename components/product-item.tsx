@@ -107,12 +107,12 @@ rounded-lg
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <button className="box-border flex flex-col justify-center items-center h-12 w-12 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+          <button className="box-border mt-[-12px] flex flex-col justify-center items-center h-16 w-16 bg-white rounded-md border border-solid border-neutral-200">
             <Image
               src={product?.logo}
               alt="alternatives"
-              className={`object-contain  rounded-md aspect-square ${
-                commentShow ? "h-10 w-10" : "mt-[-2px] w-10 px-[2px]"
+              className={`object-contain p-1 rounded-md aspect-square ${
+                commentShow ? "" : "mt-[-2px]"
               }`}
               width={200}
               height={200}
@@ -122,10 +122,10 @@ rounded-lg
           <div className="ml-4">
             <div className="md:flex items-center gap-x-2">
               {commentShow && (
-                <h1 className="text-sm font-semibold">{index! + 1}.</h1>
+                <h1 className="text-[16px] font-semibold">{index! + 1}.</h1>
               )}
 
-              <h1 className="text-sm font-semibold">{product?.name}</h1>
+              <h1 className="text-[16px] font-semibold">{product?.name}</h1>
               <div
                 onClick={handleArrowClick}
                 className="hidden md:flex cursor-pointer"
@@ -133,10 +133,10 @@ rounded-lg
                 <PiArrowBendDoubleUpRight className="text-[12px]" />
               </div>
             </div>
-            <p className="text-gray-500 text-xs md:text-sm pr-2">
+            <p className="text-gray-500 text-xs md:text-sm pr-2 mt-1">
               {product?.headline.slice(0, 40)}
             </p>
-            <div className="hidden md:flex gap-x-2 items-center">
+            <div className="hidden md:flex gap-x-2 items-center mt-3">
               {/* <p className="hidden md:flex text-xs">-</p> */}
               <div className="text-xs text-gray-500">
                 <div className="flex gap-x-1 items-center">
@@ -162,7 +162,7 @@ rounded-lg
 
                   <Link
                     href={`/category/${product?.category}`}
-                    className="hover:underline"
+                    className="hover:underline text-[12px] capitalize"
                     onClick={handleCategoryClick}
                   >
                     {product?.category}
@@ -172,7 +172,7 @@ rounded-lg
               {commentShow && <div className="mr-1">•</div>}
 
               {commentShow && (
-                <p className="text-gray-500 text-xs pr-2">
+                <p className="text-gray-500 text-xs pr-2 capitalize">
                   {product?.priceOption}
                 </p>
               )}

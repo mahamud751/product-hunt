@@ -237,6 +237,24 @@ export const getPromoProducts = async (categoryId?: string) => {
   return promoProducts;
 };
 
+export const getFeaturedProducts = async () => {
+  const promoProducts = await db.product.findMany({
+    where: {
+      featured: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      category: true,
+      subcategory: true,
+      alternatives: true,
+    },
+  });
+
+  return promoProducts;
+};
+
 export const updateProduct = async (
   productId: string,
   {

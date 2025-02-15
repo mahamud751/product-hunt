@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa";
 import { Button, Snackbar, Alert, AlertColor } from "@mui/material";
 import { getPromoProducts } from "@/lib/server-actions";
+import Link from "next/link";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 
 const PromoCard = () => {
   const [categories, setCategories] = useState<any[]>([]);
@@ -13,7 +15,7 @@ const PromoCard = () => {
 
   useEffect(() => {
     getPromoProducts().then((data) => {
-      setCategories(data.slice(0, 10));
+      setCategories(data.slice(0, 5));
     });
   }, []);
 
@@ -40,59 +42,86 @@ const PromoCard = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-3 mt-4">
-      {categories?.map((product) => (
-        <div
-          key={product.id}
-          className="flex flex-col items-start px-2 py-1 col-span-4  duration-300 rounded-lg 
+    <div className="grid grid-cols-1 gap-3 mt-2">
+      {categories?.map((product) => {
+        const promoPrice = (
+          parseFloat(product?.price) *
+          (1 - parseFloat(product?.promoOffer || "0") / 100)
+        ).toFixed(0);
+        return (
+          <div
+            key={product.id}
+            className="flex flex-col items-start px-2 py-1 col-span-4  duration-300 rounded-lg 
     border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
     "
-        >
-          <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
-            <div className="flex gap-3 items-center tracking-tight leading-snug whitespace-nowrap">
-              <button className="box-border flex flex-col justify-center items-center p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
-                <Image
-                  src={product?.logo}
-                  alt="logo"
-                  width={1000}
-                  height={1000}
-                  className="object-contain w-9 h-9 rounded aspect-square"
-                />
-              </button>
+          >
+            <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
+              <div className="flex gap-3 tracking-tight leading-snug whitespace-nowrap mt-2">
+                <div>
+                  <button className="box-border flex flex-col p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+                    <Image
+                      src={product?.logo}
+                      alt="logo"
+                      width={1000}
+                      height={1000}
+                      className="object-contain w-9 h-9 rounded aspect-square"
+                    />
+                  </button>
+                </div>
+
+                <div>
+                  <h1 className="text-sm font-semibold">
+                    {product?.name.slice(0, 15)}
+                  </h1>
+                  <p className="text-gray-500 text-xs md:text-sm pr-2">
+                    {product?.headline.slice(0, 18)}...
+                  </p>
+                  <div className="flex justify-between">
+                    <p className="text-gray-500 text-xs md:text-sm pr-2 mt-3 mb-2">
+                      {product?.category?.name.slice(0, 10)}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               <div>
-                <h1 className="text-sm font-semibold">{product?.name}</h1>
-                <p className="text-gray-500 text-xs md:text-sm pr-2">
-                  {product?.headline.slice(0, 20)}
-                </p>
+                <div className="ms-[-20px]">
+                  <Button
+                    onClick={() => handleCopy(product?.promoCode || "No code")}
+                    endIcon={<FaCopy className="w-3 h-3" />}
+                    className="text-xs text-white rounded-[15px] bg-black bg-opacity-90 w-[100px] mt-2 h-[20px]"
+                  >
+                    -{product?.promoOffer}% off
+                  </Button>
+                </div>
+                <div className="flex mt-6 ms-[-10px]">
+                  <p className="text-gray-500 text-xs md:text-sm pr-2 mt-3 mb-2 line-through">
+                    ${product?.price}
+                  </p>
+                  <p className="text-[#529072] text-xs md:text-sm pr-2 mt-3 mb-2 font-bold">
+                    ${promoPrice}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <Button
-              onClick={() => handleCopy(product?.promoCode || "No code")}
-              endIcon={<FaCopy className="w-3 h-3" />}
-              className="py-[6px] text-xs text-white rounded-[15px] bg-black bg-opacity-90 w-[50px]"
-            >
-              -{product?.promoOffer}%
-            </Button>
-
-            <Snackbar
-              open={open}
-              autoHideDuration={3000}
-              onClose={handleClose}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            >
-              <Alert
+              <Snackbar
+                open={open}
+                autoHideDuration={3000}
                 onClose={handleClose}
-                severity={severity}
-                sx={{ width: "100%" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
               >
-                {message}
-              </Alert>
-            </Snackbar>
+                <Alert
+                  onClose={handleClose}
+                  severity={severity}
+                  sx={{ width: "100%" }}
+                >
+                  {message}
+                </Alert>
+              </Snackbar>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

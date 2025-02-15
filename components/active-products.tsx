@@ -116,17 +116,19 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
       </div>
 
       {formattedActiveProducts?.length > 5 && commentShow && (
-        <div className="flex mt-12">
-          <div className="w-[20%] border-t-[3px] border-[#E1F0FE]"></div>
-          <div className="mt-[-20px] mx-3">
+        <div className="flex mt-12 items-center">
+          <div className="w-[24%] border-t-[2px] border-[#393a3a]"></div>
+
+          <div className="-mt-1 md:-mt-1 mx-3">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="px-8 py-1 text-sm font-medium bg-white rounded-[10px] border-2 border-[#448EE6]"
+              className="px-1 md:px-4 py-1 text-sm font-medium bg-white rounded-[10px] border-2 border-[#343435]"
             >
               {showAll ? "Show Less" : `${footer}`}
             </button>
           </div>
-          <div className="w-[20%] border-t-[3px] border-[#E1F0FE]"></div>
+
+          <div className="w-[24%] border-t-[2px] border-[#393a3a]"></div>
         </div>
       )}
     </div>

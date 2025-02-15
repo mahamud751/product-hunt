@@ -81,9 +81,9 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-
+      <div className="mt-5 border-t-[1px] border-[#393a3a]"></div>
       {/* Footer text */}
-      <div className="flex justify-between w-[100%] mt-12">
+      <div className="flex justify-between w-[100%] mt-5">
         <p className="text-xs text-stone-500">
           &copy; {currentYear} Product Hunt. All rights reserved.
         </p>

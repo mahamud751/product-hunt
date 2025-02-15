@@ -2,19 +2,18 @@ import { auth } from "@/auth";
 import ActiveProducts from "@/components/active-products";
 import AlternativeCard from "@/components/home/AlternativeCard";
 import FeaturedCard from "@/components/home/FeaturedCard";
+import FeaturedCardData from "@/components/home/FeaturedCardData";
 import HeroSection from "@/components/home/HeroSecion";
 import PromoButtonCard from "@/components/home/PromoButtonCard";
 import PromoCard from "@/components/home/PromoCard";
-import { getFilteredProducts, getProducts } from "@/lib/server-actions";
-import { Grid, Typography, Divider } from "@mui/material";
-import Image from "next/image";
-import Link from "next/link";
+import { getFilteredProducts } from "@/lib/server-actions";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Grid } from "@mui/material";
 
 const Home = async () => {
   const filteredTodayProducts = await getFilteredProducts("day");
   const filteredWeekProducts = await getFilteredProducts("week");
   const filteredMonthProducts = await getFilteredProducts("month");
-  const featuredProducts = await getProducts(0, 10, "ACTIVE", true);
 
   const authenticatedUser = await auth();
 
@@ -59,38 +58,31 @@ const Home = async () => {
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={4}>
             <Grid container direction="column" spacing={4}>
-              {/* Featured Section */}
               <Grid item>
-                <h1 className="text-xl font-medium"> Featured</h1>
+                <div className="flex justify-between">
+                  <div className="flex justify-between">
+                    <h1 className="text-xl font-medium">Featured</h1>
+                  </div>
+                  <hr className="border-t border-dashed border-black mt-5 w-[70%]" />
+                </div>
                 <FeaturedCard />
-                <ActiveProducts
-                  activeProducts={featuredProducts.products}
-                  commentShow={false}
-                  authenticatedUser={authenticatedUser}
-                />
-                <div className="flex justify-center">
-                  <button className="w-[80%] px-4 py-3 mt-7 font-medium leading-none text-white rounded-lg bg-neutral-800">
-                    Promote your product
-                  </button>
+                <FeaturedCardData />
+                <div className="border border-dashed rounded-lg border-black mt-5">
+                  <div className="flex justify-between mt-2 p-5">
+                    <h1 className="text-xl font-medium mt-1">
+                      Promote your product
+                    </h1>
+                    <AddCircleIcon sx={{ fontSize: 40 }} />
+                  </div>
                 </div>
               </Grid>
 
               <Grid item>
                 <div className="flex justify-between">
-                  <h1 className="text-xl font-medium">Product Deals</h1>
-
-                  <Link href={"/promos"}>
-                    <button className="flex gap-1.5 px-1 py-2 text-sm font-medium leading-none bg-white rounded-md border border-solid border-neutral-200 text-neutral-600">
-                      <span className="grow">View all</span>
-                      <Image
-                        src="/images/SVG.png"
-                        alt="alternatives"
-                        className="object-contain shrink-0 aspect-[1.07] w-[15px]"
-                        width={200}
-                        height={200}
-                      />
-                    </button>
-                  </Link>
+                  <div className="flex justify-between">
+                    <h1 className="text-xl font-medium">Product Deals</h1>
+                  </div>
+                  <hr className="border-t border-dashed border-black mt-5 w-[55%]" />
                 </div>
 
                 <PromoCard />
