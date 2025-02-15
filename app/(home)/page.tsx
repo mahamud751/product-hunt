@@ -22,13 +22,14 @@ const Home = async () => {
     <div>
       <HeroSection />
       <div className="w-full mx-auto py-8">
-        <Grid container spacing={2}>
+        <Grid container spacing={6}>
           <Grid item xs={12} sm={6} md={8} lg={8}>
             <Grid container direction="column" spacing={4}>
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredTodayProducts}
-                  header="See all of today's products"
+                  header="Top Products Launching Today"
+                  footer="See all of today's products"
                   total={filteredTodayProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}
@@ -37,7 +38,8 @@ const Home = async () => {
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredWeekProducts}
-                  header="See all of last week's top products"
+                  header="Last Week's Top Startups"
+                  footer="See all of last week's top products"
                   total={filteredWeekProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}
@@ -46,7 +48,8 @@ const Home = async () => {
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredMonthProducts}
-                  header="See all of last month's top products"
+                  header="Last Month's Top Startups"
+                  footer="See all of last month's top products"
                   total={filteredMonthProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}

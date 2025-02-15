@@ -6,6 +6,7 @@ import ProductItem from "./product-item";
 interface ActiveProductsProps {
   activeProducts: any;
   header?: string;
+  footer?: string;
   total?: number;
   commentShow?: boolean;
   authenticatedUser: any;
@@ -14,6 +15,7 @@ interface ActiveProductsProps {
 const ActiveProducts: React.FC<ActiveProductsProps> = ({
   activeProducts,
   header,
+  footer,
   total,
   commentShow,
   authenticatedUser,
@@ -115,16 +117,16 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
 
       {formattedActiveProducts?.length > 5 && commentShow && (
         <div className="flex mt-12">
-          <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
-          <div className="mt-[-20px] mx-3 w-[310px]">
+          <div className="w-[20%] border-t-[3px] border-[#E1F0FE]"></div>
+          <div className="mt-[-20px] mx-3">
             <button
               onClick={() => setShowAll(!showAll)}
               className="px-8 py-1 text-sm font-medium bg-white rounded-[10px] border-2 border-[#448EE6]"
             >
-              {showAll ? "Show Less" : "Show More"}
+              {showAll ? "Show Less" : `${footer}`}
             </button>
           </div>
-          <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
+          <div className="w-[20%] border-t-[3px] border-[#E1F0FE]"></div>
         </div>
       )}
     </div>
