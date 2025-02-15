@@ -70,7 +70,7 @@ interface ProductData {
   images: string[];
   categoryId?: string;
   subcategoryId?: string;
-  alternativeIds?: string[];
+  alternativeIds: string[];
   rank?: number;
   isMaker: boolean;
   photos: string[];
@@ -164,7 +164,7 @@ export const createProduct = async ({
           },
         },
         alternatives: {
-          connect: alternativeIds?.map((id) => ({ id })), // Connect multiple alternatives
+          connect: alternativeIds.map((id) => ({ id })), // Connect multiple alternatives
         },
 
         images: {
@@ -230,6 +230,7 @@ export const getPromoProducts = async (categoryId?: string) => {
     include: {
       category: true,
       subcategory: true,
+      alternatives: true,
     },
   });
 
@@ -432,7 +433,7 @@ export const getProductById = async (productId: string) => {
       },
       include: {
         category: true,
-
+        alternatives: true,
         images: true,
         comments: {
           include: {
