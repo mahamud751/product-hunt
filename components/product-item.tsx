@@ -100,7 +100,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
       onClick={handleProductItemClick}
       className="
       mt-2
-   px-5 py-4 w-full cursor-pointer p-2   
+   px-5 py-3 w-full cursor-pointer p-2   
 rounded-lg 
     border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
     "
@@ -111,20 +111,13 @@ rounded-lg
             <Image
               src={product?.logo}
               alt="alternatives"
-              className={`object-contain h-10 w-10 rounded-md aspect-square ${
-                commentShow ? "" : "mt-[-2px]"
+              className={`object-contain  rounded-md aspect-square ${
+                commentShow ? "h-10 w-10" : "mt-[-2px] w-10 px-[2px]"
               }`}
               width={200}
               height={200}
             />
           </button>
-          {/* <Image
-            src={product?.logo}
-            alt="logo"
-            width={1000}
-            height={1000}
-            className={`h-12 w-12 rounded-md ${commentShow ? "" : "mt-[-2px]"}`}
-          /> */}
 
           <div className="ml-4">
             <div className="md:flex items-center gap-x-2">

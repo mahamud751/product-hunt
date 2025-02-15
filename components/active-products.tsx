@@ -96,10 +96,8 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
 
   return (
     <div className="w-full">
-      <div className={`flex items-center  ${header && "border-b pb-3"}`}>
-        <h1 className="text-xl font-medium">
-          {header} {total && "(" + total + ")"}
-        </h1>
+      <div className={`flex items-center  ${header && "pb-3"}`}>
+        <h1 className="text-xl font-medium">{header}</h1>
       </div>
 
       <div className="flex flex-col">
@@ -121,7 +119,7 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
           <div className="mt-[-20px] mx-3 w-[310px]">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="px-8 py-2 text-sm font-medium bg-white rounded-[10px] border-2 border-[#448EE6]"
+              className="px-8 py-1 text-sm font-medium bg-white rounded-[10px] border-2 border-[#448EE6]"
             >
               {showAll ? "Show Less" : "Show More"}
             </button>

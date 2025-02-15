@@ -3,6 +3,7 @@ import ActiveProducts from "@/components/active-products";
 import AlternativeCard from "@/components/home/AlternativeCard";
 import FeaturedCard from "@/components/home/FeaturedCard";
 import HeroSection from "@/components/home/HeroSecion";
+import PromoButtonCard from "@/components/home/PromoButtonCard";
 import PromoCard from "@/components/home/PromoCard";
 import { getFilteredProducts, getProducts } from "@/lib/server-actions";
 import { Grid, Typography, Divider } from "@mui/material";
@@ -20,8 +21,8 @@ const Home = async () => {
   return (
     <div>
       <HeroSection />
-      <div className="w-full mx-auto py-8 ">
-        <Grid container spacing={3}>
+      <div className="w-full mx-auto py-8">
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={8} lg={8}>
             <Grid container direction="column" spacing={4}>
               <Grid item>
@@ -58,15 +59,17 @@ const Home = async () => {
               {/* Featured Section */}
               <Grid item>
                 <h1 className="text-xl font-medium"> Featured</h1>
-                <Divider
-                  sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
-                />
                 <FeaturedCard />
                 <ActiveProducts
                   activeProducts={featuredProducts.products}
                   commentShow={false}
                   authenticatedUser={authenticatedUser}
                 />
+                <div className="flex justify-center">
+                  <button className="w-[80%] px-4 py-3 mt-7 font-medium leading-none text-white rounded-lg bg-neutral-800">
+                    Promote your product
+                  </button>
+                </div>
               </Grid>
 
               <Grid item>
@@ -86,17 +89,16 @@ const Home = async () => {
                     </button>
                   </Link>
                 </div>
-                <Divider
-                  sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
-                />
+
                 <PromoCard />
+                <PromoButtonCard />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </div>
 
-      <Grid container className="" sx={{ margin: "0 auto" }}>
+      <Grid container className="" sx={{}}>
         <Grid item xs={12}>
           <AlternativeCard />
         </Grid>
