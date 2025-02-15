@@ -50,7 +50,7 @@ const FeaturedCardData = () => {
                   </h1>
 
                   <p className="text-gray-500 text-xs md:text-sm pr-2">
-                    {product?.headline.slice(0, 70)}...
+                    {product?.headline.slice(0, 55)}...
                   </p>
 
                   <div className="flex justify-between w-full items-center">
