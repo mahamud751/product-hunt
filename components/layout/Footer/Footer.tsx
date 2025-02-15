@@ -55,9 +55,9 @@ const Footer: React.FC = () => {
               Subscribe to our newsletter
             </h2>
             <p className="mt-4 mr-6 text-sm leading-5 text-stone-500">
-              Join 3,000+ other members and get
+              Join 2,100+ other members and get
               <br />
-              updates on new open source tools.
+              updates on new products and startups.
             </p>
             <NewsletterForm />
             <SocialIcons />

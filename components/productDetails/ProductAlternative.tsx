@@ -40,7 +40,7 @@ const AlternativeCard = ({ item }: { item: any }) => {
   );
 };
 
-const AlternativeCardList: React.FC = () => {
+const ProductAlternative: React.FC = () => {
   const [alternatives, setAlternatives] = useState<any[]>([]);
   const rowsPerPage = 9;
 
@@ -62,7 +62,7 @@ const AlternativeCardList: React.FC = () => {
     <div className="w-full mx-auto py-8 ">
       <div className="flex justify-between mb-4">
         <p className="text-xl font-semibold tracking-tight leading-snug text-neutral-800 ">
-          Discover Popular Alternatives to:
+          View Alternatives:
         </p>
         <Link href={"/alternatives"}>
           <button className="flex gap-1.5 px-3 py-2 text-sm font-medium leading-none bg-white rounded-md border border-solid border-neutral-200 text-neutral-600">
@@ -88,4 +88,4 @@ const AlternativeCardList: React.FC = () => {
   );
 };
 
-export default AlternativeCardList;
+export default ProductAlternative;

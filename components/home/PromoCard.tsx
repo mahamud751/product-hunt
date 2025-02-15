@@ -44,7 +44,9 @@ const PromoCard = () => {
       {categories?.map((product) => (
         <div
           key={product.id}
-          className="flex flex-col items-start px-2 py-1 col-span-4 transition-all duration-300 hover:shadow-md hover:scale-15"
+          className="flex flex-col items-start px-2 py-1 col-span-4  duration-300 rounded-lg 
+    border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
+    "
         >
           <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
             <div className="flex gap-3 items-center tracking-tight leading-snug whitespace-nowrap">

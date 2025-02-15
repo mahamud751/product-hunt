@@ -27,7 +27,7 @@ const Home = async () => {
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredTodayProducts}
-                  header="Top Products Launching Today"
+                  header="See all of today's products"
                   total={filteredTodayProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}
@@ -36,7 +36,7 @@ const Home = async () => {
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredWeekProducts}
-                  header="Last Week's Top Startups"
+                  header="See all of last week's top products"
                   total={filteredWeekProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}
@@ -45,7 +45,7 @@ const Home = async () => {
               <Grid item>
                 <ActiveProducts
                   activeProducts={filteredMonthProducts}
-                  header="Last Month's Top Startups"
+                  header="See all of last month's top products"
                   total={filteredMonthProducts?.length}
                   commentShow={true}
                   authenticatedUser={authenticatedUser}
@@ -57,9 +57,7 @@ const Home = async () => {
             <Grid container direction="column" spacing={4}>
               {/* Featured Section */}
               <Grid item>
-                <Typography variant="h6" fontWeight="medium" gutterBottom>
-                  Featured
-                </Typography>
+                <h1 className="text-xl font-medium"> Featured</h1>
                 <Divider
                   sx={{ borderStyle: "dotted", borderColor: "gray.900" }}
                 />
@@ -73,14 +71,8 @@ const Home = async () => {
 
               <Grid item>
                 <div className="flex justify-between">
-                  <Typography
-                    variant="h6"
-                    fontWeight="medium"
-                    gutterBottom
-                    mb={2}
-                  >
-                    Product Deals
-                  </Typography>
+                  <h1 className="text-xl font-medium">Product Deals</h1>
+
                   <Link href={"/promos"}>
                     <button className="flex gap-1.5 px-1 py-2 text-sm font-medium leading-none bg-white rounded-md border border-solid border-neutral-200 text-neutral-600">
                       <span className="grow">View all</span>

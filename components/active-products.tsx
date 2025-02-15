@@ -116,12 +116,12 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
       </div>
 
       {formattedActiveProducts?.length > 5 && commentShow && (
-        <div className="flex mt-4">
+        <div className="flex mt-12">
           <div className="w-[80%] border-t-[3px] border-[#E1F0FE]"></div>
-          <div className="mt-[-25px] mx-3 w-[310px]">
+          <div className="mt-[-20px] mx-3 w-[310px]">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="px-8 py-3 text-sm font-medium bg-white rounded-[25px] border-2 border-[#448EE6]"
+              className="px-8 py-2 text-sm font-medium bg-white rounded-[10px] border-2 border-[#448EE6]"
             >
               {showAll ? "Show Less" : "Show More"}
             </button>
