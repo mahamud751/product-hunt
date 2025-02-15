@@ -145,19 +145,16 @@ const NewProduct = () => {
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState<string>("");
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(
     null
   );
 
-  const [selectedAlternative, setSelectedAlterive] = useState<string | null>(
-    null
-  );
+  const [selectedAlternatives, setSelectedAlternatives] = useState<[]>([]);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [subCategoryId, setSubCategoryId] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
 
-  const [alternativeId, setAlternativeId] = useState<string | null>(null);
+  const [alternativeIds, setAlternativeIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSubQuery, setSearchSubQuery] = useState("");
   const [searchUser, setSearchUser] = useState("");
@@ -166,7 +163,6 @@ const NewProduct = () => {
     []
   );
   const [isMaker, setIsMaker] = useState<boolean>(true);
-  const [makers, setMakers] = useState<string[]>([]);
 
   const findMatchCategory = categories.find(
     (category: Category) => category.id === categoryId
@@ -470,8 +466,8 @@ const NewProduct = () => {
         website,
         twitter,
         discord,
-        makers,
         isMaker,
+        makers: selectedUsers,
         images: list,
         description: shortDescription,
         logo: secure_url,
@@ -479,7 +475,7 @@ const NewProduct = () => {
         promoExpire: formattedExpireDate,
         photos: list,
         categoryId: categoryId!,
-        alternativeId: alternativeId!,
+        alternativeIds: alternativeIds!,
         subcategoryId: subCategoryId!,
       });
       setStep(6);
@@ -670,26 +666,15 @@ const NewProduct = () => {
               <h2 className="font-medium">Select Alternative</h2>
               <div className="pt-4">
                 <Autocomplete
+                  multiple
                   options={alternative?.map((category) => ({
                     label: category.name,
                     id: category.id,
                   }))}
-                  value={
-                    selectedAlternative
-                      ? {
-                          label: selectedAlternative,
-                          id: alternative.toString(),
-                        }
-                      : null
-                  }
+                  value={selectedAlternatives}
                   onChange={(event, newValue) => {
-                    if (newValue && typeof newValue === "object") {
-                      setSelectedAlterive(newValue.label);
-                      setAlternativeId(newValue.id || null);
-                    } else {
-                      setSelectedAlterive(null);
-                      setAlternativeId(null);
-                    }
+                    setSelectedAlternatives(newValue as any);
+                    setAlternativeIds(newValue.map((item) => item.id!));
                   }}
                   renderInput={(params) => (
                     <TextField
@@ -939,25 +924,18 @@ const NewProduct = () => {
               <h2 className="font-medium">Select Makers</h2>
               <div className="pt-4">
                 <Autocomplete
+                  multiple
                   options={users?.map((user) => ({
                     label: user.name,
                     id: user.id,
                   }))}
-                  value={
-                    selectedUser
-                      ? {
-                          label: selectedUser,
-                          id: users.toString(),
-                        }
-                      : null
-                  }
+                  value={selectedUsers.map((userId) => {
+                    const user = users.find((u) => u.id === userId);
+                    return user ? { label: user.name, id: user.id } : null;
+                  })}
                   onChange={(event, newValue) => {
-                    if (newValue && typeof newValue === "object") {
-                      setSelectedUser(newValue.label);
-                      setUserId(newValue.id || null);
-                    } else {
-                      setSelectedUser(null);
-                      setUserId(null);
+                    if (Array.isArray(newValue)) {
+                      setSelectedUsers(newValue.map((item) => item!.id));
                     }
                   }}
                   renderInput={(params) => (

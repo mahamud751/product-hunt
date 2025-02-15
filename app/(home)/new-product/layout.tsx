@@ -24,11 +24,11 @@ const NewProductLayout = async ({
 
   const isPremium = await isUserPremium();
 
-  if (!isPremium && products?.length === 2) {
+  if (!authenticatedUser) {
     redirect("/");
   }
 
-  if (!authenticatedUser) {
+  if (!isPremium && products?.length === 2) {
     redirect("/");
   }
 

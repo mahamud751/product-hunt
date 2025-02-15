@@ -70,7 +70,7 @@ interface ProductData {
   images: string[];
   categoryId?: string;
   subcategoryId?: string;
-  alternativeId?: string;
+  alternativeIds?: string[];
   rank?: number;
   isMaker: boolean;
   photos: string[];
@@ -98,7 +98,7 @@ export const createProduct = async ({
   discord,
   images,
   categoryId,
-  alternativeId,
+  alternativeIds,
   priceOption,
   isMaker,
   makers,
@@ -119,12 +119,14 @@ export const createProduct = async ({
     if (!category) {
       throw new Error("Category not found");
     }
-    const alternative = await db.alternative.findUnique({
+    const alternatives = await db.alternative.findMany({
       where: {
-        id: alternativeId,
+        id: {
+          in: alternativeIds, // Check if all provided alternativeIds exist
+        },
       },
     });
-    if (!alternative) {
+    if (!alternatives) {
       throw new Error("Category not found");
     }
 
@@ -161,11 +163,10 @@ export const createProduct = async ({
             id: categoryId,
           },
         },
-        alternative: {
-          connect: {
-            id: alternativeId,
-          },
+        alternatives: {
+          connect: alternativeIds?.map((id) => ({ id })), // Connect multiple alternatives
         },
+
         images: {
           createMany: {
             data: images?.map((image) => ({ url: image })),
@@ -229,7 +230,6 @@ export const getPromoProducts = async (categoryId?: string) => {
     include: {
       category: true,
       subcategory: true,
-      alternative: true,
     },
   });
 
@@ -432,6 +432,7 @@ export const getProductById = async (productId: string) => {
       },
       include: {
         category: true,
+
         images: true,
         comments: {
           include: {

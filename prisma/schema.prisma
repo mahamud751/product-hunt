@@ -125,7 +125,7 @@ model Product {
   comments      Comment[]
   images        Image[]
   notification  Notification[]
-  alternative   Alternative?   @relation(fields: [alternativeId], references: [id])
+  alternatives  Alternative[]
   category      Category       @relation(fields: [categoryId], references: [id])
   subcategory   Subcategory?   @relation(fields: [subcategoryId], references: [id])
   user          User           @relation(fields: [userId], references: [id])

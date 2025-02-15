@@ -2,13 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  PiCaretUpFill,
-  PiChatCircle,
-  PiTrash,
-  PiUpload,
-  PiUploadSimple,
-} from "react-icons/pi";
+import { PiCaretUpFill, PiTrash } from "react-icons/pi";
 
 import { useState } from "react";
 import ShareModal from "../ui/modals/share-product-modal";
@@ -103,7 +97,6 @@ const ProductComment: React.FC<ProductModalContentProps> = ({
         )
       );
 
-      // reset the reply text for the specific comment
       setReplyText((prevReplies) => ({
         ...prevReplies,
         [commentId]: "",
@@ -119,10 +112,8 @@ const ProductComment: React.FC<ProductModalContentProps> = ({
 
   const handleCommentSubmit = async () => {
     try {
-      // call the comment server action with the product id and the comment text
       await commentOnProduct(currentProduct?.id, commentText, 2);
 
-      //reset the comment text
       setCommentText("");
       setComments([
         ...comments,
@@ -146,13 +137,10 @@ const ProductComment: React.FC<ProductModalContentProps> = ({
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      // Call the deleteComment function with the comment ID
       await deleteComment(commentId);
-      // Filter out the deleted comment from the comments state
       setComments(comments.filter((comment: any) => comment.id !== commentId));
     } catch (error) {
       console.error("Error deleting comment:", error);
-      // Handle error appropriately, e.g., display an error message to the user
     }
   };
 
@@ -196,8 +184,9 @@ const ProductComment: React.FC<ProductModalContentProps> = ({
               )}
             </div>
           </div>
-
-          <CarouselComponent productImages={currentProduct?.photos} />
+          {currentProduct?.photos?.length > 1 && (
+            <CarouselComponent productImages={currentProduct?.photos} />
+          )}
 
           <h1 className="font-semibold pt-10">Community Feedback</h1>
 

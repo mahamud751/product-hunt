@@ -1,14 +1,12 @@
 "use client";
 import { auth } from "@/auth";
-import ActiveProducts from "@/components/active-products";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
-import ProductModalContent from "@/components/product-modal-content";
 import DetailsCard from "@/components/productDetails/DetailsCard";
 import ProductComment from "@/components/productDetails/ProductComment";
 import ProductFeaturedCard from "@/components/productDetails/ProductFeaturedCard";
-import { getProductById, getProducts } from "@/lib/server-actions";
+import { getProductById } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
-import Image from "next/image";
+
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
 
@@ -17,9 +15,9 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
   const id = searchParams.get("id");
   const [authenticatedUser, setAuthenticatedUser] = useState<any>(null);
   const [product, setProduct] = useState<any>(null);
+  console.log("product", product);
 
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("Overview");
   const productRefs = useRef<HTMLDivElement[]>([]);
   const [totalUpvotes, setTotalUpvotes] = useState(product?.upvotes || 0);
@@ -44,25 +42,6 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
     fetchAlternativeDetails();
   }, [id]);
 
-  const scrollToProduct = (index: number) => {
-    productRefs.current[index]?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
-  const handlePrevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? product?.photos?.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === product?.photos?.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -85,44 +64,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
               {product?.description?.slice(0, 200)}{" "}
               {product?.description?.length > 200 && "..."}
             </p>
-            <div className="relative w-full h-auto mt-8">
-              <div className="relative w-full h-[500px] flex justify-center items-center overflow-hidden">
-                {product?.photos?.map((data: any, index: number) => (
-                  <div
-                    key={index}
-                    className={`absolute transition-all duration-500 ease-in-out ${
-                      index === currentIndex ? "opacity-100 z-10" : "opacity-0"
-                    }`}
-                    style={{ width: "70%", height: "100%" }}
-                  >
-                    <Image
-                      loading="lazy"
-                      src={data}
-                      alt=""
-                      className="object-contain w-full h-full"
-                      width={1000}
-                      height={1000}
-                    />
-                  </div>
-                ))}
-              </div>
 
-              {/* Previous Button */}
-              <button
-                onClick={handlePrevSlide}
-                className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-gray-800 bg-opacity-50 text-white w-[40px] h-[40px] rounded-full hover:bg-opacity-75 flex items-center justify-center"
-              >
-                &#10094;
-              </button>
-
-              {/* Next Button */}
-              <button
-                onClick={handleNextSlide}
-                className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-gray-800 bg-opacity-50 text-white w-[40px] h-[40px] rounded-full hover:bg-opacity-75 flex items-center justify-center"
-              >
-                &#10095;
-              </button>
-            </div>
             <ProductComment
               currentProduct={product}
               authenticatedUser={authenticatedUser}
