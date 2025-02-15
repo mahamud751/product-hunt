@@ -18,10 +18,10 @@ const AlternativeCard = ({ data }: { data: any }) => {
           <div className="my-auto">{data?.name}</div>
         </div>
         <div className="self-stretch mt-5 text-sm leading-5 text-neutral-600 h-[32px]">
-          {data.description.slice(0, 75)}...
+          {data.description.slice(0, 65)}...
         </div>
         <div className="mt-6 text-xs leading-none text-stone-500">
-          16 alternatives
+          {data?.products?.length} alternatives
         </div>
       </div>
     </div>

@@ -113,7 +113,7 @@ model Product {
   tags          String
   videoLink     String
   weburl        String
-  isMaker       Boolean        @default(true)
+  isMaker       Boolean        @default(true) 
   makers        String[]
   photos        String[]
   featured      Boolean        @default(false)
