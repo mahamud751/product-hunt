@@ -22,7 +22,7 @@ const HomeLayout = async ({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body>
-        <Container className="px-8 xl:px-28">
+        <Container>
           <Suspense fallback={<Spinner />}>
             <Navbar
               authenticatedUser={authenticatedUser}

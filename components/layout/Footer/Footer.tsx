@@ -50,7 +50,7 @@ const Footer: React.FC = () => {
       <div className="flex gap-5 max-md:flex-col md:flex-row-reverse">
         {/* Left content on small devices, right on large screens */}
         <div className="flex justify-end w-[67%] md:w-[33%] mr-[-15px]">
-          <div className="flex flex-col items-start w-full max-md:mt-10 ms-24">
+          <div className="flex flex-col items-start w-full max-md:mt-10 ms-40 px-3">
             <h2 className="text-base font-medium tracking-normal text-neutral-800 ms-2">
               Subscribe to our newsletter
             </h2>
