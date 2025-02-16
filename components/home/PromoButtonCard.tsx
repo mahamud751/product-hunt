@@ -10,7 +10,7 @@ const PromoButtonCard = () => {
           <div className="my-auto ms-12">Browse All Deals</div>
 
           {/* Align the arrow to the end */}
-          <div className="flex justify-end ms-5">
+          <div className="flex justify-end">
             <ArrowOutwardIcon sx={{ fontSize: 14 }} />
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
-
+import { Button } from "@mui/material";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 interface PaginationComponentProps {
   currentPage: number;
   totalPages: number;
@@ -15,28 +16,51 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
 
   return (
     <nav
-      className="flex gap-5 justify-between items-center px-4 py-2 text-sm max-w-[960px] text-stone-500 max-sm:flex-wrap max-sm:gap-4 max-sm:justify-center"
+      className="flex gap-5 justify-center items-center px-4 py-2 text-sm max-w-[960px] text-stone-500 max-sm:flex-wrap max-sm:gap-4 max-sm:justify-center"
       aria-label="Pagination"
     >
-      <NavigationButton
-        direction="prev"
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-      />
-      <div className="flex gap-2 items-center">
-        <span>Page:</span>
+      <div className="flex justify-center items-center gap-4">
+        {/* Previous Button with Left Arrow */}
+        <div
+          className={`flex items-center gap-2 cursor-pointer ${
+            currentPage === 1 ? "text-gray-400" : "text-black"
+          }`}
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          style={{ pointerEvents: currentPage === 1 ? "none" : "auto" }} // Disable click if on first page
+        >
+          <ChevronLeft size={20} />
+          <span className="font-bold">Previous</span>
+        </div>
+
+        {/* Page Numbers */}
         {pageNumbers.map((pageNumber) => (
-          <PaginationButton
+          <div
             key={pageNumber}
-            pageNumber={pageNumber}
-            isActive={pageNumber === currentPage}
             onClick={() => onPageChange(pageNumber)}
-          />
+            className={`cursor-pointer px-3 py-2 rounded-sm ${
+              pageNumber === currentPage
+                ? "font-bold bg-gray-200"
+                : "text-black"
+            }`}
+          >
+            {pageNumber}
+          </div>
         ))}
+
+        {/* Next Button with Right Arrow */}
+        <div
+          className={`flex items-center gap-2 cursor-pointer ${
+            currentPage === totalPages ? "text-gray-400" : "text-black"
+          }`}
+          onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          style={{
+            pointerEvents: currentPage === totalPages ? "none" : "auto",
+          }} // Disable click if on last page
+        >
+          <span className="font-bold">Next</span>
+          <ChevronRight size={20} />
+        </div>
       </div>
-      <NavigationButton
-        direction="next"
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-      />
     </nav>
   );
 };
