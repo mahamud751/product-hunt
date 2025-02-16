@@ -2,10 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
-import { AlertColor } from "@mui/material";
 import { getFeaturedProducts } from "@/lib/server-actions";
-import Link from "next/link";
-import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 
 const FeaturedCardData = () => {
   const [data, setData] = useState<any[]>([]);
@@ -19,10 +16,6 @@ const FeaturedCardData = () => {
   return (
     <div className="grid grid-cols-1 gap-3 mt-2">
       {data?.map((product) => {
-        const promoPrice = (
-          parseFloat(product?.price) *
-          (1 - parseFloat(product?.promoOffer || "0") / 100)
-        ).toFixed(0);
         return (
           <div
             key={product.id}
@@ -59,14 +52,16 @@ const FeaturedCardData = () => {
                     </p>
 
                     <button className="flex py-2 text-sm font-medium text-neutral-600 w-12">
-                      <span className="grow">View</span>
-                      <Image
-                        src="/images/SVG.png"
-                        alt="alternatives"
-                        className="object-contain shrink-0 aspect-[1.07] w-[15px]"
-                        width={200}
-                        height={200}
-                      />
+                      <span className="grow">Visit</span>
+                      <div className="mt-1">
+                        <Image
+                          src="/images/SVG.png"
+                          alt="alternatives"
+                          className="object-contain shrink-0 aspect-[1.07] w-[15px]"
+                          width={200}
+                          height={200}
+                        />
+                      </div>
                     </button>
                   </div>
                 </div>

@@ -99,7 +99,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
     <div
       onClick={handleProductItemClick}
       className="
-      mt-2
+      mt-3
    px-5 py-3 w-full cursor-pointer p-2   
 rounded-lg 
     border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15

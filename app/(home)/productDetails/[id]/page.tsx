@@ -2,6 +2,7 @@
 import { auth } from "@/auth";
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import DetailsCard from "@/components/productDetails/DetailsCard";
+import ProductAlternativeCard from "@/components/productDetails/ProductAlternativeCard";
 import ProductComment from "@/components/productDetails/ProductComment";
 import ProductFeaturedCard from "@/components/productDetails/ProductFeaturedCard";
 import { getProductById } from "@/lib/server-actions";
@@ -73,6 +74,7 @@ const ProductsDetails = ({ params }: { params: { id: string } }) => {
               hasUpvoted={hasUpvoted}
               setHasUpvoted={setHasUpvoted}
             />
+            <ProductAlternativeCard currentProduct={product} />
           </div>
         );
       case "Launches":

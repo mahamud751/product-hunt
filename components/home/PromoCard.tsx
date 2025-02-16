@@ -51,9 +51,7 @@ const PromoCard = () => {
         return (
           <div
             key={product.id}
-            className="flex flex-col items-start px-2 py-1 col-span-4  duration-300 rounded-lg 
-    border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
-    "
+            className="flex flex-col items-start px-2 py-1 col-span-4 duration-300 rounded-lg border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15"
           >
             <div className="flex gap-2 justify-between items-center self-stretch w-full max-sm:gap-3">
               <div className="flex gap-3 tracking-tight leading-snug whitespace-nowrap mt-2">
@@ -84,41 +82,48 @@ const PromoCard = () => {
                 </div>
               </div>
 
-              <div>
+              {/* Right section for promo and price, always aligned to the right */}
+              <div className="flex flex-col items-end justify-end">
                 <div className="ms-[-20px]">
                   <Button
                     onClick={() => handleCopy(product?.promoCode || "No code")}
-                    endIcon={<FaCopy className="w-3 h-3" />}
-                    className="text-xs text-white rounded-[15px] bg-black bg-opacity-90 w-[100px] mt-2 h-[20px]"
+                    endIcon={<FaCopy className="w-2 h-2" />}
+                    className="text-xs text-white rounded-[5px] bg-black bg-opacity-90 w-[88px] mt-2 h-[20px]"
                   >
                     -{product?.promoOffer}% off
                   </Button>
                 </div>
-                <div className="flex mt-6 ms-[-10px]">
-                  <p className="text-gray-500 text-xs md:text-sm pr-2 mt-3 mb-2 line-through">
-                    ${product?.price}
-                  </p>
-                  <p className="text-[#529072] text-xs md:text-sm pr-2 mt-3 mb-2 font-bold">
-                    ${promoPrice}
-                  </p>
+
+                <div className="flex justify-end mt-6 space-x-2">
+                  {product?.price && (
+                    <p className="text-gray-500 text-xs md:text-sm line-through">
+                      ${product?.price}
+                    </p>
+                  )}
+                  {product?.price && (
+                    <p className="text-red-500 text-xs md:text-sm">
+                      ${promoPrice}
+                    </p>
+                  )}
                 </div>
               </div>
-
-              <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity={severity}
-                  sx={{ width: "100%" }}
-                >
-                  {message}
-                </Alert>
-              </Snackbar>
             </div>
+
+            {/* Snackbar */}
+            <Snackbar
+              open={open}
+              autoHideDuration={3000}
+              onClose={handleClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <Alert
+                onClose={handleClose}
+                severity={severity}
+                sx={{ width: "100%" }}
+              >
+                {message}
+              </Alert>
+            </Snackbar>
           </div>
         );
       })}

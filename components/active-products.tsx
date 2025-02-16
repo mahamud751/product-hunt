@@ -116,10 +116,12 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
       </div>
 
       {formattedActiveProducts?.length > 5 && commentShow && (
-        <div className="flex mt-12 items-center">
-          <div className="w-[24%] border-t-[2px] border-[#393a3a]"></div>
+        <div className="flex mt-12 items-center justify-between">
+          {/* Left border with flex-grow */}
+          <div className="flex-grow border-t-[2px] border-[#D4D4D4]"></div>
 
-          <div className="-mt-1 md:-mt-1 mx-3">
+          {/* Button with dynamic width based on text */}
+          <div className="mx-3">
             <button
               onClick={() => setShowAll(!showAll)}
               className="px-1 md:px-4 py-1 text-sm font-medium bg-white rounded-[10px] border-2 border-[#343435]"
@@ -128,7 +130,8 @@ const ActiveProducts: React.FC<ActiveProductsProps> = ({
             </button>
           </div>
 
-          <div className="w-[24%] border-t-[2px] border-[#393a3a]"></div>
+          {/* Right border with flex-grow */}
+          <div className="flex-grow border-t-[2px] border-[#D4D4D4]"></div>
         </div>
       )}
     </div>

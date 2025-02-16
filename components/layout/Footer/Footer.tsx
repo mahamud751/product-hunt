@@ -49,12 +49,12 @@ const Footer: React.FC = () => {
     <footer className="pt-14 my-0 border-t border-neutral-800 border-opacity-10 max-sm:py-8">
       <div className="flex gap-5 max-md:flex-col md:flex-row-reverse">
         {/* Left content on small devices, right on large screens */}
-        <div className="flex flex-col w-[67%] md:w-[33%]">
-          <div className="flex flex-col items-start w-full max-md:mt-10">
-            <h2 className="text-base font-medium tracking-normal text-neutral-800">
+        <div className="flex justify-end w-[67%] md:w-[33%] mr-[-15px]">
+          <div className="flex flex-col items-start w-full max-md:mt-10 ms-24">
+            <h2 className="text-base font-medium tracking-normal text-neutral-800 ms-2">
               Subscribe to our newsletter
             </h2>
-            <p className="mt-4 mr-6 text-sm leading-5 text-stone-500">
+            <p className="mt-4 text-sm leading-5 text-stone-500 ms-2">
               Join 2,100+ other members and get
               <br />
               updates on new products and startups.
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5 border-t-[1px] border-[#393a3a]"></div>
+      <div className="mt-5 border-t-[1px] w-full border-[#D4D4D4]"></div>
       {/* Footer text */}
       <div className="flex justify-between w-[100%] mt-5">
         <p className="text-xs text-stone-500">

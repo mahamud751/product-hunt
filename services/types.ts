@@ -111,7 +111,7 @@ export interface Product {
   userId: string;
   status: Status;
   categoryId: string;
-  alternative?: string;
+  alternatives?: string;
   alternativeId?: string;
   subcategoryId?: string;
   subcategory?: Subcategory;
