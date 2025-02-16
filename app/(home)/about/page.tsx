@@ -61,7 +61,7 @@ const App: React.FC = () => {
               <MessageCircle className="w-7 h-7 text-[#AF583B]" />
             </div>
             <h2 className="text-2xl font-bold text-[#1F1F1F]">
-              Why We're Here
+              Why We&apos;re Here
             </h2>
           </div>
           <p className="text-[#1F1F1F]/80 leading-relaxed text-lg">
@@ -79,7 +79,7 @@ const App: React.FC = () => {
               <Users className="w-7 h-7 text-[#198E49]" />
             </div>
             <h2 className="text-2xl font-bold text-[#1F1F1F]">
-              Who's Behind Launchap
+              Who&apos;s Behind Launchap
             </h2>
           </div>
           <div className="flex gap-8 items-start">
