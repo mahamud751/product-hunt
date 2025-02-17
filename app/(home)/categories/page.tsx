@@ -5,7 +5,7 @@ const Categories = async () => {
   const { categories } = await getCategories(0, 10);
 
   return (
-    <div className="xl:w-3/5 w-4/5 pt-6 md:py-10 mx-auto px-6 md:px-0">
+    <div className="">
       <div className="bg-gray-100 rounded-md w-full p-10 ">
         <h1 className="text-4xl font-semibold">Categories</h1>
         <p className="text-gray-500 pt-2">

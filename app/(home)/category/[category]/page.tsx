@@ -22,7 +22,7 @@ const CategoryPage: React.FC<{ params: IParams }> = async ({ params }) => {
   const products = await getProductsByCategoryName(capitalizedCategory);
 
   return (
-    <div className="md:w-3/5 mx-auto pt-10 px-6 md:px-0">
+    <div className="">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
