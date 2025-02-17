@@ -49,15 +49,14 @@ const Footer: React.FC = () => {
     <footer className="pt-14 my-0 border-t border-neutral-800 border-opacity-10 max-sm:py-8">
       <div className="flex gap-5 max-md:flex-col md:flex-row-reverse">
         {/* Left content on small devices, right on large screens */}
-        <div className="flex justify-end w-[67%] md:w-[33%] mr-[-15px]">
+        <div className="flex justify-end w-[77%] md:w-[23%] mr-[-15px]">
           <div className="flex flex-col items-start w-full max-md:mt-10 ms-40 px-3">
             <h2 className="text-base font-medium tracking-normal text-neutral-800 ms-2">
               Subscribe to our newsletter
             </h2>
             <p className="mt-4 text-sm leading-5 text-stone-500 ms-2">
-              Join 2,100+ other members and get
-              <br />
-              updates on new products and startups.
+              Join 2,100+ other members and get updates on new products and
+              startups.
             </p>
             <NewsletterForm />
             <SocialIcons />
@@ -65,7 +64,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Right content on small devices, left on large screens */}
-        <div className="flex flex-col  w-[100%] md:w-[67%]">
+        <div className="flex flex-col  w-[100%] md:w-[77%]">
           <div className="flex flex-col w-full max-md:mt-10 max-md:max-w-full">
             <div className="max-w-full ms-0">
               <div className="flex gap-5">

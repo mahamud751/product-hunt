@@ -59,12 +59,13 @@ const Home = async () => {
           <Grid item xs={12} sm={6} md={4} lg={4}>
             <Grid container direction="column" spacing={4}>
               <Grid item>
-                <div className="flex justify-between">
-                  <div className="flex justify-between">
-                    <h1 className="text-xl font-medium">Featured</h1>
-                  </div>
-                  <hr className="border-t border-dashed border-black mt-5 w-[70%]" />
+                <div className="flex items-center justify-between">
+                  <h1 className="text-xl font-medium whitespace-nowrap">
+                    Featured
+                  </h1>
+                  <hr className="flex-grow border-t border-dashed border-black mt-4" />
                 </div>
+
                 <FeaturedCard />
                 <FeaturedCardData />
                 <div className="border border-dashed rounded-lg border-black mt-5">
@@ -78,11 +79,11 @@ const Home = async () => {
               </Grid>
 
               <Grid item>
-                <div className="flex justify-between">
-                  <div className="flex justify-between">
-                    <h1 className="text-xl font-medium">Product Deals</h1>
-                  </div>
-                  <hr className="border-t border-dashed border-black mt-5 w-[55%]" />
+                <div className="flex items-center justify-between">
+                  <h1 className="text-xl font-medium whitespace-nowrap">
+                    Product Deals
+                  </h1>
+                  <hr className="flex-grow border-t border-dashed border-black mt-4" />
                 </div>
 
                 <PromoCard />

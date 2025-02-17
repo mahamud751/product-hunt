@@ -49,8 +49,7 @@ const Page = () => {
         Competitors
       </h1>
       <br />
-
-      <p className="text-xm mt-3 text-[#4D4D4D]">
+      <p className="text-xm mt-1 text-[#4D4D4D]">
         Discover a comprehensive list of top software alternatives and
         competitors, including open- <br />
         source options for {totalAlternatives} popular tools.
@@ -76,30 +75,44 @@ const Page = () => {
           </form>
         </div>
 
-        <div className="ms-12 w-[160px]">
+        <div className="ms-5 w-[160px]">
           <FormControl fullWidth size="small">
             {" "}
             <Select
+              className="border border-solid border-neutral-200"
               value={sortOrder}
               onChange={handleSortChange}
               sx={{
-                borderRadius: 2, // Ensures rounded corners
-                width: "160px", // Fixed width
-                height: "40px", // Adjust height for compactness
+                borderRadius: 2,
+                width: "160px",
+                height: "40px",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "GrayText",
+                  borderWidth: "0px",
+                },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "GrayText", // Remove blue border on focus
+                  borderColor: "GrayText",
+                  borderWidth: "0px",
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "GrayText", // Remove hover effect
+                  borderColor: "GrayText",
                 },
-
-                backgroundColor: "white", // Keep background white on hover/focus
+                backgroundColor: "white",
+                fontSize: 14,
               }}
             >
-              <MenuItem value="Popularity">Popularity</MenuItem>
-              <MenuItem value="Latest">Latest</MenuItem>
-              <MenuItem value="NameAsc">Name A-Z</MenuItem>
-              <MenuItem value="NameDesc">Name Z-A</MenuItem>
+              <MenuItem className="text-[14px]" value="Popularity">
+                Popularity
+              </MenuItem>
+              <MenuItem className="text-[14px]" value="Latest">
+                Latest
+              </MenuItem>
+              <MenuItem className="text-[14px]" value="NameAsc">
+                Name A-Z
+              </MenuItem>
+              <MenuItem className="text-[14px]" value="NameDesc">
+                Name Z-A
+              </MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -113,11 +126,13 @@ const Page = () => {
         ))}
       </Grid>
       {/* Pagination */}
-      <PaginationComponent
-        currentPage={currentPage}
-        totalPages={Math.ceil(totalAlternatives / rowsPerPage)}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
+      <div className="flex justify-center">
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalAlternatives / rowsPerPage)}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
     </div>
   );
 };

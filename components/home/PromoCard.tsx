@@ -67,7 +67,7 @@ const PromoCard = () => {
                   </button>
                 </div>
 
-                <div>
+                <div className="-mt-1">
                   <h1 className="text-sm font-semibold">
                     {product?.name.slice(0, 15)}
                   </h1>
@@ -84,7 +84,7 @@ const PromoCard = () => {
 
               {/* Right section for promo and price, always aligned to the right */}
               <div className="flex flex-col items-end justify-end">
-                <div className="ms-[-20px]">
+                <div className="ms-[-24px] mt-[-14px]">
                   <Button
                     onClick={() => handleCopy(product?.promoCode || "No code")}
                     endIcon={<FaCopy className="w-2 h-2" />}
@@ -96,14 +96,12 @@ const PromoCard = () => {
 
                 <div className="flex justify-end mt-6 space-x-2">
                   {product?.price && (
-                    <p className="text-gray-500 text-xs md:text-sm line-through">
+                    <p className="text-gray-500 text-[12px] line-through">
                       ${product?.price}
                     </p>
                   )}
                   {product?.price && (
-                    <p className="text-red-500 text-xs md:text-sm">
-                      ${promoPrice}
-                    </p>
+                    <p className="text-red-500 text-[12px]">${promoPrice}</p>
                   )}
                 </div>
               </div>

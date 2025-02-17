@@ -27,7 +27,7 @@ const NewsletterForm: React.FC = () => {
       />
       <button
         type="submit"
-        className="ms-[-4px] px-2.5 py-1.5 mx-0 my-auto leading-none text-center text-white whitespace-nowrap rounded-md cursor-pointer bg-neutral-800 max-sm:mt-2.5 max-sm:text-center"
+        className="ms-[-4px] px-1 py-1 mx-0 my-auto leading-none text-center text-white whitespace-nowrap rounded-md cursor-pointer bg-neutral-800 max-sm:mt-2.5 max-sm:text-center"
       >
         Subscribe
       </button>
