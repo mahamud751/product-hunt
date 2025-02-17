@@ -53,9 +53,9 @@ const FeaturedCardData = () => {
                   {product?.category?.name.slice(0, 10)}
                 </p>
                 <div className="flex space-x-2">
-                  <button className="flex py-2 text-sm font-medium text-neutral-600 w-12">
-                    <span className="grow">Visit</span>
-                    <div className="mt-1">
+                  <button className="flex text-neutral-600 w-12">
+                    <span className="text-[12px]">Visit</span>
+                    <div className="m-[2px]">
                       <Image
                         src="/images/SVG.png"
                         alt="alternatives"
