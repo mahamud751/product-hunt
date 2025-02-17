@@ -19,51 +19,52 @@ const FeaturedCardData = () => {
         return (
           <div
             key={product.id}
-            className="flex flex-col items-start px-2 py-1 col-span-4  duration-300 rounded-lg 
-    border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
-    "
+            className="flex gap-3 px-2 py-1 col-span-4  duration-300 rounded-lg 
+          border border-solid bg-neutral-50 border-neutral-200 transition-transform transform hover:shadow-md hover:border-neutral-300 hover:scale-15
+         "
           >
-            <div className="flex gap-2 justify-between items-center w-full max-sm:gap-3">
-              <div className="flex gap-3 tracking-tight leading-snug mt-2">
-                <div>
-                  <button className="box-border flex flex-col p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
-                    <Image
-                      src={product?.logo}
-                      alt="logo"
-                      width={1000}
-                      height={1000}
-                      className="object-contain w-9 h-9 rounded aspect-square"
-                    />
+            {/* Left side for Image */}
+            <div className="mt-2">
+              <button className="box-border flex flex-col p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+                <Image
+                  src={product?.logo}
+                  alt="logo"
+                  width={1000}
+                  height={1000}
+                  className="object-contain w-9 h-9 rounded aspect-square"
+                />
+              </button>
+            </div>
+
+            {/* Right side for all details */}
+            <div className="flex flex-col justify-between flex-grow mt-1">
+              <div className="flex justify-between items-center">
+                <h1 className="text-sm font-semibold">
+                  {product?.name.slice(0, 15)}
+                </h1>
+              </div>
+
+              <p className="text-gray-500 text-xs mt-1">
+                {product?.headline.slice(0, 55)}...
+              </p>
+
+              <div className="flex justify-between mt-2">
+                <p className="text-gray-500 text-xs">
+                  {product?.category?.name.slice(0, 10)}
+                </p>
+                <div className="flex space-x-2">
+                  <button className="flex py-2 text-sm font-medium text-neutral-600 w-12">
+                    <span className="grow">Visit</span>
+                    <div className="mt-1">
+                      <Image
+                        src="/images/SVG.png"
+                        alt="alternatives"
+                        className="object-contain shrink-0 aspect-[1.07] w-[15px]"
+                        width={200}
+                        height={200}
+                      />
+                    </div>
                   </button>
-                </div>
-
-                <div>
-                  <h1 className="text-sm font-semibold">
-                    {product?.name.slice(0, 15)}
-                  </h1>
-
-                  <p className="text-gray-500 text-xs md:text-sm pr-2">
-                    {product?.headline.slice(0, 55)}...
-                  </p>
-
-                  <div className="flex justify-between w-full items-center">
-                    <p className="text-gray-500 text-xs md:text-sm pr-2 mt-3 mb-2 w-44 truncate">
-                      {product?.category?.name}
-                    </p>
-
-                    <button className="flex py-2 text-sm font-medium text-neutral-600 w-12">
-                      <span className="grow">Visit</span>
-                      <div className="mt-1">
-                        <Image
-                          src="/images/SVG.png"
-                          alt="alternatives"
-                          className="object-contain shrink-0 aspect-[1.07] w-[15px]"
-                          width={200}
-                          height={200}
-                        />
-                      </div>
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
