@@ -216,17 +216,49 @@ export const getProducts = async (
   return { products, totalProducts };
 };
 
-export const getPromoProducts = async (categoryId?: string) => {
+export const getPromoProducts = async (
+  searchQuery?: string,
+  sortOrder?: string,
+  categoryId?: string
+) => {
+  const where: any = {
+    promoCode: {
+      not: "", // Ensure products have a promoCode
+    },
+    categoryId: categoryId || undefined,
+  };
+
+  if (searchQuery) {
+    where.name = {
+      contains: searchQuery,
+      mode: "insensitive",
+    };
+  }
+
+  const orderBy: any = {};
+  if (sortOrder) {
+    switch (sortOrder) {
+      case "Latest":
+        orderBy.createdAt = "desc";
+        break;
+      case "NameAsc":
+        orderBy.name = "asc";
+        break;
+      case "NameDesc":
+        orderBy.name = "desc";
+        break;
+      case "Popularity":
+        orderBy.views = "desc";
+        break;
+      default:
+        orderBy.createdAt = "desc";
+        break;
+    }
+  }
+
   const promoProducts = await db.product.findMany({
-    where: {
-      promoCode: {
-        not: "",
-      },
-      categoryId: categoryId || undefined,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    where,
+    orderBy,
     include: {
       category: true,
       subcategory: true,

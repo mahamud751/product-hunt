@@ -55,7 +55,7 @@ const PromoCard = () => {
            "
           >
             {/* Left side for Image */}
-            <div className="mt-2">
+            <div className="mt-1">
               <button className="box-border flex flex-col p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
                 <Image
                   src={product?.logo}

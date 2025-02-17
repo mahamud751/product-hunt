@@ -1,7 +1,7 @@
 import { Product } from "@/services/types";
 import Image from "next/image";
 import { useState } from "react";
-
+import StarIcon from "@mui/icons-material/Star";
 interface BadgeProps {
   text: string;
   variant?: "default" | "discount";
@@ -80,14 +80,15 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
   return (
     <div className="flex flex-col items-start px-5 py-4 rounded-lg border border-solid bg-neutral-50 border-neutral-200">
       <div className="flex gap-5 justify-between self-stretch w-full font-semibold">
-        <Image
-          loading="lazy"
-          src={data?.logo || "/default-logo.png"}
-          alt="Product logo"
-          className="object-contain shrink-0 w-8 rounded aspect-square"
-          width={40}
-          height={40}
-        />
+        <button className="box-border flex flex-col p-1 w-9 h-9 bg-white rounded-md border border-solid border-neutral-200 max-md:p-1 max-md:w-8 max-md:h-8 max-sm:p-1 max-sm:w-7 max-sm:h-7">
+          <Image
+            src={data?.logo ?? ""}
+            alt="logo"
+            width={1000}
+            height={1000}
+            className="object-contain w-9 h-9 rounded aspect-square"
+          />
+        </button>
         <div className="flex gap-1.5 self-start">
           <Badge text={`${data?.category?.name.slice(0, 12)}` || "Category"} />
           <Badge text={`${data?.promoOffer}% OFF` || "0"} variant="discount" />
@@ -96,14 +97,7 @@ export const PromoPageCard: React.FC<MarketSeerCardProps> = ({ data }) => {
 
       <div className="flex gap-2 mt-3.5 text-sm font-medium leading-none text-black">
         <div className="grow my-auto">{data?.name}</div>
-        <Image
-          loading="lazy"
-          src={data?.logo || "/default-logo.png"}
-          alt="Product logo"
-          className="object-contain shrink-0 w-4 aspect-square"
-          width={100}
-          height={100}
-        />
+        <StarIcon fontSize="small" />
       </div>
       <div className="mt-2.5 text-xs leading-none text-gray-500">
         {data?.headline?.slice(0, 35) || "No description available"}
