@@ -188,8 +188,7 @@ const Page = () => {
                 size="small"
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    height: "40px",
+                    height: "36px",
                     borderColor: "GrayText",
                     "& .MuiOutlinedInput-notchedOutline": {
                       borderColor: "GrayText",
@@ -206,7 +205,7 @@ const Page = () => {
                     fontSize: 14,
                   },
                 }}
-                className="border border-solid border-neutral-200 rounded-[10px]"
+                className="border border-solid border-neutral-200 rounded-sm"
               />
             )}
           />
@@ -221,7 +220,7 @@ const Page = () => {
               sx={{
                 borderRadius: 2,
                 width: "160px",
-                height: "40px",
+                height: "36px",
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "GrayText",
                   borderWidth: "0px",
