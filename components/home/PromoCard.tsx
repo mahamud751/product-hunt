@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa";
-import { Button, Snackbar, Alert, AlertColor } from "@mui/material";
+import { Snackbar, Alert, AlertColor } from "@mui/material";
 import { getPromoProducts } from "@/lib/server-actions";
 
 const PromoCard = () => {
@@ -75,13 +75,13 @@ const PromoCard = () => {
                 </h1>
 
                 <div className="mt-1">
-                  <Button
+                  <button
                     onClick={() => handleCopy(product?.promoCode || "No code")}
-                    endIcon={<FaCopy className="w-2 h-2" />}
-                    className="text-xs text-white rounded-[5px] bg-black bg-opacity-90 w-[88px] h-[20px]"
+                    className="text-xs text-white rounded-[5px] bg-black bg-opacity-90 w-[88px] h-[20px] flex items-center justify-center space-x-1"
                   >
-                    -{product?.promoOffer}% off
-                  </Button>
+                    <span>-{product?.promoOffer}% off</span>
+                    <FaCopy className="w-3 h-3 ml-1" />
+                  </button>
                 </div>
               </div>
 
