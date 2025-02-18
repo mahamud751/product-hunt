@@ -88,11 +88,11 @@ const Page = () => {
         ))}
       </Grid>
       {/* Pagination */}
-      <PaginationComponent
+      {/* <PaginationComponent
         currentPage={currentPage}
         totalPages={Math.ceil(totalAlternatives / rowsPerPage)}
         onPageChange={(page) => setCurrentPage(page)}
-      />
+      /> */}
     </div>
   );
 };
