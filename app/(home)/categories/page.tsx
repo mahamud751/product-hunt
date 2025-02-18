@@ -8,7 +8,9 @@ function SubcategoryCard({ name, description, products }: Subcategory) {
       <div className="flex flex-col gap-2">
         <div className="flex items-center w-full">
           <div className="flex-shrink-0">
-            <h3 className="text-lg font-medium text-[#1F1F1F]">{name}</h3>
+            <h3 className="text-lg font-medium text-[#1F1F1F]">
+              {name?.slice(0, 10)}
+            </h3>
           </div>
           <div className="flex-grow mx-2 relative">
             <div
@@ -25,7 +27,7 @@ function SubcategoryCard({ name, description, products }: Subcategory) {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-gray-600 text-sm">{description}</p>
+          <p className="text-gray-600 text-sm">{description?.slice(0, 30)}</p>
         </div>
       </div>
     </div>
@@ -37,7 +39,7 @@ function CategorySection({ category }: { category: Category }) {
       <div className="flex items-center gap-3 mb-6">
         {/* {category.} */}
         <h2 className="text-2xl font-semibold text-[#1F1F1F]">
-          {category.name}
+          {category.name?.slice(0, 12)}
         </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

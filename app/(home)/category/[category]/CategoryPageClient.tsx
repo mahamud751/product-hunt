@@ -119,9 +119,9 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                         <div className="flex items-start justify-between">
                           <div>
                             <h3 className="font-semibold text-lg">
-                              {product.name}{" "}
+                              {product?.name}{" "}
                               <span className="text-gray-500">-</span>{" "}
-                              {product.headline}
+                              {product?.headline?.slice(0, 30)}
                             </h3>
                           </div>
                           <div className="flex items-center">
@@ -139,7 +139,9 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                           <div className="flex items-center gap-2">
                             <div className="flex items-center gap-1 px-3 py-1 bg-gray-200 rounded-full text-sm">
                               <Layout className="w-4 h-4" />
-                              <span>{product?.category?.name}</span>
+                              <span>
+                                {product?.category?.name.slice(0, 15)}
+                              </span>
                             </div>
                             <span className="px-3 py-1 bg-gray-200 rounded-full text-sm">
                               {product.price}
