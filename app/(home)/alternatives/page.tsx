@@ -1,11 +1,12 @@
 "use client";
 import AlternativeCard from "@/components/alternative/AlternativeCard";
-import { AlternativePagination } from "@/components/alternative/AlternativePagination";
+
 import { getAlternatives } from "@/lib/server-actions";
 import { Grid, Menu } from "@mui/material";
 import { ChevronDown, Search } from "lucide-react";
 import React, { MouseEvent, useEffect, useState } from "react";
-import { FormControl, Select, MenuItem } from "@mui/material";
+import { MenuItem } from "@mui/material";
+import AlternativePagination from "@/components/alternative/AlternativePagination";
 
 type SortOrder = "Popularity" | "Latest" | "NameAsc" | "NameDesc";
 const Page = () => {
