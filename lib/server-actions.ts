@@ -979,7 +979,11 @@ export const getCategories = async (
     where,
     include: {
       products: true,
-      subcategories: true,
+      subcategories: {
+        include: {
+          products: true,
+        },
+      },
     },
   });
 
@@ -1238,6 +1242,9 @@ export const getProductsByCategoryName = async (category: string) => {
     where: {
       status: "ACTIVE",
     },
+    include: {
+      category: true,
+    },
   });
   return products;
 };
@@ -1263,6 +1270,7 @@ export const getRankById = async (): Promise<
         },
       },
     },
+
     orderBy: {
       upvotes: {
         _count: "desc",

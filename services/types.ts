@@ -109,7 +109,7 @@ export interface Product {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  status: Status;
+  status?: Status;
   categoryId: string;
   alternatives?: string;
   alternativeId?: string;
