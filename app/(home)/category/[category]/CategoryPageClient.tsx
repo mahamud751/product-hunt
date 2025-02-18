@@ -133,7 +133,7 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                           </div>
                         </div>
                         <p className="mt-2 text-sm text-gray-600">
-                          {product.description}
+                          {product.description.slice(0, 30)}
                         </p>
                         <div className="mt-4 flex items-center justify-between">
                           <div className="flex items-center gap-2">
