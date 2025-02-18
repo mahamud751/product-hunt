@@ -8,7 +8,7 @@ interface PromoPaginationProps {
   onNextPrev: (type: "prev" | "next") => void;
 }
 
-export function PromoPagination({
+export default function PromoPagination({
   currentPage,
   totalPages,
   onPageChange,

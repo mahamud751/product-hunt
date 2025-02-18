@@ -1,6 +1,6 @@
 "use client";
 import AlternativeCard from "@/components/alternative/AlternativeCard";
-import PaginationComponent from "@/components/alternative/Pagination";
+import PaginationComponent from "@/components/alternative/AlternativePagination";
 import { getAlternatives } from "@/lib/server-actions";
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";

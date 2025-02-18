@@ -1,6 +1,6 @@
 "use client";
 import AlternativeCard from "@/components/alternative/AlternativeCard";
-import { AlternativePagination } from "@/components/alternative/Pagination";
+import { AlternativePagination } from "@/components/alternative/AlternativePagination";
 import { getAlternatives } from "@/lib/server-actions";
 import { Grid, Menu } from "@mui/material";
 import { ChevronDown, Search } from "lucide-react";

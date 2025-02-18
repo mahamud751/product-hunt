@@ -8,7 +8,7 @@ interface AlternativePaginationProps {
   onNextPrev: (type: "prev" | "next") => void;
 }
 
-export function AlternativePagination({
+export default function AlternativePagination({
   currentPage,
   totalPages,
   onPageChange,

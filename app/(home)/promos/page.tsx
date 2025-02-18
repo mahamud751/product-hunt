@@ -11,7 +11,7 @@ import {
 import { getPromoProducts, getActiveCategory } from "@/lib/server-actions";
 import { Category } from "@/services/types";
 import { DealCard } from "@/components/promos/DealCard";
-import { PromoPagination } from "@/components/promos/PromoPagination";
+import PromoPagination from "@/components/promos/PromoPagination";
 
 type SortOrder = "Popularity" | "Latest" | "NameAsc" | "NameDesc";
 const Page = () => {
