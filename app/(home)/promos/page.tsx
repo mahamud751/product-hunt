@@ -1,32 +1,35 @@
 "use client";
+import { useState, useEffect, MouseEvent } from "react";
+import { Button, MenuItem, Menu } from "@mui/material";
 import {
-  Grid,
-  Button,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Autocomplete,
-  TextField,
-  Typography,
-} from "@mui/material";
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  PlusCircle,
+} from "lucide-react";
 
-import { LocalOffer, NewReleases, TrendingUp } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { PromoPageCard } from "@/components/promos/PromoPageCard";
 import { getPromoProducts, getActiveCategory } from "@/lib/server-actions";
 import { Category } from "@/services/types";
-import { Search } from "lucide-react";
+import { DealCard } from "@/components/promos/DealCard";
+import { PromoPagination } from "@/components/promos/PromoPagination";
 
+type SortOrder = "Popularity" | "Latest" | "NameAsc" | "NameDesc";
 const Page = () => {
   const [categories, setCategories] = useState<any[]>([]);
+  const [totalPromos, setTotalPromos] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [viewAll, setViewAll] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<string>("NameAsc");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [sortOrder, setSortOrder] = useState<string>("Order by");
+  const [categoryAnchorEl, setCategoryAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
+  const rowsPerPage = 6;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,11 +38,14 @@ const Page = () => {
         setAllCategories(categoriesData);
 
         const data = await getPromoProducts(
+          currentPage - 1,
+          rowsPerPage,
           searchQuery,
           sortOrder,
           selectedCategory || undefined
         );
-        setCategories(data);
+        setCategories(data.promoProducts);
+        setTotalPromos(data.totalPromos);
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
@@ -48,13 +54,23 @@ const Page = () => {
     };
 
     fetchData();
-  }, [selectedCategory, searchQuery, sortOrder]);
-
-  const handleCategoryChange = (event: any, newValue: Category | null) => {
-    setSelectedCategory(newValue?.id || null);
-    setLoading(true);
-    setViewAll(false);
+  }, [currentPage, selectedCategory, searchQuery, sortOrder]);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
+
+  const handleNextPrev = (type: "prev" | "next") => {
+    if (type === "prev" && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    } else if (
+      type === "next" &&
+      currentPage < Math.ceil(totalPromos / rowsPerPage)
+    ) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const totalPages = Math.ceil(totalPromos / rowsPerPage);
 
   const handleViewAll = () => {
     setViewAll(true);
@@ -66,8 +82,29 @@ const Page = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSortChange = (event: SelectChangeEvent<string>) => {
-    setSortOrder(event.target.value);
+  const handleSortChange = (sort: SortOrder) => {
+    setSortOrder(sort);
+    setAnchorEl(null);
+  };
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleCategoryClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setCategoryAnchorEl(event.currentTarget);
+  };
+
+  const handleCategoryClose = () => {
+    setCategoryAnchorEl(null);
+  };
+
+  const handleCategorySelect = (categoryId: string | null) => {
+    setSelectedCategory(categoryId);
+    setCategoryAnchorEl(null); // Close the menu after selection
   };
 
   if (loading) {
@@ -80,196 +117,163 @@ const Page = () => {
 
   return (
     <div>
-      {/* Header Section */}
-      <div className="w-full bg-white rounded-[5px] shadow-md">
-        <div className="flex justify-center px-20 py-8 w-full">
-          <div>
-            <h1 className="mb-2.5 text-4xl font-extrabold leading-none text-center text-gray-900 max-md:text-3xl max-sm:px-4 max-sm:py-0 max-sm:text-3xl">
-              Unlock Exclusive Product Deals – Save Big on Top Tools
-            </h1>
-            <h6 className="mb-7 text-xl font-bold leading-snug text-center text-gray-800 max-md:text-lg max-sm:px-4 max-sm:py-0 max-sm:text-base">
-              Get 10–80% Off Premium Software & Supercharge Your Workflow Today
-            </h6>
-
-            <Grid
-              container
-              spacing={4}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid
-                item
-                xs={12}
-                md={4}
-                container
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <div className="bg-blue-500 text-white rounded-full p-2">
-                  <LocalOffer fontSize="large" />
-                </div>
-                <Typography variant="h6" align="center" className="mt-2">
-                  Exclusive Deals
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={4}
-                container
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <div className="bg-green-500 text-white rounded-full p-2">
-                  <NewReleases fontSize="large" />
-                </div>
-                <Typography variant="h6" align="center" className="mt-2">
-                  Best Prices
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={4}
-                container
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <div className="bg-yellow-500 text-white rounded-full p-2">
-                  <TrendingUp fontSize="large" />
-                </div>
-                <Typography variant="h6" align="center" className="mt-2">
-                  Limited Time
-                </Typography>
-              </Grid>
-            </Grid>
-          </div>
+      <div className="bg-[#F5F5F5] py-16 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl font-bold text-[#1F1F1F] mb-4">
+            Unlock Exclusive Product Deals – Save Big on Top Tools
+          </h1>
+          <h3 className="text-xl text-[#1F1F1F]/80 mb-8">
+            Get 10–80% Off Premium Software & Supercharge Your Workflow Today
+          </h3>
+          <button className="bg-[#AF583B] text-white px-6 py-3 rounded-lg hover:bg-[#AF583B]/90 transition-colors">
+            Browse Deals
+          </button>
         </div>
       </div>
 
       {/* Search and Sort Section */}
-      <div className="flex mt-16">
-        <div className="w-[50%]">
-          <form className="flex items-center px-3 py-2 bg-white rounded-lg border border-solid border-neutral-200 max-md:px-5">
-            <div className="flex items-center gap-2 w-full">
-              <Search className="text-neutral-600 text-opacity-50 w-5 h-5" />
-              <label htmlFor="searchInput" className="sr-only">
-                Search alternatives
-              </label>
-              <input
-                id="searchInput"
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder={`Search in alternatives...`}
-                className="w-full text-sm font-medium text-neutral-600 text-opacity-50 focus:outline-none"
-                aria-label="Search alternatives"
-              />
-            </div>
-          </form>
-        </div>
+      <div className="bg-[#F5F5F5] rounded-lg p-4 shadow-sm mt-12">
+        <div className="flex items-center gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1F1F1F]/40" />
+            <input
+              type="text"
+              placeholder="Search tools..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 rounded-lg border border-[#1F1F1F]/10 focus:outline-none focus:ring-2 focus:ring-[#AF583B]/20"
+            />
+          </div>
 
-        <div className="ms-5 w-[40%]">
-          <Autocomplete
-            options={allCategories}
-            getOptionLabel={(option) => option.name}
-            onChange={handleCategoryChange}
-            value={
-              allCategories.find((cat) => cat.id === selectedCategory) || null
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Select Category"
-                variant="outlined"
-                size="small"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: "36px",
-                    borderColor: "GrayText",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "GrayText",
-                      borderWidth: "0px",
-                    },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "GrayText",
-                      borderWidth: "0px",
-                    },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "GrayText",
-                    },
-                    backgroundColor: "white",
-                    fontSize: 14,
-                  },
-                }}
-                className="border border-solid border-neutral-200 rounded-sm"
-              />
-            )}
-          />
-        </div>
+          <button
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-[#1F1F1F]/10 hover:bg-[#1F1F1F]/5 transition-colors"
+            onClick={handleCategoryClick}
+          >
+            <SlidersHorizontal className="w-5 h-5" />
+            <span>All Categories</span>
+            <ChevronDown className="w-4 h-4" />
+          </button>
 
-        <div className="ms-5 w-[160px]">
-          <FormControl fullWidth size="small">
-            <Select
-              className="border border-solid border-neutral-200"
-              value={sortOrder}
-              onChange={handleSortChange}
-              sx={{
-                borderRadius: 2,
-                width: "160px",
-                height: "36px",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "GrayText",
-                  borderWidth: "0px",
+          <Menu
+            anchorEl={categoryAnchorEl}
+            open={Boolean(categoryAnchorEl)}
+            onClose={handleCategoryClose}
+            MenuListProps={{
+              "aria-labelledby": "category-button",
+              style: {
+                maxHeight: "300px",
+                overflowY: "auto",
+                padding: "8px 0",
+              },
+            }}
+            PaperProps={{
+              style: {
+                width: categoryAnchorEl
+                  ? categoryAnchorEl.clientWidth
+                  : undefined,
+                borderRadius: "8px",
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                border: "1px solid #e0e0e0",
+              },
+            }}
+          >
+            <MenuItem
+              className="text-[14px] px-4 py-2 hover:bg-neutral-100 transition-colors duration-200"
+              onClick={() => handleCategorySelect(null)}
+            >
+              All Categories
+            </MenuItem>
+            {allCategories.map((category) => (
+              <MenuItem
+                key={category.id}
+                className="text-[14px] px-4 py-2 hover:bg-neutral-100 transition-colors duration-200"
+                onClick={() => handleCategorySelect(category.id || null)}
+              >
+                {category.name}
+              </MenuItem>
+            ))}
+          </Menu>
+
+          <div className="ms-5 w-[200px]">
+            <button
+              className="flex items-center justify-between gap-2 w-full px-4 py-2 rounded-lg border border-[#1F1F1F]/10 hover:bg-[#1F1F1F]/5 transition-colors"
+              onClick={handleClick}
+            >
+              <span>Sort by: {sortOrder}</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "sort-button",
+              }}
+              PaperProps={{
+                style: {
+                  width: anchorEl ? anchorEl.clientWidth : undefined, // Ensures the menu width matches the button width
+                  borderRadius: "8px",
+                  boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                 },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "GrayText",
-                  borderWidth: "0px",
-                },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "GrayText",
-                },
-                backgroundColor: "white",
-                fontSize: 14,
               }}
             >
-              <MenuItem className="text-[14px]" value="Popularity">
+              <MenuItem
+                className="text-[14px] px-4 py-2 hover:bg-neutral-100"
+                onClick={() => handleSortChange("Popularity")}
+              >
                 Popularity
               </MenuItem>
-              <MenuItem className="text-[14px]" value="Latest">
+              <MenuItem
+                className="text-[14px] px-4 py-2 hover:bg-neutral-100"
+                onClick={() => handleSortChange("Latest")}
+              >
                 Latest
               </MenuItem>
-              <MenuItem className="text-[14px]" value="NameAsc">
+              <MenuItem
+                className="text-[14px] px-4 py-2 hover:bg-neutral-100"
+                onClick={() => handleSortChange("NameAsc")}
+              >
                 Name A-Z
               </MenuItem>
-              <MenuItem className="text-[14px]" value="NameDesc">
+              <MenuItem
+                className="text-[14px] px-4 py-2 hover:bg-neutral-100"
+                onClick={() => handleSortChange("NameDesc")}
+              >
                 Name Z-A
               </MenuItem>
-            </Select>
-          </FormControl>
+            </Menu>
+          </div>
         </div>
       </div>
 
-      {/* Autocomplete Category Section */}
-
-      <Grid container spacing={3} className="mb-10 mt-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {displayedCategories?.length > 0 ? (
-          displayedCategories?.map((data) => (
-            <Grid item xs={12} sm={6} md={4} key={data?.id}>
-              <PromoPageCard data={data} />
-            </Grid>
+          displayedCategories?.map((data, index) => (
+            <DealCard key={index} data={data} />
           ))
         ) : (
-          <Grid item xs={12}>
+          <>
             <div className="flex justify-center items-center h-64 bg-gray-100 rounded-lg">
               <p className="text-lg text-gray-500">No data found</p>
             </div>
-          </Grid>
+          </>
         )}
-      </Grid>
+      </div>
+
+      <PromoPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        onNextPrev={handleNextPrev}
+      />
+
+      <div className="text-center mt-12 mb-12">
+        <button className="inline-flex items-center gap-2 bg-[#AF583B] text-white px-6 py-3 rounded-lg hover:bg-[#AF583B]/90 transition-colors">
+          <PlusCircle className="w-5 h-5" />
+          Submit Your Deal
+        </button>
+      </div>
 
       {categories?.length > 15 && !viewAll && (
         <div className="flex justify-center mt-10 mb-20">

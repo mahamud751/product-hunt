@@ -63,7 +63,7 @@ const Home = async () => {
                   <h1 className="text-xl font-medium whitespace-nowrap">
                     Featured
                   </h1>
-                  <hr className="flex-grow border-t border-dashed border-black mt-4" />
+                  <hr className="flex-grow border-t border-dashed border-black mt-4 ms-[2px]" />
                 </div>
 
                 <FeaturedCard />
@@ -83,7 +83,7 @@ const Home = async () => {
                   <h1 className="text-xl font-medium whitespace-nowrap">
                     Product Deals
                   </h1>
-                  <hr className="flex-grow border-t border-dashed border-black mt-4" />
+                  <hr className="flex-grow border-t border-dashed border-black mt-4 ms-[2px]" />
                 </div>
 
                 <PromoCard />

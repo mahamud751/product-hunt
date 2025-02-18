@@ -1,19 +1,19 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface AlternativePaginationProps {
+interface PromoPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   onNextPrev: (type: "prev" | "next") => void;
 }
 
-export function AlternativePagination({
+export function PromoPagination({
   currentPage,
   totalPages,
   onPageChange,
   onNextPrev,
-}: AlternativePaginationProps) {
+}: PromoPaginationProps) {
   const renderPageNumbers = () => {
     const pages = [];
 

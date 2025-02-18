@@ -217,10 +217,15 @@ export const getProducts = async (
 };
 
 export const getPromoProducts = async (
+  page: number,
+  rowsPerPage: number,
   searchQuery?: string,
   sortOrder?: string,
   categoryId?: string
 ) => {
+  const skip = page * rowsPerPage;
+  const take = rowsPerPage;
+
   const where: any = {
     promoCode: {
       not: "", // Ensure products have a promoCode
@@ -257,6 +262,8 @@ export const getPromoProducts = async (
   }
 
   const promoProducts = await db.product.findMany({
+    skip,
+    take,
     where,
     orderBy,
     include: {
@@ -265,8 +272,9 @@ export const getPromoProducts = async (
       alternatives: true,
     },
   });
+  const totalPromos = await db.product.count({ where });
 
-  return promoProducts;
+  return { promoProducts, totalPromos };
 };
 
 export const getFeaturedProducts = async () => {
