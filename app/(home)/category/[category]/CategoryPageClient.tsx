@@ -231,7 +231,7 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                     <div className="ml-3 flex-1">
                       <h3 className="font-medium text-sm">
                         {product.name} <span className="text-gray-500">-</span>{" "}
-                        {product.headline}
+                        {product?.headline?.slice(0, 30)}
                       </h3>
                     </div>
                     <ArrowRight className="w-4 h-4 text-gray-400" />
