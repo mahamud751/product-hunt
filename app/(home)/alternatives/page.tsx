@@ -153,7 +153,7 @@ const Page = () => {
         ))}
       </Grid>
       {/* Pagination */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-10">
         <AlternativePagination
           currentPage={currentPage}
           totalPages={totalPages}

@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
+
 import SocialIcons from "./SocialIcon";
 import NewsletterForm from "../../home/NewsLetter";
 import LinkColumn from "./Links";
-import AuthorCredit from "./Authors";
-import { Container } from "@mui/material";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -12,35 +11,35 @@ const Footer: React.FC = () => {
     {
       title: "Browse:",
       links: [
-        "Alternatives",
-        "All Categories",
-        "AI & Assistants",
-        "Work & Productivity",
-        "Marketing & Sales",
-        "Social Meida Tools",
+        { label: "Alternatives", href: "/alternatives" },
+        { label: "All Categories", href: "/categories" },
+        { label: "AI & Assistants", href: "#" },
+        { label: "Work & Productivity", href: "#" },
+        { label: "Marketing & Sales", href: "#" },
+        { label: "Social Media Tools", href: "#" },
       ],
     },
     {
       title: "Quick Links:",
       links: [
-        "About Us",
-        "Our Blog",
-        "Advertise",
-        "Add a Free Listing",
-        "Auto Submit",
-        "Privacy Policy",
-        "Terms & Condtion",
+        { label: "About Us", href: "/about-us" },
+        { label: "Our Blog", href: "/blog" },
+        { label: "Advertise", href: "#" },
+        { label: "Add a Free Listing", href: "#" },
+        { label: "Auto Submit", href: "/auto-submit" },
+        { label: "Privacy Policy", href: "/privacy-policy" },
+        { label: "Terms & Conditions", href: "/privacy-policy" },
       ],
     },
     {
       title: "Platforms:",
       links: [
-        "Leaderboard",
-        "Community",
-        "Winner Borad",
-        "How it Works",
-        "Newsletter",
-        "Become An Affiliate",
+        { label: "Leaderboard", href: "/leaderboard" },
+        { label: "Community", href: "/community" },
+        { label: "Winner Board", href: "/winner-board" },
+        { label: "How it Works", href: "/how-it-works" },
+        { label: "Newsletter", href: "/newsletter" },
+        { label: "Become An Affiliate", href: "/affiliate" },
       ],
     },
   ];
@@ -64,7 +63,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Right content on small devices, left on large screens */}
-        <div className="flex flex-col  w-[100%] md:w-[70%]">
+        <div className="flex flex-col w-[100%] md:w-[70%]">
           <div className="flex flex-col w-full max-md:mt-10 max-md:max-w-full">
             <div className="max-w-full ms-0">
               <div className="flex gap-5">
@@ -72,7 +71,7 @@ const Footer: React.FC = () => {
                   <LinkColumn
                     key={index}
                     title={column.title}
-                    links={column.links}
+                    data={column.links}
                   />
                 ))}
               </div>
