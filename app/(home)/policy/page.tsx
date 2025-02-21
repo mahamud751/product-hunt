@@ -319,7 +319,7 @@ function PrivacyContent() {
           <li>How long we store your personal data</li>
           <li>Where we store your personal data</li>
           <li>How we protect your personal data</li>
-          <li>Our policy on children's privacy</li>
+          <li>Our policy on children&#39;s privacy</li>
           <li>Links to other websites</li>
           <li>Changes to this Privacy & Cookies Policy</li>
         </ul>
@@ -335,9 +335,11 @@ function PrivacyContent() {
           Who We Are and How to Contact Us
         </h3>
         <p className="text-gray-700">
-          <strong>Who we are:</strong> Launchap.com ("Launchap," "we," "us," or
-          "our") is the data controller responsible for your personal data.
+          <strong>Who we are:</strong> Launchap.com (&quot;Launchap,&quot;
+          &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) is the data
+          controller responsible for your personal data.
         </p>
+
         <p className="text-gray-700">
           <strong>How to contact us:</strong> If you have any questions
           regarding this policy, please email us at{" "}
@@ -401,7 +403,7 @@ function PrivacyContent() {
           You can opt out of marketing communications at any time by:
         </p>
         <ul className="list-disc pl-6 text-gray-700">
-          <li>Clicking the "unsubscribe" link in our emails</li>
+          <li>Clicking the &quot;unsubscribe&quot; link in our emails</li>
           <li>Updating your account settings</li>
           <li>Contacting us directly</li>
         </ul>
