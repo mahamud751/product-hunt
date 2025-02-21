@@ -9,6 +9,10 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
+  Box,
+  Step,
+  StepLabel,
+  Stepper,
 } from "@mui/material";
 import LogoUploader from "@/components/custom-image-upload";
 import { Button } from "@/components/ui/button";
@@ -488,36 +492,73 @@ const NewProduct = () => {
     setStep(stepId);
   };
   return (
-    <div className="flex justify-center py-8 md:py-20">
-      <div className="hidden md:block w-1/2 p-4 md:p-0">
-        <div className="space-y-4 sticky top-10">
-          {steps.map((stepItem) => {
-            const Icon = stepItem.icon;
-            const isActive = step === stepItem.id;
-            return (
-              <button
-                key={stepItem.id}
-                onClick={() => handleStepClick(stepItem.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-md transition-all ${
-                  isActive ? "" : "text-gray-700 hover:bg-gray-200"
-                }`}
-                style={{
-                  backgroundColor: isActive ? stepItem.lightColor : "",
-                }}
-              >
-                <Icon
-                  className={`text-xl ${isActive ? "text-white" : ""}`}
-                  style={{ color: isActive ? stepItem.color : stepItem.color }}
-                />
-                <span>{stepItem.label}</span>
-              </button>
-            );
-          })}
-        </div>
+    <div className="py-8 md:py-20">
+      <div className="hidden md:block md:p-0 ms-2 mb-16">
+        <Box sx={{ width: "100%", mb: 4 }}>
+          <Stepper activeStep={step - 1} alternativeLabel>
+            {steps.map((stepItem, index) => {
+              const isActive = step === stepItem.id;
+              return (
+                <Step key={stepItem.id}>
+                  <StepLabel
+                    onClick={() => handleStepClick(stepItem.id)}
+                    style={{ cursor: "pointer" }}
+                    icon={
+                      <div
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          border: `2px solid ${
+                            isActive ? "#A96E60" : "#CFD0D1"
+                          }`,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: "transparent",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "50%",
+                            backgroundColor: isActive
+                              ? "#AE583C"
+                              : "transparent",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: isActive ? "#FFFFFF" : "#000000",
+                            fontSize: "14px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {index + 1}
+                        </div>
+                      </div>
+                    }
+                  >
+                    {/* Optional: Add step label text below the circle */}
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        color: isActive ? "#A96E60" : "#000000",
+                        fontWeight: isActive ? "bold" : "normal",
+                      }}
+                    >
+                      {stepItem.label}
+                    </div>
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+        </Box>
       </div>
 
       {/* Form content on the right side - Always visible */}
-      <div className="px-3 w-full md:w-5/5 ms-20">
+      <div className="bg-[#F5F5F5] p-10">
         {step === 1 && (
           <>
             <h1 className="text-4xl font-semibold"> New product</h1>

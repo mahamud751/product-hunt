@@ -5,7 +5,7 @@ import Navbar from "@/components/navbar/navbar";
 import Spinner from "@/components/spinner";
 import { getNotifications, getProductsByUserId } from "@/lib/server-actions";
 import { Container } from "@mui/material";
-import { redirect } from "next/navigation";
+
 import { Suspense } from "react";
 
 const HomeLayout = async ({
@@ -22,7 +22,7 @@ const HomeLayout = async ({
   return (
     <html suppressHydrationWarning={true} lang="en">
       <body>
-        <Container>
+        <Container className="px-8 xl:px-28">
           <Suspense fallback={<Spinner />}>
             <Navbar
               authenticatedUser={authenticatedUser}
