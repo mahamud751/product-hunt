@@ -210,8 +210,8 @@ const Page = () => {
                 link to your product page.
               </p>
               <p className="mt-2">
-                It's a powerful way to get discovered by even more potential
-                users and fans.
+                It&apos;s a powerful way to get discovered by even more
+                potential users and fans.
               </p>
             </FeatureCard>
           </section>
@@ -229,8 +229,8 @@ const Page = () => {
                       Free Launch (Queued)
                     </h4>
                     <p>
-                      Your product is placed in a waiting line. You'll get an
-                      auto-assigned launch date, so keep an eye on your
+                      Your product is placed in a waiting line. You&apos;ll get
+                      an auto-assigned launch date, so keep an eye on your
                       dashboard for updates.
                     </p>
                   </div>
@@ -315,9 +315,9 @@ const Page = () => {
               <p>
                 Makers can offer exclusive deals for Launchap users—a discount,
                 extended free trial, or any special perk. Products featuring
-                these deals get a "Special Deal" badge on their page and in
-                search results, drawing extra attention and encouraging more
-                users to check them out.
+                these deals get a &apos;Special Deal&apos; badge on their page
+                and in search results, drawing extra attention and encouraging
+                more users to check them out.
               </p>
             </FeatureCard>
           </section>
@@ -392,7 +392,7 @@ const Page = () => {
                 </h3>
                 <p className="text-gray-600">
                   Explore products by category or tags to find exactly what
-                  you're looking for.
+                  you&apos;re looking for.
                 </p>
               </div>
 
@@ -430,7 +430,7 @@ const Page = () => {
                   Take the First Step
                 </h3>
                 <p className="text-gray-600 mb-8">
-                  Whether you're looking for cutting-edge tools to boost
+                  Whether you&apos;re looking for cutting-edge tools to boost
                   productivity or launching the next big thing, Launchap is here
                   to help you succeed.
                 </p>
