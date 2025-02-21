@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
         { label: "Leaderboard", href: "/leaderboard" },
         { label: "Community", href: "/community" },
         { label: "Winner Board", href: "/winner-board" },
-        { label: "How it Works", href: "/how-it-works" },
+        { label: "How it Works", href: "/how-work" },
         { label: "Newsletter", href: "/newsletter" },
         { label: "Become An Affiliate", href: "/affiliate" },
       ],
