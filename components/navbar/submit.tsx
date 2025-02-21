@@ -18,11 +18,12 @@ const Submit: React.FC<SubmitProps> = ({ products, authenticatedUser }) => {
 
   const handleClick = async () => {
     const isPremium = await isUserPremium();
-    if (!isPremium && products?.length === 2) {
-      setIsUpgradeModalVisible(true);
-    } else {
-      router.push("/new-product");
-    }
+    // if (!isPremium && products?.length === 2) {
+    //   setIsUpgradeModalVisible(true);
+    // } else {
+    //   router.push("/new-product");
+    // }
+    router.push("/new-product");
   };
 
   return (
