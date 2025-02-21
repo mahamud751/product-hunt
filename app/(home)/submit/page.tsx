@@ -138,8 +138,8 @@ const Submit = () => {
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="text-[#198E49] shrink-0" size={24} />
                   <span>
-                    Manual submissions only (We don't use potentially harmful
-                    bots)
+                    Manual submissions only (We don&apos;t use potentially
+                    harmful bots)
                   </span>
                   )
                 </div>
@@ -243,8 +243,8 @@ const Submit = () => {
                 Visibility & SEO Boost
               </h3>
               <p>
-                Increase your product's visibility and SEO ranking by securing
-                listings on influential directories.
+                Increase your product&apos;s visibility and SEO ranking by
+                securing listings on influential directories.
               </p>
             </div>
             <div className="bg-white p-6 rounded-xl">
@@ -378,9 +378,10 @@ const Submit = () => {
               100+ Founders Are Submitting Faster!
             </h2>
             <p className="text-lg mb-4">
-              Don't just take our word for it—here's what successful founders
-              are saying about Directories!
+              Don&apos;t just take our word for it&mdash;here&apos;s what
+              successful founders are saying about Directories!
             </p>
+
             <div className="flex items-center justify-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -413,8 +414,9 @@ const Submit = () => {
 
           <div className="text-center mt-12">
             <p className="text-lg mb-6">
-              🚀 Get started today and supercharge your product's reach!
+              🚀 Get started today and supercharge your product&apos;s reach!
             </p>
+
             <button className="cta-primary inline-flex items-center gap-2">
               Get Started Now
               <ArrowRight size={20} />
@@ -468,8 +470,10 @@ const Submit = () => {
             Boost Your App, Submit, Earn!
           </h2>
           <p className="text-lg mb-8">
-            Don't waste more time—increase your startup's online presence now!
+            Don&apos;t waste more time—increase your startup&apos;s online
+            presence now!
           </p>
+
           <p className="text-[#AF583B] font-semibold mb-8">
             💰 $50 off – only 10 spots left!
           </p>

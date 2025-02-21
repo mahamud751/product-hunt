@@ -64,8 +64,8 @@ const Page = () => {
             <h2 className="text-xl font-semibold text-[#1F1F1F]">Need Help?</h2>
           </div>
           <p className="mt-4 text-gray-600">
-            If you have any questions about our legal policies, please don't
-            hesitate to contact us at{" "}
+            If you have any questions about our legal policies, please
+            don&apos;t hesitate to contact us at{" "}
             <a
               href="mailto:contact@launchap.com"
               className="text-[#AF583B] hover:underline"
@@ -90,15 +90,16 @@ function TermsContent() {
         <p className="text-gray-700">
           Welcome to Launchap. Please read on to learn the rules and
           restrictions that govern your use of our website(s), products,
-          services, and applications (collectively, the "Services"). If you have
-          any questions, comments, or concerns regarding these terms or the
-          Services, please contact us at contact@launchap.com.
+          services, and applications (collectively, the &quot;Services&quot;).
+          If you have any questions, comments, or concerns regarding these terms
+          or the Services, please contact us at contact@launchap.com.
         </p>
         <p className="text-gray-700">
-          These Terms of Service (the "Terms") form a binding agreement between
-          you and Launchap Inc. ("Launchap," "we," or "us"). By using the
-          Services in any way, you agree to these Terms. If you do not agree,
-          you may not use the Services.
+          These Terms of Service (the &quot;Terms&quot;) form a binding
+          agreement between you and Launchap Inc. (&quot;Launchap,&quot;
+          &quot;we,&quot; or &quot;us&quot;). By using the Services in any way,
+          you agree to these Terms. If you do not agree, you may not use the
+          Services.
         </p>
         <p className="text-gray-700">
           These Terms include our Privacy Policy and any other policies
@@ -198,11 +199,11 @@ function TermsContent() {
           distribute content without permission.
         </p>
         <p className="text-gray-700">
-          User-generated content ("User Submissions") remains your property.
-          However, by submitting content to Launchap, you grant us a worldwide,
-          non-exclusive, royalty-free license to use, modify, distribute, and
-          display your content in connection with operating and promoting the
-          Services.
+          User-generated content (&quot;User Submissions&quot;) remains your
+          property. However, by submitting content to Launchap, you grant us a
+          worldwide, non-exclusive, royalty-free license to use, modify,
+          distribute, and display your content in connection with operating and
+          promoting the Services.
         </p>
       </section>
 
@@ -234,9 +235,9 @@ function TermsContent() {
           8. Disclaimers and Limitation of Liability
         </h3>
         <p className="text-gray-700">
-          <strong>Disclaimers:</strong> The Services are provided "as is"
-          without warranties of any kind. We do not guarantee uninterrupted or
-          error-free operation.
+          <strong>Disclaimers:</strong> The Services are provided &quot;as
+          is&quot; without warranties of any kind. We do not guarantee
+          uninterrupted or error-free operation.
         </p>
         <p className="text-gray-700">
           <strong>Limitation of Liability:</strong> To the fullest extent
@@ -295,12 +296,12 @@ function PrivacyContent() {
         <p className="text-gray-600 mb-4">Effective Date: March 15, 2024</p>
         <p className="text-gray-700">
           At Launchap, we value your privacy and take it seriously. This Privacy
-          & Cookies Policy outlines our policies regarding the collection, use,
-          and disclosure of your information when you use our services,
-          websites, and applications (the "Services"). By using the Services,
-          you agree to the collection and use of information in accordance with
-          this Privacy & Cookies Policy. We do not share your personal data
-          except as described in this policy.
+          &amp; Cookies Policy outlines our policies regarding the collection,
+          use, and disclosure of your information when you use our services,
+          websites, and applications (the &quot;Services&quot;). By using the
+          Services, you agree to the collection and use of information in
+          accordance with this Privacy &amp; Cookies Policy. We do not share
+          your personal data except as described in this policy.
         </p>
       </section>
 
@@ -324,7 +325,8 @@ function PrivacyContent() {
         </ul>
         <p className="text-gray-700 mt-4">
           This policy complies with the General Data Protection Regulation
-          ("GDPR") and the California Consumer Privacy Act ("CCPA").
+          (&quot;GDPR&quot;) and the California Consumer Privacy Act
+          (&quot;CCPA&quot;).
         </p>
       </section>
 
@@ -386,8 +388,8 @@ function PrivacyContent() {
           </li>
         </ul>
         <p className="text-gray-700 mt-4">
-          To exercise these rights, contact us using the details in "Who We Are
-          and How to Contact Us."
+          To exercise these rights, contact us using the details in &quot;Who We
+          Are and How to Contact Us.&quot;
         </p>
       </section>
 
@@ -536,7 +538,7 @@ function PrivacyContent() {
 
       <section>
         <h3 className="text-xl font-bold text-[#1F1F1F] mb-3">
-          Our Policy on Children's Privacy
+          Our Policy on Children&apos;s Privacy
         </h3>
         <p className="text-gray-700">
           Our Services are not intended for users under 16 years of age. We do
@@ -586,10 +588,11 @@ function CookiesContent() {
         </h2>
         <p className="text-gray-600 mb-4">Effective Date: March 15, 2024</p>
         <p className="text-gray-700">
-          At Launchap.com ("Launchap," "we," "us," or "our"), we use cookies and
-          similar tracking technologies to improve your experience on our
-          platform. This Cookies Policy explains what cookies are, the types of
-          cookies we use, and how you can manage them.
+          At Launchap.com (&quot;Launchap,&quot; &quot;we,&quot; &quot;us,&quot;
+          or &quot;our&quot;), we use cookies and similar tracking technologies
+          to improve your experience on our platform. This Cookies Policy
+          explains what cookies are, the types of cookies we use, and how you
+          can manage them.
         </p>
       </section>
 
@@ -605,9 +608,9 @@ function CookiesContent() {
           performance.
         </p>
         <p className="text-gray-700">
-          Cookies may be either "persistent" (remain on your device after you
-          close your browser) or "session" (deleted once you close your
-          browser).
+          Cookies may be either &quot;persistent&quot; (remain on your device
+          after you close your browser) or &quot;session&quot; (deleted once you
+          close your browser).
         </p>
       </section>
 
@@ -773,10 +776,11 @@ function CookiesContent() {
         </h3>
         <p className="text-gray-700">
           We may update this policy from time to time. Changes will be posted on
-          this page, and the "Effective Date" will be updated accordingly. Your
-          continued use of Launchap.com constitutes acceptance of the updated
-          policy.
+          this page, and the &quot;Effective Date&quot; will be updated
+          accordingly. Your continued use of &quot;Launchap.com&quot;
+          constitutes acceptance of the updated policy.
         </p>
+
         <p className="text-gray-700 mt-4">
           If you have any questions about our Cookies Policy, contact us at{" "}
           <a
