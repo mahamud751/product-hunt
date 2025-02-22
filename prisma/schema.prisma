@@ -42,7 +42,7 @@ model User {
   isPremium     Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  username      String         @unique
+  username      String       
   headline      String?
   about         String?
   socialLinks   Json?
