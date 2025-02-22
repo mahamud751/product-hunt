@@ -394,7 +394,7 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-4">Interests</h2>
               <div className="flex flex-wrap gap-2">
-                {user?.interests.map((interest, index) => (
+                {user?.interests.map((interest: string, index: number) => (
                   <span key={index} className="badge">
                     {interest}
                   </span>
@@ -428,7 +428,7 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
                 <ChevronRight size={20} className="ml-auto text-gray-400" />
               </div>
               <div className="flex flex-wrap gap-2">
-                {user?.skills?.map((skill, index) => (
+                {user?.skills?.map((skill: string, index: number) => (
                   <span key={index} className="text-gray-600">
                     {skill}
                     {index < topSkills.length - 1 ? " • " : ""}
@@ -446,7 +446,7 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
                 </button>
               </div>
               <div className="space-y-6">
-                {user?.experiences.map((exp) => (
+                {user?.experiences.map((exp: any) => (
                   <div key={exp.id} className="flex gap-4">
                     <img
                       src={exp.logo}
@@ -472,7 +472,7 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
                       </div>
                       <p className="text-gray-600 mt-2">{exp.description}</p>
                       <div className="flex flex-wrap gap-2 mt-3">
-                        {exp?.skills?.map((skill, index) => (
+                        {exp?.skills?.map((skill: string, index: number) => (
                           <span key={index} className="badge">
                             {skill}
                           </span>
@@ -488,7 +488,7 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-6">Education</h2>
               <div className="space-y-6">
-                {user?.education.map((edu) => (
+                {user?.education.map((edu: any) => (
                   <div key={edu.id} className="flex gap-4">
                     <img
                       src={edu.logo}
