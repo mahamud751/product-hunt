@@ -35,13 +35,21 @@ model Session {
 
 model User {
   id            String         @id @default(cuid())
-  image         String
-  name          String
+  image         String?         // For the avatar/profile picture
+  name          String         // Full name
   email         String         @unique
   emailVerified DateTime?
   isPremium     Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  username      String      @unique
+  headline      String?        
+  about         String?        
+  socialLinks   Json?           
+  interests     String[]       
+  skills        String[]       
+  experiences   Json?         
+  education     Json?           
   accounts      Account[]
   comments      Comment[]
   notifications Notification[]
@@ -49,7 +57,6 @@ model User {
   sessions      Session[]
   upvotes       Upvote[]
 }
-
 model Category {
   id            String        @id @default(cuid())
   name          String        @unique

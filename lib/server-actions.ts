@@ -1,7 +1,12 @@
 "use server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { Alternative, Category, Subcategory } from "@/services/types";
+import {
+  Alternative,
+  Category,
+  Subcategory,
+  UpdateUserProfileParams,
+} from "@/services/types";
 import { DateTime } from "luxon";
 import { features } from "process";
 
@@ -1423,6 +1428,64 @@ export const getUsers = async () => {
   const users = await db.user.findMany();
 
   return users;
+};
+
+export const getUser = async (userId: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+};
+
+export const updateUserProfile = async (
+  userId: string,
+  updateData: UpdateUserProfileParams
+) => {
+  // Authenticate the user
+  const authenticatedUser = await auth();
+
+  if (!authenticatedUser) {
+    throw new Error("You must be signed in to update your profile");
+  }
+
+  // Check if the user exists
+  const user = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Update the user's profile
+  const updatedUser = await db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      image: updateData.image,
+      name: updateData.name,
+      username: updateData.username,
+      headline: updateData.headline,
+      about: updateData.about,
+      socialLinks: updateData.socialLinks,
+      interests: updateData.interests,
+      skills: updateData.skills,
+      experiences: updateData.experiences,
+      education: updateData.education,
+    },
+  });
+
+  return updatedUser;
 };
 
 export const getTotalUpvotes = async () => {

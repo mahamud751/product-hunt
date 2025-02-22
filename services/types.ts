@@ -59,6 +59,30 @@ export interface User {
   upvotes: Upvote[];
 }
 
+export interface UpdateUserProfileParams {
+  image?: string;
+  name?: string;
+  username: string;
+  headline?: string;
+  about?: string;
+  socialLinks?: { platform: string; url: string }[];
+  interests?: string[];
+  skills?: string[];
+  experiences?: {
+    company: string;
+    role: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  }[];
+  education?: {
+    institution: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+  }[];
+}
+
 export interface Category {
   id?: string;
   name: string;
