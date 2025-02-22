@@ -75,7 +75,7 @@ const ProductTable: React.FC<ProductTableClientProps> = ({
       const { products: filteredProducts, totalProducts: filteredTotal } =
         await getProducts(page, rowsPerPage, statusFilter || undefined);
 
-      setProductsData(filteredProducts as Product[]);
+      setProductsData(filteredProducts as any);
       setFilteredTotalProducts(filteredTotal);
     };
 
