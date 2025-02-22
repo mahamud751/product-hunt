@@ -9,7 +9,7 @@ export default async function Categories() {
   return (
     <div>
       <CategoryTable
-        categories={categories as Category[]}
+        categories={categories as any}
         totalCategories={totalCategories}
         initialPage={0}
         initialRowsPerPage={10}
