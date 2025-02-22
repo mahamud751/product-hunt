@@ -74,7 +74,7 @@ const CategoryTable: React.FC<CategoryTableClientProps> = ({
       const { categories: filteredCategory, totalCategories: filteredTotal } =
         await getCategories(page, rowsPerPage, statusFilter || undefined);
 
-      setCategoryData(filteredCategory as Category[]);
+      setCategoryData(filteredCategory as any);
       setFilteredTotalCategory(filteredTotal);
     };
 
