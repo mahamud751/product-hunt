@@ -7,7 +7,7 @@ export default async function Products() {
   return (
     <div>
       <ProductTable
-        products={products as Product[]}
+        products={products as any}
         totalProducts={totalProducts}
         initialPage={0}
         initialRowsPerPage={10}
