@@ -20,8 +20,12 @@ import {
   Diamond,
   PartyPopper,
   Plus,
+  Globe,
+  Github,
 } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
 
 interface AvatarProps {
   user: any;
@@ -38,7 +42,8 @@ type Tab =
 
 const Profile: React.FC<AvatarProps> = ({ user }) => {
   console.log(user);
-
+  const [showAll, setShowAll] = useState(false);
+  const [showAllExp, setShowAllExp] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("about");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFullBio, setShowFullBio] = useState(false);
@@ -52,15 +57,25 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     { id: "knowledge", label: "Knowledge" },
     { id: "reviews", label: "Reviews" },
   ];
+  const platformIcons = {
+    linkedin: <Linkedin size={20} />,
+    twitter: <Twitter size={20} />,
+    github: <Github size={20} />,
+    website: <Globe size={20} />, // Use Globe icon for website or any other icon you prefer
+  };
 
-  const bio = `If you're reading this, chances are you're facing one or more of these challenges:
+  const getFilePreview = (file: { name: string; url: string }) => {
+    return file.url; // For existing data, we use the Cloudinary URL directly
+  };
 
-→ Struggling to drive consistent organic traffic and sales
-→ Failing to rank despite investing time and money into SEO
-→ Feeling overwhelmed by constant algorithm changes
-→ Not sure which SEO strategies actually work
+  const getFileName = (file: { name: string; url: string }) => {
+    return file.name;
+  };
 
-I help SaaS and eCommerce brands solve these exact problems with proven SEO systems that drive predictable traffic and revenue growth.`;
+  const isImageFile = (file: { name: string; url: string }) => {
+    const name = getFileName(file);
+    return /\.(jpg|jpeg|png|gif)$/i.test(name);
+  };
 
   const topSkills = [
     "Search Engine Optimization (SEO)",
@@ -70,16 +85,6 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
     "Google Ads",
     "Content Strategy",
     "Social Media Marketing",
-  ];
-
-  const interests = [
-    "Web App",
-    "Design Tools",
-    "User Experience",
-    "SaaS",
-    "Artificial Intelligence",
-    "Web3",
-    "NFT",
   ];
 
   const badges = [
@@ -137,54 +142,6 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
       logo: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=48&h=48&q=80",
       upvotes: 575,
       tags: ["GPT-4", "Artificial Intelligence", "Search"],
-    },
-  ];
-
-  const experiences = [
-    {
-      id: 1,
-      role: "SEO Consultant & Founder",
-      company: "Authoritific",
-      type: "Self-employed",
-      period: "Jan 2023 - Present",
-      duration: "2 yrs 2 mos",
-      location: "Bangladesh",
-      workType: "Remote",
-      description:
-        "I Help Startups in the SaaS + Ecom Brands 10x Revenue With SEO System",
-      logo: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=48&h=48&q=80",
-      skills: ["Online Marketing", "Display Advertising"],
-    },
-    {
-      id: 2,
-      role: "SEO & Digital Marketing Expert",
-      company: "Barakah Venture Limited",
-      type: "Full-time",
-      period: "Jan 2024 - Present",
-      duration: "1 yr 2 mos",
-      location: "Dhaka, Bangladesh",
-      workType: "On-site",
-      description:
-        "Launched and managed an SEO campaign for high-volume long-tail keywords that generated consistent organic visitors.",
-      logo: "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=48&h=48&q=80",
-      skills: ["Online Marketing", "Display Advertising"],
-    },
-  ];
-
-  const education = [
-    {
-      id: 1,
-      school: "Daffodil International University-DIU",
-      degree: "Master of Business Administration - MBA, Marketing",
-      period: "2017 - 2017",
-      logo: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=48&h=48&q=80",
-    },
-    {
-      id: 2,
-      school: "Daffodil Institute of IT",
-      degree: "Bachelor of Business Administration (BBA), Marketing",
-      period: "2012 - 2017",
-      logo: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=48&h=48&q=80",
     },
   ];
 
@@ -276,6 +233,14 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
     (sum, product) => sum + product.upvotes,
     0
   );
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "Present";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   const StarRating = ({ rating }: { rating: number }) => {
     return (
@@ -300,18 +265,18 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
       <header className="border-b">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center gap-8">
-            <img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80"
-              alt="Profile"
+            <Image
+              src={user?.image}
+              alt="profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
+              width={200}
+              height={200}
             />
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-[#1F1F1F]">
-                Sarah Anderson
+                {user?.name}
               </h1>
-              <p className="text-lg text-gray-600 mt-1">
-                Founder of SaaSWarrior
-              </p>
+              <p className="text-lg text-gray-600 mt-1">{user?.headline}</p>
               <div className="flex items-center gap-6 mt-4">
                 <div className="flex items-center gap-2">
                   <Users size={18} />
@@ -360,14 +325,17 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
                 <p className="text-gray-600 whitespace-pre-line">
                   {showFullBio
                     ? user?.about
-                    : user?.about.slice(0, 150) + "..."}
+                    : user?.about?.slice(0, 150) +
+                      (user?.about?.length > 150 ? "..." : "")}
                 </p>
-                <button
-                  onClick={() => setShowFullBio(!showFullBio)}
-                  className="text-[#AF583B] hover:text-[#8F4731] font-medium mt-2"
-                >
-                  {showFullBio ? "Show less" : "...see more"}
-                </button>
+                {user?.about?.length > 150 && (
+                  <button
+                    onClick={() => setShowFullBio(!showFullBio)}
+                    className="text-[#AF583B] hover:text-[#8F4731] font-medium mt-2"
+                  >
+                    {showFullBio ? "Show less" : "...see more"}
+                  </button>
+                )}
               </div>
             </section>
 
@@ -375,18 +343,24 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-4">Links</h2>
               <div className="flex gap-4">
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  <Twitter size={20} />
-                </a>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  <Facebook size={20} />
-                </a>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  <Instagram size={20} />
-                </a>
-                <a href="#" className="text-gray-600 hover:text-gray-900">
-                  <Linkedin size={20} />
-                </a>
+                {user.socialLinks?.map((link: any, index: number) =>
+                  link.url ? (
+                    <Link
+                      key={index}
+                      href={link.url}
+                      passHref
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      {
+                        platformIcons[
+                          link.platform as keyof typeof platformIcons
+                        ]
+                      }
+                    </Link>
+                  ) : null
+                )}
               </div>
             </section>
 
@@ -446,41 +420,102 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
                 </button>
               </div>
               <div className="space-y-6">
-                {user?.experiences.map((exp: any) => (
-                  <div key={exp.id} className="flex gap-4">
-                    <img
-                      src={exp.logo}
-                      alt={exp.company}
-                      className="w-12 h-12 rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-bold text-lg">{exp.role}</h3>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <span>{exp.company}</span>
-                        <span>•</span>
-                        <span>{exp.type}</span>
+                {user?.experiences
+                  ?.slice(0, showAllExp ? user.experiences.length : 1)
+                  .map((exp: any) => {
+                    const startDate = formatDate(exp.startDate);
+                    const endDate = formatDate(exp.endDate);
+                    return (
+                      <div key={exp.id} className="flex gap-4">
+                        <div className="flex items-center">
+                          {exp.files && exp.files.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {exp.files.map(
+                                (
+                                  file: { name: string; url: string },
+                                  fileIndex: number
+                                ) => (
+                                  <div
+                                    key={fileIndex}
+                                    className="relative flex flex-col items-center"
+                                  >
+                                    {isImageFile(file) ? (
+                                      <Image
+                                        src={getFilePreview(file)}
+                                        alt={getFileName(file)}
+                                        className="w-12 h-12 rounded-lg"
+                                        width={200}
+                                        height={200}
+                                      />
+                                    ) : (
+                                      <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
+                                        <span className="text-xs text-gray-600 truncate max-w-[48px]">
+                                          {getFileName(file)}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          ) : (
+                            <Image
+                              src={
+                                "https://i.ibb.co.com/XZ5ggT15/istockphoto-1147544807-612x612.jpg"
+                              }
+                              alt={exp.company}
+                              className="w-12 h-12 rounded-lg"
+                              width={200}
+                              height={200}
+                            />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-bold text-lg">{exp.role}</h3>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <span>{exp.company}</span>
+                            <span>•</span>
+                            <span>{exp.type}</span>
+                          </div>
+                          <div className="flex items-center gap-4 text-gray-600 mt-1">
+                            <span className="flex items-center gap-1">
+                              <Clock size={16} />
+                              {startDate === endDate
+                                ? startDate
+                                : `${startDate} - ${endDate}`}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin size={16} />
+                              {exp.location} • {exp.workType}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 mt-2">
+                            {exp.description}
+                          </p>
+                          <div className="flex flex-wrap gap-2 mt-3">
+                            {exp?.technologies?.map(
+                              (tech: string, index: number) => (
+                                <span key={index} className="badge">
+                                  {tech}
+                                </span>
+                              )
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-4 text-gray-600 mt-1">
-                        <span className="flex items-center gap-1">
-                          <Clock size={16} />
-                          {exp.period}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin size={16} />
-                          {exp.location} • {exp.workType}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 mt-2">{exp.description}</p>
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {exp?.skills?.map((skill: string, index: number) => (
-                          <span key={index} className="badge">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    );
+                  })}
+
+                {user?.experiences?.length > 1 && (
+                  <button
+                    onClick={() => setShowAllExp(!showAllExp)}
+                    className="text-[#AF583B] hover:text-[#8F4731] font-medium"
+                  >
+                    {showAllExp
+                      ? `Show less`
+                      : `Show all ${user.experiences.length} experiences`}
+                  </button>
+                )}
               </div>
             </section>
 
@@ -488,26 +523,87 @@ I help SaaS and eCommerce brands solve these exact problems with proven SEO syst
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-6">Education</h2>
               <div className="space-y-6">
-                {user?.education.map((edu: any) => (
-                  <div key={edu.id} className="flex gap-4">
-                    <img
-                      src={edu.logo}
-                      alt={edu.school}
-                      className="w-12 h-12 rounded-lg"
-                    />
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-lg">{edu.school}</h3>
-                        <CheckCircle2 size={16} className="text-[#198E49]" />
+                {user?.education
+                  ?.slice(0, showAll ? user.education.length : 1)
+                  .map((edu: any) => {
+                    const startYear = new Date(edu.startDate).getFullYear();
+                    const endYear = edu.endDate
+                      ? new Date(edu.endDate).getFullYear()
+                      : "Present";
+                    return (
+                      <div key={edu.id} className="flex gap-4">
+                        <div className="flex items-center">
+                          {edu.files && edu.files.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {edu.files.map(
+                                (
+                                  file: { name: string; url: string },
+                                  fileIndex: number
+                                ) => (
+                                  <div
+                                    key={fileIndex}
+                                    className="relative flex flex-col items-center"
+                                  >
+                                    {isImageFile(file) ? (
+                                      <Image
+                                        src={getFilePreview(file)}
+                                        alt={getFileName(file)}
+                                        className="w-12 h-12 rounded-lg"
+                                        width={200}
+                                        height={200}
+                                      />
+                                    ) : (
+                                      <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded-lg">
+                                        <span className="text-xs text-gray-600 truncate max-w-[48px]">
+                                          {getFileName(file)}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          ) : (
+                            <Image
+                              src={
+                                "https://i.ibb.co.com/XZ5ggT15/istockphoto-1147544807-612x612.jpg"
+                              }
+                              alt={edu.school}
+                              className="w-12 h-12 rounded-lg"
+                              height={200}
+                              width={200}
+                            />
+                          )}
+                        </div>
+
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-lg">
+                              {edu?.institution}
+                            </h3>
+                            <CheckCircle2
+                              size={16}
+                              className="text-[#198E49]"
+                            />
+                          </div>
+                          <p className="text-gray-800">{edu?.degree}</p>
+                          <p className="text-gray-600">{`${startYear} - ${endYear}`}</p>{" "}
+                          {/* Year range */}
+                        </div>
                       </div>
-                      <p className="text-gray-800">{edu.degree}</p>
-                      <p className="text-gray-600">{edu.period}</p>
-                    </div>
-                  </div>
-                ))}
-                <button className="text-[#AF583B] hover:text-[#8F4731] font-medium">
-                  Show all 4 educations
-                </button>
+                    );
+                  })}
+
+                {user?.education?.length > 1 && (
+                  <button
+                    onClick={() => setShowAll(!showAll)}
+                    className="text-[#AF583B] hover:text-[#8F4731] font-medium"
+                  >
+                    {showAll
+                      ? `Show less`
+                      : `Show all ${user.education.length} educations`}
+                  </button>
+                )}
               </div>
             </section>
 

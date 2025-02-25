@@ -74,12 +74,18 @@ export interface UpdateUserProfileParams {
     startDate: string;
     endDate: string;
     description: string;
+    type: "Self-employed" | "Full-time"; // Added employment type
+    location: string; // Added location
+    workType: "Remote" | "On-site"; // Added work type
+    technologies: string[]; // Added technologies/skills array
+    files?: { name: string; url: string }[]; // File metadata (unchanged)
   }[];
   education?: {
     institution: string;
     degree: string;
     startDate: string;
     endDate: string;
+    files?: { name: string; url: string }[]; // File metadata (unchanged)
   }[];
 }
 

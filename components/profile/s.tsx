@@ -37,7 +37,7 @@ interface Experience {
   location: string;
   workType: "Remote" | "On-site";
   technologies: string[];
-  file?: File | { name: string; url: string }; // Single file instead of array
+  files?: (File | { name: string; url: string })[];
 }
 
 interface Education {
@@ -45,7 +45,7 @@ interface Education {
   degree: string;
   startDate: string;
   endDate: string;
-  file?: File | { name: string; url: string }; // Single file instead of array
+  files?: (File | { name: string; url: string })[];
 }
 
 interface Skill {
@@ -81,7 +81,7 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
       location: exp.location || "",
       workType: exp.workType || "On-site",
       technologies: exp.technologies || [],
-      file: exp.files?.[0], // Take the first file if it exists
+      files: exp.files || [],
     })) || [
       {
         company: "",
@@ -93,6 +93,7 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         location: "",
         workType: "On-site" as "On-site",
         technologies: [],
+        files: [],
       },
     ]
   );
@@ -103,13 +104,14 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
       degree: edu.degree || "",
       startDate: edu.startDate || "",
       endDate: edu.endDate || "",
-      file: edu.files?.[0], // Take the first file if it exists
+      files: edu.files || [],
     })) || [
       {
         institution: "",
         degree: "",
         startDate: "",
         endDate: "",
+        files: [],
       },
     ]
   );
@@ -192,23 +194,46 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
     setter: React.Dispatch<React.SetStateAction<any[]>>,
     index: number
   ) => {
-    const file = e.target.files?.[0]; // Only take the first file
-    if (file) {
-      setter((prev) => {
-        const updated = [...prev];
-        updated[index].file = file; // Replace the existing file
-        return updated;
-      });
-    }
+    const newFiles = Array.from(e.target.files || []);
+    setter((prev) => {
+      const updated = [...prev];
+      const existingFileNames = new Set(
+        (updated[index].files || []).map((file: File) => getFileName(file))
+      );
+      const uniqueNewFiles = newFiles.filter(
+        (file) => !existingFileNames.has(file.name)
+      );
+      updated[index].files = [
+        ...(updated[index].files || []),
+        ...uniqueNewFiles,
+      ];
+      return updated;
+    });
   };
 
   const removeFile = (
     setter: React.Dispatch<React.SetStateAction<any[]>>,
-    index: number
+    itemIndex: number,
+    fileIndex: number
   ) => {
     setter((prev) => {
+      // Make a shallow copy of the experiences
       const updated = [...prev];
-      updated[index].file = undefined; // Clear the single file
+
+      // Safely create a copy of the files array for the selected experience item
+      const filesCopy = updated[itemIndex].files
+        ? [...updated[itemIndex].files]
+        : [];
+
+      // Remove the specific file by index
+      filesCopy.splice(fileIndex, 1);
+
+      // Update the specific experience's files array with the updated one
+      updated[itemIndex] = {
+        ...updated[itemIndex],
+        files: filesCopy,
+      };
+
       return updated;
     });
   };
@@ -222,18 +247,15 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
     }))
     .filter((category) => category.skills.length > 0);
 
-  const getFilePreview = (file?: File | { name: string; url: string }) => {
-    if (!file) return "";
+  const getFilePreview = (file: File | { name: string; url: string }) => {
     return file instanceof File ? URL.createObjectURL(file) : file.url;
   };
 
-  const getFileName = (file?: File | { name: string; url: string }) => {
-    if (!file) return "";
+  const getFileName = (file: File | { name: string; url: string }) => {
     return file instanceof File ? file.name : file.name;
   };
 
-  const isImageFile = (file?: File | { name: string; url: string }) => {
-    if (!file) return false;
+  const isImageFile = (file: File | { name: string; url: string }) => {
     const name = getFileName(file);
     return /\.(jpg|jpeg|png|gif)$/i.test(name);
   };
@@ -259,6 +281,7 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         location: "",
         workType: "On-site" as "On-site",
         technologies: [],
+        files: [],
       },
     ]);
   };
@@ -271,6 +294,7 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         degree: "",
         startDate: "",
         endDate: "",
+        files: [],
       },
     ]);
   };
@@ -336,29 +360,49 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         socialLinks,
         interests: selectedInterests,
         skills,
+
         experiences: await Promise.all(
           experiences.map(async (exp) => {
-            const uploadedFile = exp.file
-              ? exp.file instanceof File
-                ? await uploadToCloudinary(exp.file)
-                : exp.file
+            // Handle files: upload any File objects to Cloudinary
+            const uploadedFiles = exp.files
+              ? await Promise.all(
+                  exp.files.map(async (file) => {
+                    if (file instanceof File) {
+                      return await uploadToCloudinary(file); // Convert File to { name: string; url: string }
+                    }
+                    return file; // Already { name: string; url: string }
+                  })
+                )
               : undefined;
+
             return {
               ...exp,
-              files: uploadedFile ? [uploadedFile] : undefined, // Convert to array for UpdateUserProfileParams
+              files: uploadedFiles as
+                | { name: string; url: string }[]
+                | undefined, // Explicitly cast to match the expected type
             };
           })
         ),
+
         education: await Promise.all(
           education.map(async (edu) => {
-            const uploadedFile = edu.file
-              ? edu.file instanceof File
-                ? await uploadToCloudinary(edu.file)
-                : edu.file
+            // Handle files: upload any File objects to Cloudinary
+            const uploadedFiles = edu.files
+              ? await Promise.all(
+                  edu.files.map(async (file) => {
+                    if (file instanceof File) {
+                      return await uploadToCloudinary(file); // Convert File to { name: string; url: string }
+                    }
+                    return file; // Already { name: string; url: string }
+                  })
+                )
               : undefined;
+
             return {
               ...edu,
-              files: uploadedFile ? [uploadedFile] : undefined, // Convert to array for UpdateUserProfileParams
+              files: uploadedFiles as
+                | { name: string; url: string }[]
+                | undefined, // Explicitly cast to match the expected type
             };
           })
         ),
@@ -418,7 +462,8 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         <div className="space-y-6 mb-12">
           <div>
             <label className="block text-sm font-medium text-[#1F1F1F] mb-2">
-              Name<span className="text-red-500">*</span>
+              Name
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -431,7 +476,8 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
 
           <div>
             <label className="block text-sm font-medium text-[#1F1F1F] mb-2">
-              Username<span className="text-red-500">*</span>
+              Username
+              <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <input
@@ -902,11 +948,12 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-[#1F1F1F] mb-2">
-                    Supporting Document
+                    Supporting Documents
                   </label>
                   <div className="relative">
                     <input
                       type="file"
+                      multiple
                       accept="image/*,.pdf"
                       onChange={(e) =>
                         handleFileChange(e, setExperiences, index)
@@ -914,34 +961,41 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
                       className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#AF583B] file:text-white hover:file:bg-opacity-90"
                     />
                   </div>
-                  {exp.file && (
-                    <div className="mt-2 flex gap-2">
-                      <div className="relative flex flex-col items-center">
-                        {isImageFile(exp.file) ? (
-                          <Image
-                            src={getFilePreview(exp.file)}
-                            alt={getFileName(exp.file)}
-                            width={200}
-                            height={200}
-                            className="w-24 h-24 object-cover rounded-lg"
-                          />
-                        ) : (
-                          <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-lg">
-                            <span className="text-sm text-gray-600 truncate max-w-[100px]">
-                              {getFileName(exp.file)}
-                            </span>
-                          </div>
-                        )}
-                        <span className="text-sm text-gray-600 mt-1 truncate max-w-[100px]">
-                          {getFileName(exp.file)}
-                        </span>
-                        <button
-                          onClick={() => removeFile(setExperiences, index)}
-                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
+                  {exp.files && exp.files.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {exp.files.map((file, fileIndex) => (
+                        <div
+                          key={getFileName(file)} // Use file name as key for uniqueness
+                          className="relative flex flex-col items-center"
                         >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                          {isImageFile(file) ? (
+                            <Image
+                              src={getFilePreview(file)}
+                              alt={getFileName(file)}
+                              width={200}
+                              height={200}
+                              className="w-24 h-24 object-cover rounded-lg"
+                            />
+                          ) : (
+                            <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-lg">
+                              <span className="text-sm text-gray-600 truncate max-w-[100px]">
+                                {getFileName(file)}
+                              </span>
+                            </div>
+                          )}
+                          <span className="text-sm text-gray-600 mt-1 truncate max-w-[100px]">
+                            {getFileName(file)}
+                          </span>
+                          <button
+                            onClick={() =>
+                              removeFile(setExperiences, index, fileIndex)
+                            }
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -1025,44 +1079,52 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#1F1F1F] mb-2">
-                    Certificate/Document
+                    Certificates/Documents
                   </label>
                   <div className="relative">
                     <input
                       type="file"
+                      multiple
                       accept="image/*,.pdf"
                       onChange={(e) => handleFileChange(e, setEducation, index)}
                       className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#AF583B] file:text-white hover:file:bg-opacity-90"
                     />
                   </div>
-                  {edu.file && (
-                    <div className="mt-2 flex gap-2">
-                      <div className="relative flex flex-col items-center">
-                        {isImageFile(edu.file) ? (
-                          <Image
-                            src={getFilePreview(edu.file)}
-                            alt={getFileName(edu.file)}
-                            width={200}
-                            height={200}
-                            className="w-24 h-24 object-cover rounded-lg"
-                          />
-                        ) : (
-                          <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-lg">
-                            <span className="text-sm text-gray-600 truncate max-w-[100px]">
-                              {getFileName(edu.file)}
-                            </span>
-                          </div>
-                        )}
-                        <span className="text-sm text-gray-600 mt-1 truncate max-w-[100px]">
-                          {getFileName(edu.file)}
-                        </span>
-                        <button
-                          onClick={() => removeFile(setEducation, index)}
-                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
+                  {edu.files && edu.files.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {edu.files.map((file, fileIndex) => (
+                        <div
+                          key={getFileName(file)} // Use file name as key for uniqueness
+                          className="relative flex flex-col items-center"
                         >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                          {isImageFile(file) ? (
+                            <Image
+                              src={getFilePreview(file)}
+                              alt={getFileName(file)}
+                              width={300}
+                              height={300}
+                              className="w-96 h-44 object-cover rounded-lg"
+                            />
+                          ) : (
+                            <div className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-lg">
+                              <span className="text-sm text-gray-600 truncate max-w-[100px]">
+                                {getFileName(file)}
+                              </span>
+                            </div>
+                          )}
+                          <span className="text-sm text-gray-600 mt-1 truncate max-w-[100px]">
+                            {getFileName(file)}
+                          </span>
+                          <button
+                            onClick={() =>
+                              removeFile(setEducation, index, fileIndex)
+                            }
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-700"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
