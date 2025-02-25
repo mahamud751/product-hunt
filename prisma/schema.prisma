@@ -205,7 +205,7 @@ model Blog {
   contents  Json?       
   userId    String     
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status    Status      @default(PENDING) // Status field
+  status    Status      @default(PENDING) 
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 

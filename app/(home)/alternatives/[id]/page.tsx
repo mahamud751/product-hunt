@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
 
-const AlternativeDetails = ({}: { params: { id: string } }) => {
+const AlternativeDetails = () => {
   const searchParams = useSearchParams();
 
   const id = searchParams.get("id");

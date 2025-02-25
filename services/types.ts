@@ -169,6 +169,36 @@ export interface Product {
   photos: string[];
 }
 
+export interface ProductData {
+  name: string;
+  tags: string;
+  linekdin: string;
+  weburl: string;
+  suggestUrl: string;
+  promoOffer: string;
+  promoCode: string;
+  videoLink: string;
+  price: string;
+  priceOption: string;
+  slug: string;
+  headline: string;
+  description: string;
+  logo: string;
+  releaseDate: string;
+  promoExpire: string;
+  website: string;
+  twitter: string;
+  discord: string;
+  images: string[];
+  categoryId?: string;
+  subcategoryId?: string;
+  alternativeIds: string[];
+  rank?: number;
+  isMaker: boolean;
+  photos: string[];
+  makers: string[];
+}
+
 export interface Image {
   id: string;
   productId: string;
@@ -218,7 +248,7 @@ export interface Notification {
 }
 
 export interface Blog {
-  id: string;
+  id?: string;
   name: string | null;
   readtime: string | null;
   headline: string | null;
@@ -229,10 +259,10 @@ export interface Blog {
     description: string;
     photos: string[];
   }[];
-  user: User;
-  status: "PENDING" | "ACTIVE" | "REJECTED";
-  createdAt: Date;
-  updatedAt: Date;
+  userId: string;
+  user?: User;
+  status?: "PENDING" | "ACTIVE" | "REJECTED";
+  createdAt?: Date;
 }
 
 // Optional: Type for `replies` in `Comment`

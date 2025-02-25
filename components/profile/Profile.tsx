@@ -6,8 +6,6 @@ import {
   Flame,
   Twitter,
   Linkedin,
-  Facebook,
-  Instagram,
   Star,
   ThumbsUp,
   Clock,
@@ -41,7 +39,6 @@ type Tab =
   | "products";
 
 const Profile: React.FC<AvatarProps> = ({ user }) => {
-  console.log(user);
   const [showAll, setShowAll] = useState(false);
   const [showAllExp, setShowAllExp] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("about");

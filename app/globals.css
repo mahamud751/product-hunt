@@ -66,6 +66,26 @@
   }
 }
 
+.custom-dots {
+  position: relative;
+  bottom: 0;
+  display: flex !important;
+  justify-content: center;
+  margin-top: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.custom-dots li {
+  margin: 0 0.25rem;
+}
+
+.custom-dots li button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
 @layer base {
   * {
     @apply border-border;

@@ -112,6 +112,22 @@ export const adminMenuItems: MenuItem[] = [
       },
     ],
   },
+  {
+    text: "Blogs",
+    icon: <Sell className="text-blue-600" />,
+    path: "/alternative",
+
+    submenus: [
+      {
+        text: "Add Blog",
+        path: "/admin/blog-add",
+      },
+      {
+        text: "Alternative List",
+        path: "/admin/alternative-list",
+      },
+    ],
+  },
 
   // {
   //   text: "Blog",

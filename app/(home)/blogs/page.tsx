@@ -1,70 +1,90 @@
-import { Button, Card } from "@mui/material";
-import { ArrowRight } from "lucide-react";
+"use client";
+import { getBlogs } from "@/lib/server-actions";
+import { cleanName } from "@/lib/utils";
+import { Blog } from "@/services/types";
+import Image from "next/image";
+import Link from "next/link";
+
+import { useEffect, useState } from "react";
 
 const Blogs = () => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  useEffect(() => {
+    getBlogs().then((data) => {
+      setBlogs(data);
+    });
+  }, []);
+  console.log(blogs);
+
   return (
     <div>
-      <section className="py-16 bg-secondary/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold mb-8">Popular Alternatives</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                title: "VS Code",
-                description: "Open source alternatives to Visual Studio Code",
-                alternatives: ["Atom", "Sublime Text", "Neovim"],
-                image:
-                  "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=300",
-              },
-              {
-                title: "Photoshop",
-                description: "Free alternatives to Adobe Photoshop",
-                alternatives: ["GIMP", "Krita", "Inkscape"],
-                image:
-                  "https://images.unsplash.com/photo-1572044162444-ad60f128bdea?auto=format&fit=crop&q=80&w=300",
-              },
-              {
-                title: "Slack",
-                description: "Open source team chat alternatives",
-                alternatives: ["Matrix", "Mattermost", "Rocket.Chat"],
-                image:
-                  "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=300",
-              },
-            ].map((item, i) => (
-              <article className="overflow-hidden pb-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 max-w-[307px]">
-                <figure className="w-full">
-                  <img
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/34a908a46b1b2f41538c9649a433bf943f58d2637aee84cc4adf397bde143f1c?placeholderIfAbsent=true&apiKey=e4c55b3835e0471b869cabb50a0b8cd9"
-                    alt="Website Analytics Tools"
-                    className="object-contain w-full aspect-[1.78]"
-                  />
-                </figure>
+      <section className="py-16">
+        <div>
+          <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
+            Blog
+          </h1>
+          <br />
+          <p className="text-xm mt-1 text-[#4D4D4D]">
+            A collection of useful articles for developers and open source
+            enthusiasts. Learn about the latest trends and technologies in the
+            open source community.
+          </p>
 
-                <div className="flex flex-col items-start px-5 mt-6 w-full">
-                  <header>
-                    <h2 className="text-xl font-semibold tracking-tight leading-7 text-stone-900">
-                      7 Open-Source Tools for
-                      <br />
-                      Better Website Analytics
-                    </h2>
-                  </header>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {blogs?.map((item, i) => {
+              const cleanedName = cleanName(item?.name || "");
+              return (
+                <Link
+                  key={i}
+                  href={{
+                    pathname: `/blogs/${encodeURIComponent(cleanedName)}`,
+                    query: { id: item?.id },
+                  }}
+                >
+                  <article className="overflow-hidden pb-6 rounded-lg border border-solid bg-neutral-50 border-neutral-200 max-w-[307px]">
+                    <figure className="w-full">
+                      <Image
+                        src={item?.photos?.[0]}
+                        className="w-full h-40"
+                        alt="blog"
+                        width={1000}
+                        height={1000}
+                      />
+                    </figure>
 
-                  <p className="self-stretch mt-6 text-sm leading-5 text-neutral-600">
-                    If you are running a website, SaaS, or
-                    <br />
-                    online business, having a good analytics…
-                  </p>
+                    <div className="flex flex-col items-start px-5 mt-6 w-full">
+                      <header>
+                        <h2 className="text-xl font-semibold tracking-tight leading-7 text-stone-900">
+                          {item?.name}
+                        </h2>
+                      </header>
 
-                  <footer className="flex gap-2.5 mt-6 text-xs leading-none text-neutral-500">
-                    <time className="grow" dateTime="2025-01-14">
-                      Jan 14, 2025
-                    </time>
-                    <span className="my-auto">•</span>
-                    <span>4 min read</span>
-                  </footer>
-                </div>
-              </article>
-            ))}
+                      <p className="self-stretch mt-6 text-sm leading-5 text-neutral-600 h-16">
+                        {item?.headline?.slice(0, 110)}
+                      </p>
+
+                      <footer className="flex gap-2.5 mt-6 text-xs leading-none text-neutral-500">
+                        <time
+                          className="grow"
+                          dateTime={item?.createdAt?.toString()}
+                        >
+                          {new Date(item?.createdAt ?? "").toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </time>
+                        <span className="my-auto">•</span>
+                        <span>{item?.readtime} min read</span>
+                      </footer>
+                    </div>
+                  </article>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

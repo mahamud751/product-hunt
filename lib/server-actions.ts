@@ -3,12 +3,13 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import {
   Alternative,
+  Blog,
   Category,
+  ProductData,
   Subcategory,
   UpdateUserProfileParams,
 } from "@/services/types";
 import { DateTime } from "luxon";
-import { features } from "process";
 
 const getDateRange = (filter: "day" | "week" | "month") => {
   const timeZone = "Asia/Dhaka";
@@ -51,36 +52,6 @@ const getDateRange = (filter: "day" | "week" | "month") => {
     endDate: endDateUTC.toISO(),
   };
 };
-
-interface ProductData {
-  name: string;
-  tags: string;
-  linekdin: string;
-  weburl: string;
-  suggestUrl: string;
-  promoOffer: string;
-  promoCode: string;
-  videoLink: string;
-  price: string;
-  priceOption: string;
-  slug: string;
-  headline: string;
-  description: string;
-  logo: string;
-  releaseDate: string;
-  promoExpire: string;
-  website: string;
-  twitter: string;
-  discord: string;
-  images: string[];
-  categoryId?: string;
-  subcategoryId?: string;
-  alternativeIds: string[];
-  rank?: number;
-  isMaker: boolean;
-  photos: string[];
-  makers: string[];
-}
 
 export const createProduct = async ({
   name,
@@ -508,6 +479,7 @@ export const getProductById = async (productId: string) => {
             user: true,
           },
         },
+        user: true,
       },
     });
 
@@ -1240,6 +1212,54 @@ export const getAlternatives = async (
   const totalAlternatives = await db.alternative.count({ where });
 
   return { alternatives, totalAlternatives };
+};
+
+export const createBlog = async ({
+  name,
+  readtime,
+  headline,
+  desc,
+  photos,
+  contents,
+  userId,
+}: Blog): Promise<any> => {
+  try {
+    const blog = await db.blog.create({
+      data: {
+        name,
+        readtime,
+        headline,
+        desc,
+        photos,
+        contents,
+        userId,
+        status: "PENDING", // Initial status
+      },
+    });
+
+    return blog;
+  } catch (error) {
+    console.error("Error creating blog:", error);
+    return null;
+  }
+};
+
+export const getBlogs = async (): Promise<any> => {
+  const blogs = await db.blog.findMany({});
+
+  return blogs;
+};
+export const getSingleBlogs = async (id: string): Promise<any> => {
+  const blog = await db.blog.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  return blog;
 };
 
 export const getProductsByCategoryName = async (category: string) => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Star,
   ThumbsUp,
@@ -20,6 +20,11 @@ import {
   FileText,
   Coffee,
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { getProductById, getSingleAlternative } from "@/lib/server-actions";
+import Image from "next/image";
+import Link from "next/link";
+import ImageSlider from "@/components/productDetails/ImageSlider";
 
 function ReviewModal({
   isOpen,
@@ -131,6 +136,30 @@ function App() {
   const [selectedSort, setSelectedSort] = useState("best");
   const [currentPage, setCurrentPage] = useState(1);
   const alternativesPerPage = 5;
+  const searchParams = useSearchParams();
+
+  const id = searchParams.get("id");
+  console.log(id);
+
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  console.log(data);
+
+  useEffect(() => {
+    const fetchAlternativeDetails = async () => {
+      try {
+        const data = await getProductById(id as string);
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlternativeDetails();
+  }, [id]);
 
   const tabs = [
     { id: "overview", label: "Overview" },
@@ -186,7 +215,7 @@ function App() {
     <section className="mb-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Review Product Name?</h2>
+          <h2 className="text-2xl font-bold mb-2">a</h2>
           <div className="flex items-center gap-2">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -377,15 +406,13 @@ function App() {
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center text-white">
-                N
+                {<Image src={data?.logo} alt="Logo" width={32} height={32} />}
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-[#1F1F1F] mb-1">
-                  Product Name
+                  {data?.name}
                 </h1>
-                <p className="text-lg text-gray-600">
-                  The all-in-one workspace
-                </p>
+                <p className="text-lg text-gray-600">{data?.headline}</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                   <div className="flex items-center gap-1">
                     <div className="flex">
@@ -415,9 +442,23 @@ function App() {
                   <Trophy className="w-5 h-5 text-purple-600" />
                 </div>
               </div>
-              <button className="px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
-                Visit website
-              </button>
+              <Link
+                href={
+                  data?.website
+                    ? data.website.startsWith("http") ||
+                      data.website.startsWith("https")
+                      ? data.website
+                      : `https://${data.website}`
+                    : "#"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors">
+                  Visit website
+                </button>
+              </Link>
+
               <button className="px-4 py-2 rounded-lg bg-[#FF4B4B] text-white hover:bg-[#FF4B4B]/90 transition-colors">
                 Follow
               </button>
@@ -459,11 +500,7 @@ function App() {
               <div>
                 <section className="mb-8">
                   <h2 className="text-2xl font-bold mb-4">Overview</h2>
-                  <p className="text-gray-600 mb-6">
-                    A powerful workspace that combines note-taking, project
-                    management, and task organization. Perfect for teams and
-                    individuals looking to streamline their workflow.
-                  </p>
+                  <p className="text-gray-600 mb-6">{data?.description}</p>
 
                   {/* User Poll */}
                   <div className="bg-[#F5F5F5] rounded-lg p-6 mb-8">
@@ -480,11 +517,7 @@ function App() {
 
                   {/* Product Screenshots */}
                   <div className="relative overflow-hidden rounded-lg mb-8">
-                    <img
-                      src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=2850&q=80"
-                      alt="Product Screenshot"
-                      className="w-full h-[400px] object-cover"
-                    />
+                    <ImageSlider photos={data?.photos || []} />
                   </div>
                 </section>
 
@@ -603,7 +636,7 @@ function App() {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Category</span>
-                    <span>SaaS</span>
+                    <span>{data?.category?.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Pricing</span>
