@@ -217,6 +217,24 @@ export interface Notification {
   user: User;
 }
 
+export interface Blog {
+  id: string;
+  name: string | null;
+  readtime: string | null;
+  headline: string | null;
+  desc: string | null;
+  photos: string[];
+  contents?: {
+    title: string;
+    description: string;
+    photos: string[];
+  }[];
+  user: User;
+  status: "PENDING" | "ACTIVE" | "REJECTED";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // Optional: Type for `replies` in `Comment`
 export interface Reply {
   id: string;

@@ -56,6 +56,7 @@ model User {
   products      Product[]
   sessions      Session[]
   upvotes       Upvote[]
+  blogs         Blog[]         // Relation to Blog
 }
 
 model Category {
@@ -192,6 +193,24 @@ model Notification {
   updatedAt      DateTime           @updatedAt
   product        Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
   user           User               @relation(fields: [userId], references: [id])
+}
+
+model Blog {
+  id        String      @id @default(cuid())
+  name      String?
+  readtime  String?   
+  headline  String?
+  desc      String?
+  photos    String[]   
+  contents  Json?       
+  userId    String     
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    Status      @default(PENDING) // Status field
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
 }
 
 enum Status {
