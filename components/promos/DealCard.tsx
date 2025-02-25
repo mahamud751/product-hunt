@@ -9,7 +9,7 @@ interface MarketSeerCardProps {
   data: Product;
 }
 export const DealCard: React.FC<MarketSeerCardProps> = ({ data }) => {
-  const cleanedName = cleanName(data?.name);
+  const cleanedName = cleanName(data?.name ?? "");
   const [copied, setCopied] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
