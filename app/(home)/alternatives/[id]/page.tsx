@@ -2,15 +2,17 @@
 import DetailsPageCard from "@/components/alternative/DetailsPageCard";
 import { getSingleAlternative } from "@/lib/server-actions";
 import { cleanName } from "@/lib/utils";
-import { Grid } from "@mui/material";
+import { Breadcrumbs, Grid } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
+import { Home } from "lucide-react";
 
 const AlternativeDetails = () => {
   const searchParams = useSearchParams();
-
+  const pathname = usePathname();
   const id = searchParams.get("id");
 
   const [alternative, setAlternative] = useState<any>(null);
@@ -44,12 +46,23 @@ const AlternativeDetails = () => {
     return <p>Loading...</p>;
   }
 
-  if (!alternative) {
-    return <p>No alternative found.</p>;
-  }
-
   return (
     <div>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <Link href="/alternatives" className="text-gray-500 hover:underline">
+          Alternatives
+        </Link>
+        {/* Display the current pathname */}
+        <span>{pathname}</span>
+      </Breadcrumbs>
       <div className="w-full mx-auto py-8">
         <Grid container spacing={3}>
           {/* Left Side Grid */}

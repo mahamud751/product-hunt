@@ -79,9 +79,9 @@ const Page = () => {
       >
         <Link color="inherit" href="/" className="flex items-center gap-1">
           <Home className="w-5 h-5 text-gray-500" />
-          Home
+          <span className="ms-[2px]">Home</span>
         </Link>
-        <span>Software Alternatives</span>
+        <span>Alternatives</span>
       </Breadcrumbs>
 
       <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
