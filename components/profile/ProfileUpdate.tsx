@@ -649,7 +649,7 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
 
                   <div className="p-2 border-t">
                     <p className="text-sm text-gray-500 px-2 mb-2">
-                      Can't find your skill? Add a custom one:
+                      Can&apos;t find your skill? Add a custom one:
                     </p>
                     <div className="flex gap-2 px-2">
                       <input

@@ -837,7 +837,7 @@ const NewProduct: React.FC = () => {
           Tell Us About Your Product
         </h2>
         <p className="text-gray-600">
-          We'll need its name, tagline, launch tags, and description.
+          We&apos;ll need its name, tagline, launch tags, and description.
         </p>
 
         <FormField
@@ -1170,7 +1170,7 @@ const NewProduct: React.FC = () => {
           Did you work on this product?
         </h2>
         <p className="text-gray-600">
-          It's fine either way. Just need to know.
+          It&apos;s fine either way. Just need to know.
         </p>
 
         <div className="space-y-4">
@@ -1202,10 +1202,10 @@ const NewProduct: React.FC = () => {
             />
             <div>
               <p className="font-medium text-[#1F1F1F]">
-                I didn't work on this product
+                I didn&apos;t work on this product
               </p>
               <p className="text-sm text-blue-600">
-                I'll be listed as Hunter of this product
+                I&apos;ll be listed as Hunter of this product
               </p>
             </div>
           </label>
@@ -1217,7 +1217,7 @@ const NewProduct: React.FC = () => {
           Who worked on this product?
         </h2>
         <p className="text-gray-600">
-          You're free to add anyone who worked on this product.
+          You&apos;re free to add anyone who worked on this product.
         </p>
 
         <div className="space-y-4">

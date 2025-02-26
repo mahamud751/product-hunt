@@ -713,8 +713,8 @@ const NewProduct: React.FC = () => {
 
               <h1 className="text-4xl font-semibold mt-10">Additional Links</h1>
               <p className="text-xl font-light mt-4 leading-8">
-                Add links to your product's website, social media, and other
-                platforms
+                Add links to your product&apos;s website, social media, and
+                other platforms
               </p>
 
               <div className="mt-10">

@@ -1,12 +1,14 @@
 "use client";
 import AlternativeCard from "@/components/alternative/AlternativeCard";
-
 import { getAlternatives } from "@/lib/server-actions";
-import { Grid, Menu } from "@mui/material";
-import { ChevronDown, Search } from "lucide-react";
+import { Grid, Menu, Breadcrumbs } from "@mui/material";
+import { ChevronDown, Search, Home } from "lucide-react";
+
 import React, { MouseEvent, useEffect, useState } from "react";
 import { MenuItem } from "@mui/material";
 import AlternativePagination from "@/components/alternative/AlternativePagination";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"; // Icon for breadcrumb separator
+import Link from "next/link";
 
 type SortOrder = "Popularity" | "Latest" | "NameAsc" | "NameDesc";
 const Page = () => {
@@ -53,10 +55,12 @@ const Page = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+
   const handleSortChange = (sort: SortOrder) => {
     setSortOrder(sort);
     setAnchorEl(null);
   };
+
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,6 +71,19 @@ const Page = () => {
 
   return (
     <div>
+      {/* Breadcrumbs */}
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          Home
+        </Link>
+        <span>Software Alternatives</span>
+      </Breadcrumbs>
+
       <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
         Browse the Best Software Alternatives &
         <br />
@@ -109,7 +126,7 @@ const Page = () => {
               }}
               PaperProps={{
                 style: {
-                  width: anchorEl ? anchorEl.clientWidth : undefined, // Ensures the menu width matches the button width
+                  width: anchorEl ? anchorEl.clientWidth : undefined,
                   borderRadius: "8px",
                   boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
                 },

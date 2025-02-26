@@ -893,9 +893,10 @@ const App: React.FC = () => {
                 <h3 className="font-semibold mb-4">Makers</h3>
 
                 <div className="flex -space-x-2">
-                  {makers?.map((data) => {
+                  {makers?.map((data, index) => {
                     return (
                       <Image
+                        key={index}
                         src={data?.image}
                         alt="profile"
                         className="w-10 h-10 rounded-full border-2 border-white"
