@@ -151,6 +151,7 @@ export interface Product {
   top?: boolean;
   priceOption: string;
   price: string;
+
   promoCode?: string;
   promoExpire?: string;
   promoOffer?: string;
