@@ -1187,7 +1187,7 @@ const NewProduct: React.FC = () => {
                 I worked on this product
               </p>
               <p className="text-sm text-blue-600">
-                I'll be listed as both Hunter and Maker of this product
+                I&apos;ll be listed as both Hunter and Maker of this product
               </p>
             </div>
           </label>
