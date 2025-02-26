@@ -581,7 +581,7 @@ const NewProduct: React.FC = () => {
   // Fetch Data
   useEffect(() => {
     getActiveCategory().then((data) => setCategories(data));
-    getUsers().then((data) => setUsers(data));
+    getUsers().then((data) => setUsers(data as any));
     getActiveAlternative().then((data) => setAlternatives(data));
   }, []);
 
@@ -787,6 +787,8 @@ const NewProduct: React.FC = () => {
       await createProduct({
         name: formData.name,
         tags: formData.tags.join(","),
+
+        //@ts-ignore
         linekdin: formData.socialLinks.linkedin,
         weburl: formData.websiteUrl,
         suggestUrl: "",
@@ -798,6 +800,7 @@ const NewProduct: React.FC = () => {
         slug: formData.slug,
         headline: formData.tagline,
         website: formData.websiteUrl,
+        //@ts-ignore
         twitter: formData.socialLinks.twitter,
         discord: "",
         isMaker: formData.workedOnProduct,
@@ -920,7 +923,7 @@ const NewProduct: React.FC = () => {
             onChange={(event, newValue) => {
               if (newValue && typeof newValue === "object") {
                 handleInputChange("primaryCategory", newValue.label);
-                setCategoryId(newValue.id);
+                setCategoryId(newValue.id || null);
               } else {
                 handleInputChange("primaryCategory", "");
                 setCategoryId(null);
@@ -959,7 +962,7 @@ const NewProduct: React.FC = () => {
             onChange={(event, newValue) => {
               if (newValue && typeof newValue === "object") {
                 handleInputChange("subcategory", newValue.label);
-                setSubCategoryId(newValue.id);
+                setSubCategoryId(newValue.id || null);
               } else {
                 handleInputChange("subcategory", "");
                 setSubCategoryId(null);
@@ -991,6 +994,7 @@ const NewProduct: React.FC = () => {
                 alternatives
                   .filter((alt) => value.includes(alt.name))
                   .map((alt) => alt.id)
+                  .filter((id) => id !== undefined) as string[]
               );
             }}
             placeholder="Which well-known tool is this an alternative to?"

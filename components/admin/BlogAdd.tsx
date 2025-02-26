@@ -50,6 +50,7 @@ const BlogAdd = ({ user }: { user: any }) => {
       updatedContents[index].photos = []; // Reset photos, we'll upload them later
       handleContentImageUpload(index, value); // Upload immediately
     } else {
+      //@ts-ignore
       updatedContents[index][field] = value;
     }
     setContents(updatedContents);

@@ -21,7 +21,6 @@ import { useSearchParams } from "next/navigation";
 import {
   commentOnProduct,
   getProductById,
-  getUsers,
   updateComment,
 } from "@/lib/server-actions";
 import Image from "next/image";
@@ -30,54 +29,19 @@ import ImageSlider from "@/components/productDetails/ImageSlider";
 
 import { Product } from "@/services/types";
 
-// Define types based on your Prisma models
-interface User {
-  id: string;
-  name?: string;
-  image?: string;
-  profilePicture?: string;
-}
-
-interface Comment {
-  id: string;
-  profilePicture: string;
-  productId: string;
-  userId: string;
-  body: string;
-  createdAt: Date;
-  updatedAt: Date;
-  replies?: Reply[];
-  user: User;
-  rating: number;
-}
-
-interface Reply {
-  userId: string;
-  body: string;
-  createdAt: string;
-  profilePicture?: string;
-}
-
-interface Alternative {
-  name: string;
-  description: string;
-  icon: React.ReactNode;
-  rating: number;
-  reviews: number;
-}
-
-// Review Modal Component
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   productId: string;
 }
-
-const ReviewModal: React.FC<ReviewModalProps> = ({
+function ReviewModal({
   isOpen,
   onClose,
   productId,
-}) => {
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const [rating, setRating] = useState<number>(0);
   const [isHovering, setIsHovering] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
@@ -163,23 +127,17 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       </div>
     </div>
   );
-};
+}
 
 // Reviews Section Component
 interface ReviewsSectionProps {
   productId: string;
   comments: Comment[];
-  activeTab: any;
-  data: any;
-  setIsReviewModalOpen: any;
 }
 
 const ReviewsSection: React.FC<ReviewsSectionProps> = ({
   productId,
   comments,
-  activeTab,
-  data,
-  setIsReviewModalOpen,
 }) => {
   const [showAllReplies, setShowAllReplies] = useState<{
     [key: string]: boolean;
@@ -188,8 +146,6 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
   const [selectedSort, setSelectedSort] = useState<"newest" | "highest">(
     "newest"
   );
-  const [visibleReviews, setVisibleReviews] = useState<number>(2); // Initially show 2 reviews
-  const reviewsPerPage = 10; // Load 10 reviews per click after "View all"
 
   const handleReply = async (commentId: string) => {
     if (!replyText[commentId]) return;
@@ -219,22 +175,11 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
     return 0;
   });
 
-  const handleViewAllReviews = () => {
-    setVisibleReviews(reviewsPerPage);
-  };
-
-  const handleShowMoreReviews = () => {
-    setVisibleReviews((prev) => prev + reviewsPerPage);
-  };
-
-  const totalReviews = comments.length;
-  const hasMoreReviews = visibleReviews < totalReviews;
-
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">Reviews {data?.name}</h2>
+          <h2 className="text-2xl font-bold mb-2">Reviews</h2>
           <div className="flex items-center gap-2">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -255,27 +200,9 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
                 comments.reduce((sum, c) => sum + c.rating, 0) /
                 (comments.length || 1)
               ).toFixed(1)}{" "}
-              based on ({comments.length} reviews)
+              ({comments.length} reviews)
             </span>
           </div>
-        </div>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setIsReviewModalOpen(true)}
-            className="px-4 py-2 bg-[#198E49] text-white rounded-lg hover:bg-[#198E49]/90 transition-colors mb-8"
-          >
-            Leave a Review
-          </button>
-          {activeTab === "overview" && visibleReviews === 2 && (
-            <div>
-              <button
-                onClick={handleViewAllReviews}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
-              >
-                View all reviews
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -345,7 +272,7 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
       </div>
 
       <div className="space-y-6">
-        {sortedComments.slice(0, visibleReviews).map((comment) => (
+        {sortedComments.map((comment) => (
           <div key={comment.id} className="border rounded-lg p-6">
             <div className="flex justify-between mb-4">
               <div className="flex gap-3">
@@ -469,33 +396,20 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
           </div>
         ))}
       </div>
-
-      {/* Show More Button */}
-      {hasMoreReviews && visibleReviews >= reviewsPerPage && (
-        <div className="mt-6 text-center">
-          <button
-            onClick={handleShowMoreReviews}
-            className="px-6 py-2 bg-[#AF583B] text-white rounded-lg hover:bg-[#AF583B]/90 transition-colors"
-          >
-            Show remaining reviews ({totalReviews - visibleReviews} more)
-          </button>
-        </div>
-      )}
     </section>
   );
 };
 
 // Main App Component
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<
-    "overview" | "launches" | "reviews"
-  >("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "reviews">(
+    "overview"
+  );
   const [isReviewModalOpen, setIsReviewModalOpen] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
   const [data, setData] = useState<Product | null>(null);
-  const [users, setUsers] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const alternatives: Alternative[] = [
@@ -551,27 +465,8 @@ const App: React.FC = () => {
 
     fetchProductDetails();
   }, [id]);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!id) return;
-      try {
-        const users = await getUsers();
-        setUsers(users as any);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
-
-  const makers = Array.isArray(users)
-    ? users.filter((user) => data?.makers?.includes(user.id))
-    : [];
 
   console.log(data);
-  console.log(makers);
 
   if (loading)
     return (
@@ -672,7 +567,7 @@ const App: React.FC = () => {
       <nav className="border-b sticky top-0 bg-white z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex space-x-8">
-            {(["overview", "launches", "reviews"] as const).map((tab) => (
+            {(["overview", "reviews"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -700,19 +595,6 @@ const App: React.FC = () => {
                 <section className="mb-8">
                   <h2 className="text-2xl font-bold mb-4">Overview</h2>
                   <p className="text-gray-600 mb-6">{data.description}</p>
-                  {/* User Poll */}
-                  <div className="bg-[#F5F5F5] rounded-lg p-6 mb-8">
-                    <h3 className="font-semibold mb-4">Do you use this?</h3>
-                    <div className="flex gap-4">
-                      <button className="bg-[#AF583B] text-white px-4 py-2 rounded-lg hover:bg-[#AF583B]/90 transition-colors">
-                        I use this
-                      </button>
-                      <button className="bg-[#198E49] text-white px-4 py-2 rounded-lg hover:bg-[#198E49]/90 transition-colors">
-                        I use something else
-                      </button>
-                    </div>
-                  </div>
-
                   <div className="relative overflow-hidden rounded-lg mb-8">
                     <ImageSlider photos={data.photos || []} />
                   </div>
@@ -723,118 +605,67 @@ const App: React.FC = () => {
                     Awards & Recognition
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
-                    {/* {data.featured && ( */}
-                    <div className="bg-white p-4 rounded-lg">
-                      <Star className="w-6 h-6 text-[#FFC107] mb-2" />
-                      <h3 className="font-semibold mb-1">Featured Product</h3>
-                      <p className="text-sm text-gray-600">2023</p>
-                    </div>
-                    {/* )} */}
-                    {/* {data.top && ( */}
-                    <div className="bg-white p-4 rounded-lg">
-                      <Trophy className="w-6 h-6 text-purple-600 mb-2" />
-                      <h3 className="font-semibold mb-1">Top Ranked</h3>
-                      <p className="text-sm text-gray-600">2023</p>
-                    </div>
-                    {/* )} */}
-                  </div>
-                </section>
-                {/* Recent Launches */}
-                <section className="mb-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Recent Launches</h2>
-                    <button className="text-[#AF583B] hover:underline">
-                      View all launches
-                    </button>
-                  </div>
-                  <div className="space-y-4">
-                    {[1, 2].map((launch) => (
-                      <div key={launch} className="border rounded-lg p-4">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold">
-                            Major Update {launch}.0
-                          </h3>
-                          <span className="text-sm text-gray-500">
-                            2 weeks ago
-                          </span>
-                        </div>
-                        <p className="text-gray-600 text-sm mb-2">
-                          Introducing new features and improvements...
-                        </p>
-                        <div className="flex gap-4 text-sm text-gray-500">
-                          <span>👍 234 upvotes</span>
-                          <span>💬 45 comments</span>
-                        </div>
+                    {data.featured && (
+                      <div className="bg-white p-4 rounded-lg">
+                        <Star className="w-6 h-6 text-[#FFC107] mb-2" />
+                        <h3 className="font-semibold mb-1">Featured Product</h3>
+                        <p className="text-sm text-gray-600">2023</p>
                       </div>
-                    ))}
+                    )}
+                    {data.top && (
+                      <div className="bg-white p-4 rounded-lg">
+                        <Trophy className="w-6 h-6 text-purple-600 mb-2" />
+                        <h3 className="font-semibold mb-1">Top Ranked</h3>
+                        <p className="text-sm text-gray-600">2023</p>
+                      </div>
+                    )}
                   </div>
                 </section>
 
-                {/* Alternatives */}
-                <section className="mb-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Alternatives</h2>
-                    <button className="text-[#AF583B] hover:underline">
-                      View all alternatives
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    {[1, 2].map((alt) => (
-                      <div key={alt} className="border rounded-lg p-4">
-                        <div className="flex gap-3 mb-2">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg"></div>
-                          <div>
-                            <h3 className="font-semibold">Alternative {alt}</h3>
-                            <p className="text-sm text-gray-600">
-                              Similar workspace solution
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Star className="w-4 h-4 text-[#FFC107]" />
-                          <span className="text-sm text-gray-600">4.8/5</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+                <button
+                  onClick={() => setIsReviewModalOpen(true)}
+                  className="px-4 py-2 bg-[#198E49] text-white rounded-lg hover:bg-[#198E49]/90 transition-colors mb-8"
+                >
+                  Leave a Review
+                </button>
 
-                <ReviewsSection
-                  productId={data.id}
-                  comments={data.comments}
-                  activeTab={activeTab}
-                  data={data}
-                  setIsReviewModalOpen={setIsReviewModalOpen}
-                />
+                <ReviewsSection productId={data.id} comments={data.comments} />
               </div>
             )}
 
             {activeTab === "reviews" && (
               <div>
-                <ReviewsSection
-                  productId={data.id}
-                  comments={data.comments}
-                  activeTab={activeTab}
-                  data={data}
-                  setIsReviewModalOpen={setIsReviewModalOpen}
-                />
+                <button
+                  onClick={() => setIsReviewModalOpen(true)}
+                  className="px-4 py-2 bg-[#198E49] text-white rounded-lg hover:bg-[#198E49]/90 transition-colors mb-8"
+                >
+                  Leave a Review
+                </button>
+                <ReviewsSection productId={data.id} comments={data.comments} />
               </div>
             )}
           </div>
 
-          {/* Right Sidebar */}
           <div className="w-80">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-20">
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-semibold">Product Status</span>
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
-                    Claimed
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      data.status === "PENDING"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {data.status}
                   </span>
                 </div>
-                <button className="w-full bg-[#1F1F1F] text-white px-4 py-2 rounded-lg hover:bg-black/90 transition-colors">
-                  Join Team
-                </button>
+                {data.isMaker && (
+                  <button className="w-full bg-[#1F1F1F] text-white px-4 py-2 rounded-lg hover:bg-black/90 transition-colors">
+                    Join Team
+                  </button>
+                )}
               </div>
 
               <div className="border-t pt-6 mb-6">
@@ -842,15 +673,23 @@ const App: React.FC = () => {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Category</span>
-                    <span>{data?.category?.name}</span>
+                    <span className="capitalize">
+                      {data.category?.name || "N/A"}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Pricing</span>
-                    <span className="capitalize">{data?.priceOption}</span>
+                    <span className="capitalize">
+                      {data?.priceOption || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Release Date</span>
+                    <span>{data?.releaseDate || "N/A"}</span>
                   </div>
                 </div>
                 <div className="flex gap-3 mt-4">
-                  {data.twitter && (
+                  {data?.twitter && (
                     <a
                       href={data.twitter}
                       target="_blank"
@@ -859,7 +698,7 @@ const App: React.FC = () => {
                       <Twitter className="w-5 h-5 text-gray-600 hover:text-black cursor-pointer" />
                     </a>
                   )}
-                  {data.linekdin && (
+                  {data?.linekdin && (
                     <a
                       href={data.linekdin}
                       target="_blank"
@@ -868,7 +707,7 @@ const App: React.FC = () => {
                       <Linkedin className="w-5 h-5 text-gray-600 hover:text-black cursor-pointer" />
                     </a>
                   )}
-                  {data.twitter && (
+                  {data?.twitter && (
                     <a
                       href={data.twitter}
                       target="_blank"
@@ -889,46 +728,26 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="border-t pt-6 mb-6">
-                <h3 className="font-semibold mb-4">Makers</h3>
-
-                <div className="flex -space-x-2">
-                  {makers?.map((data) => {
-                    return (
-                      <Image
-                        src={data?.image}
-                        alt="profile"
+              {data?.makers && data?.makers.length > 0 && (
+                <div className="border-t pt-6 mb-6">
+                  <h3 className="font-semibold mb-4">Makers</h3>
+                  <div className="flex -space-x-2">
+                    {data.makers.slice(0, 3).map((maker, index) => (
+                      <img
+                        key={index}
+                        src={
+                          (maker as unknown as User).image ||
+                          (maker as unknown as User).profilePicture ||
+                          "https://via.placeholder.com/40"
+                        }
+                        alt={`Maker ${index + 1}`}
                         className="w-10 h-10 rounded-full border-2 border-white"
-                        width={100}
-                        height={100}
                       />
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Updated Sponsored Ad Card */}
-              <div className="border rounded-lg p-4 mb-6">
-                <div className="flex items-start justify-between mb-2">
-                  <span className="text-xs text-gray-500">Ad</span>
-                  <img
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=40&h=40&q=80"
-                    alt="Efficient App"
-                    className="w-10 h-10 rounded-lg"
-                  />
-                </div>
-                <h4 className="font-semibold text-lg mb-2">Efficient App</h4>
-                <p className="text-sm text-gray-600 mb-3">
-                  Not all Open Source alternatives are equal — Narrow down the
-                  best, without the bullsh*t
-                </p>
-                <button className="w-full bg-[#1F1F1F] text-white px-4 py-2 rounded-lg text-sm flex items-center justify-center gap-2 hover:bg-black/90 transition-colors">
-                  Visit Efficient App
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Product Alternatives Section */}
               <div className="border-t pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold">Product Alternatives</h3>
@@ -938,7 +757,7 @@ const App: React.FC = () => {
                   </button>
                 </div>
                 <div className="space-y-4">
-                  {alternatives.map((alt, index) => (
+                  {alternatives.slice(0, 3).map((alt, index) => (
                     <div
                       key={index}
                       className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"

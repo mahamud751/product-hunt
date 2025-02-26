@@ -28,9 +28,13 @@ const Submit: React.FC<SubmitProps> = ({ products, authenticatedUser }) => {
 
   return (
     <div>
-      <button onClick={handleClick} className="text-[#ff6154]">
-        Submit
+      <button
+        onClick={handleClick}
+        className="px-4 py-2 text-sm font-bold text-white bg-[#AF583B] rounded-lg hover:bg-[#8E472F] transition-colors"
+      >
+        New Launch
       </button>
+
       <MembershipModal
         visible={isUpgradeModalVisible}
         setVisible={setIsUpgradeModalVisible}
