@@ -2,10 +2,13 @@
 import { getBlogs } from "@/lib/server-actions";
 import { cleanName } from "@/lib/utils";
 import { Blog } from "@/services/types";
+import { Breadcrumbs } from "@mui/material";
+import { Home } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { useEffect, useState } from "react";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -14,10 +17,20 @@ const Blogs = () => {
       setBlogs(data);
     });
   }, []);
-  console.log(blogs);
 
   return (
     <div>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>Blogs</span>
+      </Breadcrumbs>
       <section className="py-16">
         <div>
           <h1 className="text-4xl font-semibold tracking-tighter leading-none mt-5">
