@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { Camera, Shield, History, Link } from 'lucide-react';
+import React, { useState } from "react";
+import { Camera, Shield, History, Link } from "lucide-react";
 
-export function ProfileSettings() {
+interface User {
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+}
+
+export function ProfileSettings({ user }: { user: User }) {
   const [profile, setProfile] = useState({
-    name: 'John Doe',
-    username: 'johndoe',
-    email: 'john@example.com',
-    phone: '+1 (555) 123-4567'
+    name: user.name,
+    username: user.username,
+    email: user.email,
+    phone: user.phone,
   });
 
   return (
@@ -19,15 +26,15 @@ export function ProfileSettings() {
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover"
           />
-          <button
-            className="absolute bottom-0 right-0 p-1.5 bg-[#AF583B] rounded-full text-white hover:bg-[#8F4731] transition-colors"
-          >
+          <button className="absolute bottom-0 right-0 p-1.5 bg-[#AF583B] rounded-full text-white hover:bg-[#8F4731] transition-colors">
             <Camera className="w-4 h-4" />
           </button>
         </div>
-        
+
         <div>
-          <h3 className="text-lg font-semibold text-[#1F1F1F]">Profile Picture</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F]">
+            Profile Picture
+          </h3>
           <p className="text-sm text-gray-500 mt-1">
             Upload a photo to make your profile stand out
           </p>
@@ -40,10 +47,12 @@ export function ProfileSettings() {
           <Shield className="w-5 h-5 mr-2" />
           Personal Information
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
             <input
               type="text"
               value={profile.name}
@@ -51,33 +60,45 @@ export function ProfileSettings() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#AF583B] focus:ring focus:ring-[#AF583B] focus:ring-opacity-50"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               value={profile.username}
-              onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, username: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#AF583B] focus:ring focus:ring-[#AF583B] focus:ring-opacity-50"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               value={profile.email}
-              onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, email: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#AF583B] focus:ring focus:ring-[#AF583B] focus:ring-opacity-50"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
             <input
               type="tel"
               value={profile.phone}
-              onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, phone: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#AF583B] focus:ring focus:ring-[#AF583B] focus:ring-opacity-50"
             />
           </div>
@@ -90,11 +111,19 @@ export function ProfileSettings() {
           <History className="w-5 h-5 mr-2" />
           Recent Login Activity
         </h3>
-        
+
         <div className="bg-gray-50 rounded-lg p-4 space-y-4">
           {[
-            { device: 'MacBook Pro', location: 'San Francisco, CA', time: '2 hours ago' },
-            { device: 'iPhone 13', location: 'San Francisco, CA', time: '1 day ago' },
+            {
+              device: "MacBook Pro",
+              location: "San Francisco, CA",
+              time: "2 hours ago",
+            },
+            {
+              device: "iPhone 13",
+              location: "San Francisco, CA",
+              time: "1 day ago",
+            },
           ].map((login, index) => (
             <div key={index} className="flex items-center justify-between py-2">
               <div>
@@ -113,28 +142,28 @@ export function ProfileSettings() {
           <Link className="w-5 h-5 mr-2" />
           Connected Accounts
         </h3>
-        
+
         <div className="space-y-4">
           {[
-            { name: 'Google', connected: true },
-            { name: 'Twitter', connected: false },
-            { name: 'GitHub', connected: true },
+            { name: "Google", connected: true },
+            { name: "Twitter", connected: false },
+            { name: "GitHub", connected: true },
           ].map((account, index) => (
             <div key={index} className="flex items-center justify-between py-2">
               <div>
                 <p className="font-medium text-[#1F1F1F]">{account.name}</p>
                 <p className="text-sm text-gray-500">
-                  {account.connected ? 'Connected' : 'Not connected'}
+                  {account.connected ? "Connected" : "Not connected"}
                 </p>
               </div>
               <button
                 className={`px-4 py-2 rounded-md text-sm font-semibold ${
                   account.connected
-                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    : 'bg-[#AF583B] text-white hover:bg-[#8F4731]'
+                    ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-[#AF583B] text-white hover:bg-[#8F4731]"
                 }`}
               >
-                {account.connected ? 'Disconnect' : 'Connect'}
+                {account.connected ? "Disconnect" : "Connect"}
               </button>
             </div>
           ))}

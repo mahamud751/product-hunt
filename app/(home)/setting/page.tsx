@@ -1,35 +1,15 @@
-"use client";
-import React, { useState } from "react";
+import { auth } from "@/auth";
 
-import { BillingSettings } from "@/components/setting/BillingSettings";
-import { NotificationSettings } from "@/components/setting/NotificationSettings";
-import { ProfileSettings } from "@/components/setting/ProfileSettings";
-import { SecuritySettings } from "@/components/setting/SecuritySettings";
-import { SettingsLayout } from "@/components/setting/SettingsLayout";
+import Setting from "@/components/setting/Setting";
+import { getUser } from "@/lib/server-actions";
 
-function App() {
-  const [activeTab, setActiveTab] = useState("profile");
+const Page = async () => {
+  // Get the authenticated user
+  const authenticatedUser = await auth();
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "profile":
-        return <ProfileSettings />;
-      case "security":
-        return <SecuritySettings />;
-      case "notifications":
-        return <NotificationSettings />;
-      case "billing":
-        return <BillingSettings />;
-      default:
-        return <ProfileSettings />;
-    }
-  };
+  const user = await getUser(authenticatedUser?.user?.id ?? "");
 
-  return (
-    <SettingsLayout activeTab={activeTab} setActiveTab={setActiveTab}>
-      {renderContent()}
-    </SettingsLayout>
-  );
-}
+  return <Setting user={user} />;
+};
 
-export default App;
+export default Page;
