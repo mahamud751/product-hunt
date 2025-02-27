@@ -8,7 +8,11 @@ import {
   Clock,
   ArrowRight,
   Star,
+  Home,
 } from "lucide-react";
+import { Breadcrumbs } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Link from "next/link";
 
 const testimonialAvatar =
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80";
@@ -45,6 +49,17 @@ const testimonials = [
 const Submit = () => {
   return (
     <div className="bg-white text-[#1F1F1F]">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>Auto Submit</span>
+      </Breadcrumbs>
       {/* Hero Section */}
       <section className="px-4 py-20 max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto">

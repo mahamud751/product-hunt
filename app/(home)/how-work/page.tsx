@@ -15,7 +15,11 @@ import {
   CheckCircle,
   Star,
   MessageCircle,
+  Home,
 } from "lucide-react";
+import { Breadcrumbs } from "@mui/material";
+import Link from "next/link";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 function FeatureCard({
   icon: Icon,
@@ -80,6 +84,17 @@ function LeaderboardCard({
 const Page = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>About Us</span>
+      </Breadcrumbs>
       {/* Hero Section */}
       <div className="bg-[#F5F5F5] py-20">
         <div className="max-w-6xl mx-auto px-4">

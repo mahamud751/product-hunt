@@ -1,9 +1,22 @@
 import React from "react";
-import { Users, Rocket, Heart, MessageCircle } from "lucide-react";
-
+import { Users, Rocket, Heart, MessageCircle, Home } from "lucide-react";
+import { Breadcrumbs } from "@mui/material";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Link from "next/link";
 const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>About Us</span>
+      </Breadcrumbs>
       {/* Hero Section */}
       <div className="w-full py-20 bg-[#F5F5F5]">
         <div className="max-w-4xl mx-auto px-6">

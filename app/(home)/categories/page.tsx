@@ -1,10 +1,24 @@
 import { getCategories } from "@/lib/server-actions";
 import { Category, Subcategory } from "@/services/types";
+import { Breadcrumbs } from "@mui/material";
+import { Home } from "lucide-react";
 import Link from "next/link";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 function SubcategoryCard({ name, description, products }: Subcategory) {
   return (
     <div className="group bg-[#F5F5F5] p-6 rounded-lg transition-all duration-200 hover:shadow-md hover:bg-white cursor-pointer">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>categories</span>
+      </Breadcrumbs>
       <div className="flex flex-col gap-2">
         <div className="flex items-center w-full">
           <div className="flex-shrink-0">

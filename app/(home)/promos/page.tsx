@@ -1,17 +1,19 @@
 "use client";
 import { useState, useEffect, MouseEvent } from "react";
-import { Button, MenuItem, Menu } from "@mui/material";
+import { Button, MenuItem, Menu, Breadcrumbs } from "@mui/material";
 import {
   Search,
   SlidersHorizontal,
   ChevronDown,
   PlusCircle,
+  Home,
 } from "lucide-react";
-
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { getPromoProducts, getActiveCategory } from "@/lib/server-actions";
 import { Category } from "@/services/types";
 import { DealCard } from "@/components/promos/DealCard";
 import PromoPagination from "@/components/promos/PromoPagination";
+import Link from "next/link";
 
 type SortOrder = "Popularity" | "Latest" | "NameAsc" | "NameDesc";
 const Page = () => {
@@ -117,6 +119,17 @@ const Page = () => {
 
   return (
     <div>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+        className="my-4"
+      >
+        <Link color="inherit" href="/" className="flex items-center gap-1">
+          <Home className="w-5 h-5 text-gray-500" />
+          <span className="ms-[2px]">Home</span>
+        </Link>
+        <span>Promos</span>
+      </Breadcrumbs>
       <div className="bg-[#F5F5F5] py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-[#1F1F1F] mb-4">
