@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
       title: "Quick Links:",
       links: [
         { label: "About Us", href: "/about-us" },
-        { label: "Our Blog", href: "/blog" },
+        { label: "Our Blog", href: "/blogs" },
         { label: "Advertise", href: "#" },
         { label: "Add a Free Listing", href: "#" },
         { label: "Auto Submit", href: "/auto-submit" },
