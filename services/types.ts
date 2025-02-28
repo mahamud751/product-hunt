@@ -130,6 +130,8 @@ export interface Product {
   slug?: string;
   headline?: string;
   rank?: number;
+  banner?: string;
+
   description: string;
   logo?: string;
   releaseDate?: string;
@@ -156,7 +158,7 @@ export interface Product {
   promoExpire?: string;
   promoOffer?: string;
   suggestUrl?: string;
-  tags?: string;
+  tags?: string[];
   videoLink?: string;
   weburl?: string;
   comments: Comment[];
@@ -172,7 +174,8 @@ export interface Product {
 
 export interface ProductData {
   name: string;
-  tags: string;
+  tags: string[];
+  banner: string;
   linekdin: string;
   weburl: string;
   suggestUrl: string;

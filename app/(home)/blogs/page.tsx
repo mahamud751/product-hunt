@@ -22,7 +22,7 @@ const Blogs = () => {
     <div>
       <Breadcrumbs
         aria-label="breadcrumb"
-        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        separator={<NavigateNextIcon fontSize="small" />}
         className="my-4"
       >
         <Link color="inherit" href="/" className="flex items-center gap-1">

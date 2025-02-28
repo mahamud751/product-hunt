@@ -3,7 +3,7 @@ import { User, Settings, Package, LogOut, LogIn, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation"; // Use navigate for redirect
+import { useRouter } from "next/navigation";
 
 interface UserDropdownProps {
   isLoggedIn?: boolean;
@@ -17,9 +17,8 @@ export default function UserDropdown({
 }: UserDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const navigate = useRouter(); // Use navigate from next/navigation
+  const navigate = useRouter();
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -35,10 +34,9 @@ export default function UserDropdown({
     };
   }, []);
 
-  // Redirect to home if no authenticated user
   useEffect(() => {
     if (!authenticatedUser) {
-      navigate.push("/"); // Redirect to home page
+      navigate.push("/");
     }
   }, [authenticatedUser, navigate]);
 
@@ -69,7 +67,7 @@ export default function UserDropdown({
           {authenticatedUser ? (
             <div className="py-1">
               <Link
-                href="profile"
+                href="/profile"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#AF583B]"
               >
                 <User className="h-4 w-4 mr-2" />
@@ -83,7 +81,7 @@ export default function UserDropdown({
                 My Products
               </Link>
               <Link
-                href="#"
+                href="/setting"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#AF583B]"
               >
                 <Settings className="h-4 w-4 mr-2" />

@@ -56,6 +56,7 @@ const getDateRange = (filter: "day" | "week" | "month") => {
 export const createProduct = async ({
   name,
   tags,
+  banner,
   linekdin,
   weburl,
   suggestUrl,
@@ -112,6 +113,7 @@ export const createProduct = async ({
       data: {
         name,
         tags,
+        banner,
         linekdin,
         weburl,
         suggestUrl,
@@ -1454,6 +1456,9 @@ export const getUser = async (userId: string) => {
   const user = await db.user.findUnique({
     where: {
       id: userId,
+    },
+    include: {
+      products: true,
     },
   });
 

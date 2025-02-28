@@ -12,7 +12,10 @@ import { Home } from "lucide-react";
 
 const AlternativeDetails = () => {
   const searchParams = useSearchParams();
+
   const pathname = usePathname();
+  const lastPart = pathname?.split("/").filter(Boolean).pop();
+
   const id = searchParams.get("id");
 
   const [alternative, setAlternative] = useState<any>(null);
@@ -50,7 +53,7 @@ const AlternativeDetails = () => {
     <div>
       <Breadcrumbs
         aria-label="breadcrumb"
-        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        separator={<NavigateNextIcon fontSize="small" />}
         className="my-4"
       >
         <Link color="inherit" href="/" className="flex items-center gap-1">
@@ -60,8 +63,7 @@ const AlternativeDetails = () => {
         <Link href="/alternatives" className="text-gray-500 hover:underline">
           Alternatives
         </Link>
-        {/* Display the current pathname */}
-        <span>{pathname}</span>
+        <span>{lastPart}</span>
       </Breadcrumbs>
       <div className="w-full mx-auto py-8">
         <Grid container spacing={3}>

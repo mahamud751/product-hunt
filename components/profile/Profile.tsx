@@ -24,6 +24,7 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import { Product } from "@/services/types";
 
 interface AvatarProps {
   user: any;
@@ -44,6 +45,8 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<Tab>("about");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFullBio, setShowFullBio] = useState(false);
+
+  console.log("user", user);
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "about", label: "About" },
@@ -643,23 +646,23 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
 
         {activeTab === "products" && (
           <div className="space-y-4">
-            {products.map((product) => (
+            {user?.products?.map((product: Product) => (
               <div key={product.id} className="card hover:bg-white">
                 <div className="flex items-start gap-4">
                   <img
-                    src={product.logo}
-                    alt={product.name}
+                    src={product?.logo}
+                    alt={product?.name}
                     className="w-12 h-12 rounded-lg"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <h3 className="font-bold text-lg text-gray-900">
-                          {product.name}
+                          {product?.name}
                         </h3>
-                        <p className="text-gray-600">{product.tagline}</p>
+                        <p className="text-gray-600">{product.headline}</p>
                         <div className="flex flex-wrap gap-2 mt-2">
-                          {product.tags.map((tag) => (
+                          {product?.tags?.map((tag) => (
                             <span key={tag} className="text-sm text-gray-500">
                               • {tag}
                             </span>
@@ -671,7 +674,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                           <ArrowUp size={20} className="text-gray-500" />
                         </button>
                         <span className="text-sm font-medium">
-                          {product.upvotes}
+                          {product?.upvotes}
                         </span>
                       </div>
                     </div>

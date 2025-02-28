@@ -42,7 +42,7 @@ model User {
   isPremium     Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  username      String?       
+  username      String?
   headline      String?
   about         String?
   socialLinks   Json?
@@ -56,7 +56,7 @@ model User {
   products      Product[]
   sessions      Session[]
   upvotes       Upvote[]
-  blogs         Blog[]         // Relation to Blog
+  blogs         Blog[]
 }
 
 model Category {
@@ -119,7 +119,8 @@ model Product {
   promoExpire   String
   promoOffer    String
   suggestUrl    String
-  tags          String
+  tags          String[]
+  banner        String
   videoLink     String
   weburl        String
   isMaker       Boolean        @default(true)
@@ -196,18 +197,18 @@ model Notification {
 }
 
 model Blog {
-  id        String      @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String?
-  readtime  String?   
+  readtime  String?
   headline  String?
   desc      String?
-  photos    String[]   
-  contents  Json?       
-  userId    String     
-  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status    Status      @default(PENDING) 
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  photos    String[]
+  contents  Json?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    Status   @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([status])

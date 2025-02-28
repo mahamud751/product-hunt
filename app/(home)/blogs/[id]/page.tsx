@@ -13,6 +13,7 @@ import React, { useEffect, useState, useRef } from "react";
 const BlogDetails = ({}: { params: { id: string } }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const lastPart = pathname?.split("/").filter(Boolean).pop();
   const id = searchParams.get("id");
 
   const [blog, setBlog] = useState<any>(null);
@@ -47,18 +48,18 @@ const BlogDetails = ({}: { params: { id: string } }) => {
     <div>
       <Breadcrumbs
         aria-label="breadcrumb"
-        separator={<NavigateNextIcon fontSize="small" />} // Custom separator
+        separator={<NavigateNextIcon fontSize="small" />}
         className="my-4"
       >
         <Link color="inherit" href="/" className="flex items-center gap-1">
           <Home className="w-5 h-5 text-gray-500" />
           <span className="ms-[2px]">Home</span>
         </Link>
-        <Link href="/alternatives" className="text-gray-500 hover:underline">
+        <Link href="/blogs" className="text-gray-500 hover:underline">
           Blogs
         </Link>
-        {/* Display the current pathname */}
-        <span>{pathname}</span>
+
+        <span>{lastPart}</span>
       </Breadcrumbs>
       <div className="w-full mx-auto py-8">
         <div>

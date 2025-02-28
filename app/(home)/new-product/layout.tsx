@@ -32,24 +32,7 @@ const NewProductLayout = async ({
   //   redirect("/");
   // }
 
-  return (
-    <html lang="en">
-      <body>
-        <Container className="px-8 xl:px-28">
-          <Suspense fallback={<Spinner />}>
-            <Navbar
-              authenticatedUser={authenticatedUser}
-              notifications={notifications}
-              products={products}
-            />
-
-            {children}
-          </Suspense>
-          <Footer />
-        </Container>
-      </body>
-    </html>
-  );
+  return <> {children}</>;
 };
 
 export default NewProductLayout;

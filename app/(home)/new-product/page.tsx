@@ -786,7 +786,7 @@ const NewProduct: React.FC = () => {
 
       await createProduct({
         name: formData.name,
-        tags: formData.tags.join(","),
+        tags: formData.tags,
 
         //@ts-ignore
         linekdin: formData.socialLinks.linkedin,
@@ -892,7 +892,7 @@ const NewProduct: React.FC = () => {
           tooltip="Add relevant tags to help people discover your product."
         >
           <MultiSelect
-            options={categories.map((cat) => cat.name)}
+            options={categories?.map((cat) => cat.name)}
             value={formData.tags}
             onChange={(value) => handleInputChange("tags", value)}
             placeholder="e.g., SaaS, AI, Productivity"
