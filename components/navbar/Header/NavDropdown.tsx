@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { cleanName } from "@/lib/utils";
 
 interface NavItem {
   label: string;
@@ -12,57 +14,54 @@ interface NavDropdownProps {
   title: string;
   items?: NavItem[];
   isProducts?: boolean;
+  categories?: any[];
 }
 
-export default function NavDropdown({ title, items = [], isProducts = false }: NavDropdownProps) {
+export default function NavDropdown({
+  title,
+  items = [],
+  isProducts = false,
+  categories,
+}: NavDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const categories = [
-    { label: 'Work & Productivity', href: '#' },
-    { label: 'Engineering & Development', href: '#' },
-    { label: 'Design & Creative', href: '#' },
-    { label: 'Finance', href: '#' },
-    { label: 'Social & Community', href: '#' },
-    { label: 'Marketing & Sales', href: '#' },
-    { label: 'AI', href: '#' },
-    { label: 'Health & Fitness', href: '#' },
-    { label: 'Travel', href: '#' },
-    { label: 'Platforms', href: '#' },
-    { label: 'Product add-ons', href: '#' },
-    { label: 'Web3', href: '#' },
-    { label: 'Physical Products', href: '#' },
-    { label: 'Ecommerce', href: '#' },
-  ];
-
   const addOns = [
-    { label: 'Chrome Extensions', href: '#' },
-    { label: 'Figma Templates', href: '#' },
-    { label: 'Slack apps', href: '#' },
-    { label: 'Wordpress Plugins', href: '#' },
-    { label: 'Figma Plugins', href: '#' },
-    { label: 'Notion Templates', href: '#' },
-    { label: 'Twitter apps', href: '#' },
-    { label: 'Wordpress themes', href: '#' },
+    { label: "Chrome Extensions", href: "#" },
+    { label: "Figma Templates", href: "#" },
+    { label: "Slack apps", href: "#" },
+    { label: "Wordpress Plugins", href: "#" },
+    { label: "Figma Plugins", href: "#" },
+    { label: "Notion Templates", href: "#" },
+    { label: "Twitter apps", href: "#" },
+    { label: "Wordpress themes", href: "#" },
   ];
 
   const landscapes = [
-    { label: 'AI notetakers', href: '#' },
-    { label: 'Compliance software', href: '#' },
-    { label: 'Hiring software', href: '#' },
-    { label: 'Password managers', href: '#' },
-    { label: 'Project management software', href: '#' },
-    { label: 'See more', href: '#' },
+    { label: "AI notetakers", href: "#" },
+    { label: "Compliance software", href: "#" },
+    { label: "Hiring software", href: "#" },
+    { label: "Password managers", href: "#" },
+    { label: "Project management software", href: "#" },
+    { label: "See more", href: "#" },
   ];
 
   return (
-    <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+    <div
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <button className="inline-flex items-center text-gray-700 hover:text-[#AF583B] font-medium">
         {title}
         <ChevronDown className="ml-1 h-4 w-4" />
       </button>
 
       {isOpen && (
-        <div className={`absolute left-0 mt-2 ${isProducts ? 'w-[800px]' : 'w-[400px]'} rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 animate-fadeIn`}>
+        <div
+          className={`absolute left-0 mt-2 ${
+            isProducts ? "w-[800px]" : "w-[400px]"
+          } rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 animate-fadeIn`}
+        >
           {isProducts ? (
             <div className="p-6">
               {/* Featured Section */}
@@ -72,14 +71,20 @@ export default function NavDropdown({ title, items = [], isProducts = false }: N
                     <span className="text-lg">📈</span>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">Shoutouts Leaderboard</h3>
-                    <p className="text-sm text-gray-500">The most-loved products on Product Hunt</p>
+                    <h3 className="font-medium text-gray-900">
+                      Shoutouts Leaderboard
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      The most-loved products on Product Hunt
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="mb-6">
-                <h3 className="font-medium text-gray-900 mb-2">Product Landscapes</h3>
+                <h3 className="font-medium text-gray-900 mb-2">
+                  Product Landscapes
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {landscapes.map((item) => (
                     <a
@@ -98,21 +103,31 @@ export default function NavDropdown({ title, items = [], isProducts = false }: N
                 <div>
                   <h3 className="font-medium text-gray-900 mb-3">Categories</h3>
                   <div className="space-y-2">
-                    {categories.map((category) => (
-                      <a
-                        key={category.label}
-                        href={category.href}
-                        className="block text-sm text-gray-600 hover:text-[#AF583B]"
-                      >
-                        {category.label}
-                      </a>
-                    ))}
+                    {categories?.map((category) => {
+                      const cleanedName = cleanName(category?.name);
+                      return (
+                        <Link
+                          key={category.label}
+                          href={{
+                            pathname: `/category/${encodeURIComponent(
+                              cleanedName
+                            )}`,
+                            query: { id: category?.id },
+                          }}
+                          className="block text-sm text-gray-600 hover:text-[#AF583B]"
+                        >
+                          {category?.name}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Add-ons Column */}
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-3">Product add-ons</h3>
+                  <h3 className="font-medium text-gray-900 mb-3">
+                    Product add-ons
+                  </h3>
                   <div className="grid grid-cols-2 gap-2">
                     {addOns.map((addon) => (
                       <a

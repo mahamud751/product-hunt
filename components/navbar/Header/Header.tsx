@@ -19,9 +19,11 @@ import Link from "next/link";
 export default function Header({
   products,
   authenticatedUser,
+  categories,
 }: {
   products: any;
   authenticatedUser: any;
+  categories: any;
 }) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -108,7 +110,11 @@ export default function Header({
           {/* Center Section - Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             <NavDropdown title="Launches" items={launchesItems} />
-            <NavDropdown title="Products" isProducts={true} />
+            <NavDropdown
+              title="Products"
+              isProducts={true}
+              categories={categories}
+            />
             <NavDropdown title="Community" items={communityItems} />
             <Link
               href="promos"

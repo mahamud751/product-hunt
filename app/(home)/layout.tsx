@@ -3,7 +3,11 @@ import Footer from "@/components/layout/Footer/Footer";
 
 import Navbar from "@/components/navbar/navbar";
 import Spinner from "@/components/spinner";
-import { getNotifications, getProductsByUserId } from "@/lib/server-actions";
+import {
+  getActiveCategory,
+  getNotifications,
+  getProductsByUserId,
+} from "@/lib/server-actions";
 import { Container } from "@mui/material";
 
 import { Suspense } from "react";
@@ -18,6 +22,7 @@ const HomeLayout = async ({
   const authenticatedUser = await auth();
   const notifications = await getNotifications();
   const products = await getProductsByUserId(authenticatedUser?.user?.id || "");
+  const categories = await getActiveCategory();
 
   return (
     <html suppressHydrationWarning={true} lang="en">
@@ -28,6 +33,7 @@ const HomeLayout = async ({
               authenticatedUser={authenticatedUser}
               notifications={notifications}
               products={products}
+              categories={categories}
             />
 
             {children}
