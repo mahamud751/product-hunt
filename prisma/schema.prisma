@@ -120,7 +120,7 @@ model Product {
   promoOffer    String
   suggestUrl    String
   tags          String[]
-  banner        String
+  banner        String?
   videoLink     String
   weburl        String
   isMaker       Boolean        @default(true)

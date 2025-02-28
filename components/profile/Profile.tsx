@@ -673,9 +673,9 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                         <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                           <ArrowUp size={20} className="text-gray-500" />
                         </button>
-                        <span className="text-sm font-medium">
+                        {/* <span className="text-sm font-medium">
                           {product?.upvotes}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </div>

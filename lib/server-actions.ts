@@ -277,6 +277,7 @@ export const updateProduct = async (
   productId: string,
   {
     name,
+    banner,
     slug,
     headline,
     description,
@@ -314,6 +315,7 @@ export const updateProduct = async (
     data: {
       name,
       slug,
+      banner,
       headline,
       description,
       logo,

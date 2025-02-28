@@ -15,7 +15,9 @@ interface EditProductFormProps {
 
 const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
   const [isEditingLogo, setIsEditingLogo] = useState(false);
+  const [isEditingBanner, setIsEditingBanner] = useState(false);
   const [uploadedLogoUrl, setUploadedLogoUrl] = useState("");
+  const [uploadedBannerUrl, setUploadedBannerUrl] = useState("");
   const [isEditingProductImages, setIsEditingProductImages] = useState(false);
   const [uploadedProductImages, setUploadedProductImages] = useState<string[]>(
     []
@@ -54,6 +56,14 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
       setIsEditingLogo(false);
     } else {
       setIsEditingLogo(true);
+    }
+  };
+  const handleBannerUpload = (url?: string) => {
+    if (url) {
+      setUploadedBannerUrl(url);
+      setIsEditingBanner(false);
+    } else {
+      setIsEditingBanner(true);
     }
   };
 
@@ -102,6 +112,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
         categoryId: categories,
         alternativeIds: alternatives,
         logo: uploadedLogoUrl || product.logo,
+        banner: uploadedBannerUrl || product.banner,
         images:
           uploadedProductImages.length > 0
             ? uploadedProductImages
@@ -188,6 +199,39 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
                 className="text-sm text-blue-500 cursor-pointer hover:underline mt-2"
               >
                 Change Logo
+              </button>
+            </div>
+          )}
+        </div>
+        <div>
+          <h1 className="font-medium">Banner</h1>
+          {isEditingBanner ? (
+            <div>
+              <LogoUploader
+                endpoint="productLogo"
+                onChange={handleBannerUpload}
+              />
+              <button
+                onClick={() => setIsEditingBanner(false)}
+                className="mt-2 cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div className="mt-6">
+              <Image
+                src={uploadedBannerUrl || product?.banner}
+                alt="logo"
+                width={200}
+                height={200}
+                className="w-28 md:w-60 border rounded-md cursor-pointer"
+              />
+              <button
+                onClick={() => setIsEditingBanner(true)}
+                className="text-sm text-blue-500 cursor-pointer hover:underline mt-2"
+              >
+                Change Banner
               </button>
             </div>
           )}

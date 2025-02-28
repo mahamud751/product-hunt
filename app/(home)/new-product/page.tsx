@@ -53,7 +53,7 @@ interface ProductFormData {
   websiteUrl: string;
   socialLinks: { twitter?: string; linkedin?: string };
   logo: File | string | null;
-  headerImage: File | string | null;
+  banner: File | string | null;
   productImages: (File | string)[];
   videoUrl: string;
   workedOnProduct: boolean;
@@ -541,7 +541,7 @@ const initialFormData: ProductFormData = {
   websiteUrl: "",
   socialLinks: { twitter: "", linkedin: "" },
   logo: null,
-  headerImage: null,
+  banner: null,
   productImages: [],
   videoUrl: "",
   workedOnProduct: true,
@@ -1104,13 +1104,13 @@ const NewProduct: React.FC = () => {
           tooltip="Recommended: 1200x630px, JPG/PNG/GIF, Max: 2MB."
         >
           <FileUpload
-            onFileSelect={(file) => handleInputChange("headerImage", file)}
-            value={formData.headerImage}
+            onFileSelect={(file) => handleInputChange("banner", file)}
+            value={formData.banner}
             className="h-48"
           />
-          {formData.headerImage && typeof formData.headerImage === "object" && (
+          {formData.banner && typeof formData.banner === "object" && (
             <Image
-              src={URL.createObjectURL(formData.headerImage)}
+              src={URL.createObjectURL(formData.banner)}
               alt="Uploaded Header"
               width={100}
               height={100}
@@ -1470,9 +1470,7 @@ const NewProduct: React.FC = () => {
             </div>
             <div className="flex">
               <dt className="w-1/3 text-gray-500">Header Image:</dt>
-              <dd className="w-2/3">
-                {formData.headerImage ? "✓ Uploaded" : "—"}
-              </dd>
+              <dd className="w-2/3">{formData.banner ? "✓ Uploaded" : "—"}</dd>
             </div>
             <div className="flex">
               <dt className="w-1/3 text-gray-500">Product Images:</dt>

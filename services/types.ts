@@ -175,7 +175,7 @@ export interface Product {
 export interface ProductData {
   name: string;
   tags: string[];
-  banner: string;
+  banner?: string;
   linekdin: string;
   weburl: string;
   suggestUrl: string;
