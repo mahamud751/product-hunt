@@ -30,7 +30,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
   const [makers, setMakers] = useState(product.makers || []);
 
   const [tags, setTags] = useState(product.tags);
-  const [linekdin, setLinekdin] = useState(product.linekdin);
+  const [linkedin, setLinekdin] = useState(product.linkedin);
   const [weburl, setWeburl] = useState(product.weburl);
   const [suggestUrl, setSuggestUrl] = useState(product.suggestUrl);
   const [promoOffer, setPromoOffer] = useState(product.promoOffer);
@@ -93,7 +93,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
       await updateProduct(product.id, {
         name,
         tags,
-        linekdin,
+        linkedin,
         weburl,
         suggestUrl,
         promoOffer,
@@ -261,7 +261,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
           <input
             type="text"
             className="border w-full focus:outline-none mt-6 p-4 rounded-xl"
-            value={linekdin}
+            value={linkedin}
             onChange={(e) => setLinekdin(e.target.value)}
           />
         </div>

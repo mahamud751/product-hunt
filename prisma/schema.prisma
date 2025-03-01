@@ -52,6 +52,7 @@ model User {
   education     Json?
   accounts      Account[]
   comments      Comment[]
+  reviews       Review[]
   notifications Notification[]
   products      Product[]
   sessions      Session[]
@@ -113,7 +114,7 @@ model Product {
   userId        String
   status        Status         @default(PENDING)
   categoryId    String
-  linekdin      String
+  linkedin      String
   price         String
   promoCode     String
   promoExpire   String
@@ -132,7 +133,9 @@ model Product {
   alternativeId String?
   subcategoryId String?
   priceOption   String
+  averageRating Float?
   comments      Comment[]
+  reviews       Review[]
   images        Image[]
   notification  Notification[]
   alternatives  Alternative[]
@@ -141,6 +144,7 @@ model Product {
   user          User           @relation(fields: [userId], references: [id])
   upvotes       Upvote[]
   views         Int            @default(0)
+
 
   @@index([userId])
   @@index([status])
@@ -173,10 +177,22 @@ model Comment {
   productId      String
   userId         String
   body           String
-  rating         Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   replies        Json?
+  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id             String   @id @default(cuid())
+  profilePicture String
+  productId      String
+  userId         String
+  body           String
+  rating         Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   user           User     @relation(fields: [userId], references: [id])
 }
@@ -188,6 +204,7 @@ model Notification {
   profilePicture String
   productId      String
   commentId      String?
+  reviewId       String?
   type           NotificationType
   status         NotificationStatus @default(UNREAD)
   createdAt      DateTime           @default(now())
@@ -230,4 +247,5 @@ enum NotificationType {
   COMMENT
   ACTIVATED
   REJECTED
+  REVIEW
 }

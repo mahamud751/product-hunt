@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { format, formatDistanceToNow } from "date-fns";
+
 import {
   Users,
   Award,
@@ -48,6 +50,8 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
 
   console.log("user", user);
 
+  const formattedDate = format(new Date(user?.createdAt), "MMMM do, yyyy");
+
   const tabs: { id: Tab; label: string }[] = [
     { id: "about", label: "About" },
     { id: "activity", label: "Activity" },
@@ -61,11 +65,11 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     linkedin: <Linkedin size={20} />,
     twitter: <Twitter size={20} />,
     github: <Github size={20} />,
-    website: <Globe size={20} />, // Use Globe icon for website or any other icon you prefer
+    website: <Globe size={20} />,
   };
 
   const getFilePreview = (file: { name: string; url: string }) => {
-    return file.url; // For existing data, we use the Cloudinary URL directly
+    return file.url;
   };
 
   const getFileName = (file: { name: string; url: string }) => {
@@ -118,33 +122,6 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     },
   ];
 
-  const products = [
-    {
-      id: 1,
-      name: "Bit Flows",
-      tagline: "Zapier alternative inside WordPress",
-      logo: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=48&h=48&q=80",
-      upvotes: 272,
-      tags: ["Api", "WordPress", "Marketing automation"],
-    },
-    {
-      id: 2,
-      name: "Pickle",
-      tagline: "Your AI body double for zoom calls",
-      logo: "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=48&h=48&q=80",
-      upvotes: 251,
-      tags: ["Meetings", "Video"],
-    },
-    {
-      id: 3,
-      name: "ChatGPT Deep Research",
-      tagline: "Agent capable of doing deep research for you independently",
-      logo: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=48&h=48&q=80",
-      upvotes: 575,
-      tags: ["GPT-4", "Artificial Intelligence", "Search"],
-    },
-  ];
-
   const upvotedProducts = [
     {
       id: 1,
@@ -177,46 +154,6 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
       logo: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=48&h=48&q=80",
       upvotes: 149,
       tags: ["Solo maker", "Productivity", "Notes"],
-    },
-  ];
-
-  const reviews = [
-    {
-      id: 1,
-      user: {
-        name: "Ankit Sharma",
-        avatar:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
-        date: "1yr ago",
-      },
-      product: {
-        name: "FuseBase /formerly Nimbus/",
-        description: "Client collaboration platform for professional services",
-        logo: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=48&h=48&q=80",
-        rating: 5,
-      },
-      content:
-        "One of the best tools for project management. It is not only a project management tool but also a client portal. It's super easy to use, and we love how it helps us talk, share files, and keep...",
-      helpfulCount: 7,
-    },
-    {
-      id: 2,
-      user: {
-        name: "Ankit Sharma",
-        avatar:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
-        date: "1yr ago",
-      },
-      product: {
-        name: "Picyard",
-        description:
-          "Design tool to transform your images into stunning visuals.",
-        logo: "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=48&h=48&q=80",
-        rating: 5,
-      },
-      content:
-        "Congratulations, guys. 😊 I've seen and used about 10 to 20 screenshot tools, but this one is really cool. It has numerous features. Thank you for keeping it free for the basic users",
-      helpfulCount: 3,
     },
   ];
 
@@ -614,7 +551,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                   <PartyPopper size={24} className="text-[#AF583B]" />
                   <span className="font-medium">Joined Product Hunt</span>
                 </div>
-                <span className="text-gray-600">August 19th, 2022</span>
+                <span className="text-gray-600">{formattedDate}</span>
               </div>
             </section>
           </div>
@@ -749,22 +686,27 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
 
         {activeTab === "reviews" && (
           <div className="space-y-6">
-            {reviews.map((review) => (
+            {user?.reviews.map((review: any) => (
               <div key={review.id} className="card hover:bg-white">
                 <div className="space-y-4">
                   {/* User Info */}
                   <div className="flex items-center gap-3">
-                    <img
-                      src={review.user.avatar}
-                      alt={review.user.name}
+                    <Image
+                      src={review?.user?.image}
+                      alt={review?.user?.name}
                       className="w-12 h-12 rounded-full"
+                      width={200}
+                      height={200}
                     />
                     <div>
                       <h3 className="font-bold text-gray-900">
-                        {review.user.name}
+                        {review?.user?.name}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        left a review • {review.user.date}
+                        left a review •{" "}
+                        {formatDistanceToNow(new Date(review?.createdAt), {
+                          addSuffix: true,
+                        })}
                       </p>
                     </div>
                   </div>
@@ -772,34 +714,34 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                   {/* Rating and Review */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
                     <img
-                      src={review.product.logo}
-                      alt={review.product.name}
+                      src={review?.product?.logo}
+                      alt={review?.product?.name}
                       className="w-12 h-12 rounded-lg"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div>
                           <h4 className="font-bold text-gray-900">
-                            {review.product.name}
+                            {review?.product?.name}
                           </h4>
                           <p className="text-sm text-gray-600">
-                            {review.product.description}
+                            {review?.product?.description}
                           </p>
                         </div>
-                        <StarRating rating={review.product.rating} />
+                        <StarRating rating={review?.product?.averageRating} />
                       </div>
                     </div>
                   </div>
 
                   {/* Review Content */}
-                  <p className="text-gray-600">{review.content}</p>
+                  <p className="text-gray-600">{review?.content}</p>
 
                   {/* Actions */}
                   <div className="flex items-center justify-between pt-2">
                     <button className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
                       <ThumbsUp size={16} />
                       <span className="text-sm">
-                        Helpful ({review.helpfulCount})
+                        Helpful ({review?.helpfulCount})
                       </span>
                     </button>
                     <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">

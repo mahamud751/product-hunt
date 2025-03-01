@@ -53,6 +53,7 @@ export interface User {
   updatedAt: Date;
   accounts: Account[];
   comments: Comment[];
+  reviews: Review[];
   notifications: Notification[];
   products: Product[];
   sessions: Session[];
@@ -136,6 +137,7 @@ export interface Product {
   logo?: string;
   releaseDate?: string;
   website?: string;
+  linkedin?: string;
   twitter?: string;
   discord?: string;
   createdAt: Date;
@@ -147,7 +149,6 @@ export interface Product {
   alternativeId?: string;
   subcategoryId?: string;
   subcategory?: Subcategory;
-  linekdin?: string;
   verified?: boolean;
   featured?: boolean;
   top?: boolean;
@@ -162,10 +163,12 @@ export interface Product {
   videoLink?: string;
   weburl?: string;
   comments: Comment[];
+  reviews: Review[];
   images: Image[];
   notification: Notification[];
   category: Category;
   user: User;
+  averageRating: number;
   upvotes: Upvote[];
   isMaker: boolean;
   makers: string[];
@@ -176,7 +179,7 @@ export interface ProductData {
   name: string;
   tags: string[];
   banner?: string;
-  linekdin: string;
+  linkedin: string;
   weburl: string;
   suggestUrl: string;
   promoOffer: string;
@@ -188,6 +191,7 @@ export interface ProductData {
   headline: string;
   description: string;
   logo: string;
+  averageRating?: number;
   releaseDate: string;
   promoExpire: string;
   website: string;
@@ -230,7 +234,18 @@ export interface Comment {
   body: string;
   createdAt: Date;
   updatedAt: Date;
-  replies?: any; // Use a more specific type if `replies` has a defined structure
+  replies?: any;
+  product: Product;
+  user: User;
+}
+export interface Review {
+  id: string;
+  profilePicture: string;
+  productId: string;
+  userId: string;
+  body: string;
+  createdAt: Date;
+  updatedAt: Date;
   product: Product;
   user: User;
   rating: number;

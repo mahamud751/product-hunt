@@ -1,5 +1,5 @@
 export const TINY_MCE_EDITOR_INIT = {
-  height: 600,
+  height: 400,
   content_style:
     "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
   importcss_append: true,

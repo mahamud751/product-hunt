@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Star,
   ThumbsUp,
@@ -22,13 +22,16 @@ import {
   commentOnProduct,
   getProductById,
   getUsers,
+  reviewOnProduct,
   updateComment,
 } from "@/lib/server-actions";
 import Image from "next/image";
 import Link from "next/link";
 import ImageSlider from "@/components/productDetails/ImageSlider";
-
 import { Product } from "@/services/types";
+import AllReviewSection from "@/components/productDetails/AllReviewSection";
+import { Editor } from "@tinymce/tinymce-react";
+import { TINY_MCE_EDITOR_INIT } from "@/lib/constants";
 
 // Define types based on your Prisma models
 interface User {
@@ -36,6 +39,18 @@ interface User {
   name?: string;
   image?: string;
   profilePicture?: string;
+}
+
+interface Review {
+  id: string;
+  profilePicture: string;
+  productId: string;
+  userId: string;
+  body: string;
+  rating: number;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
 }
 
 interface Comment {
@@ -48,7 +63,6 @@ interface Comment {
   updatedAt: Date;
   replies?: Reply[];
   user: User;
-  rating: number;
 }
 
 interface Reply {
@@ -71,12 +85,14 @@ interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   productId: string;
+  refetch: () => void; // Added refetch prop
 }
 
 const ReviewModal: React.FC<ReviewModalProps> = ({
   isOpen,
   onClose,
   productId,
+  refetch,
 }) => {
   const [rating, setRating] = useState<number>(0);
   const [isHovering, setIsHovering] = useState<number>(0);
@@ -84,9 +100,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleSubmit = async () => {
     try {
-      await commentOnProduct(productId, reviewText, rating);
+      await reviewOnProduct(productId, reviewText, rating);
       setRating(0);
       setReviewText("");
+      refetch(); // Trigger refetch after successful submission
       onClose();
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -168,28 +185,200 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 // Reviews Section Component
 interface ReviewsSectionProps {
   productId: string;
-  comments: Comment[];
+  reviews: Review[];
   activeTab: any;
   data: any;
   setIsReviewModalOpen: any;
+  isOverview?: boolean;
 }
 
 const ReviewsSection: React.FC<ReviewsSectionProps> = ({
   productId,
-  comments,
+  reviews,
   activeTab,
   data,
   setIsReviewModalOpen,
+  isOverview = false,
+}) => {
+  const [visibleReviews, setVisibleReviews] = useState<number>(2);
+  const reviewsPerPage = 10;
+  const [selectedSort, setSelectedSort] = useState<"newest" | "highest">(
+    "newest"
+  );
+
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+
+  const sortedReviews = [...safeReviews].sort((a, b) => {
+    if (selectedSort === "newest")
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    if (selectedSort === "highest") return b.rating - a.rating;
+    return 0;
+  });
+
+  const handleViewAllReviews = () => {
+    setVisibleReviews(reviewsPerPage);
+  };
+
+  const handleShowMoreReviews = () => {
+    setVisibleReviews((prev) => prev + reviewsPerPage);
+  };
+
+  const totalReviews = safeReviews.length;
+  const hasMoreReviews = visibleReviews < totalReviews;
+
+  return (
+    <section className="mb-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Reviews {data?.name}</h2>
+          <div className="flex items-center gap-2">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`w-4 h-4 ${
+                    star <= (data?.averageRating || 0)
+                      ? "text-[#FFC107] fill-[#FFC107]"
+                      : "text-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-gray-600">
+              {(data?.averageRating || 0).toFixed(1)} based on (
+              {safeReviews.length} reviews)
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setIsReviewModalOpen(true)}
+            className="px-4 py-2 bg-[#198E49] text-white rounded-lg hover:bg-[#198E49]/90 transition-colors mb-8"
+          >
+            Leave a Review
+          </button>
+          <div>
+            {isOverview && visibleReviews === 2 && (
+              <button
+                onClick={handleViewAllReviews}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
+              >
+                View all reviews
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {!isOverview && (
+        <AllReviewSection data={data} safeReviews={safeReviews} />
+      )}
+
+      {!isOverview && (
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-sm text-gray-600">Sort by:</span>
+          <select
+            value={selectedSort}
+            onChange={(e) =>
+              setSelectedSort(e.target.value as "newest" | "highest")
+            }
+            className="border rounded-lg p-1 text-sm"
+          >
+            <option value="newest">Newest</option>
+            <option value="highest">Highest Rated</option>
+          </select>
+        </div>
+      )}
+
+      <div className="space-y-6">
+        {sortedReviews?.slice(0, visibleReviews).map((review) => (
+          <div key={review.id} className="border rounded-lg p-6">
+            <div className="flex justify-between mb-4">
+              <div className="flex gap-3">
+                <Image
+                  src={review.profilePicture || "/default-avatar.png"}
+                  alt={review.user?.name || "User"}
+                  className="w-10 h-10 rounded-full"
+                  width={40}
+                  height={40}
+                />
+                <div>
+                  <div className="font-semibold">
+                    {review.user?.name || "Anonymous"}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    {new Date(review.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`w-4 h-4 ${
+                      star <= review.rating
+                        ? "text-[#FFC107] fill-[#FFC107]"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+            <p className="text-gray-600 mb-4">{review.body}</p>
+            <div className="flex gap-4 text-sm">
+              <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                <ThumbsUp className="w-4 h-4" />
+                <span>Helpful</span>
+              </button>
+              <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                <Share2 className="w-4 h-4" />
+                <span>Share</span>
+              </button>
+              <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                <Flag className="w-4 h-4" />
+                <span>Report</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {hasMoreReviews && visibleReviews >= reviewsPerPage && !isOverview && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={handleShowMoreReviews}
+            className="px-6 py-2 bg-[#AF583B] text-white rounded-lg hover:bg-[#AF583B]/90 transition-colors"
+          >
+            Show remaining reviews ({totalReviews - visibleReviews} more)
+          </button>
+        </div>
+      )}
+    </section>
+  );
+};
+
+// Comments Section Component
+interface CommentsSectionProps {
+  productId: string;
+  comments: Comment[];
+  data: any;
+  refetch: () => void; // Added refetch prop
+}
+
+const CommentsSection: React.FC<CommentsSectionProps> = ({
+  productId,
+  comments,
+  data,
+  refetch,
 }) => {
   const [showAllReplies, setShowAllReplies] = useState<{
     [key: string]: boolean;
   }>({});
   const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
-  const [selectedSort, setSelectedSort] = useState<"newest" | "highest">(
+  const [selectedSort, setSelectedSort] = useState<"newest" | "oldest">(
     "newest"
   );
-  const [visibleReviews, setVisibleReviews] = useState<number>(2); // Initially show 2 reviews
-  const reviewsPerPage = 10; // Load 10 reviews per click after "View all"
+  const [newCommentText, setNewCommentText] = useState<string>("");
 
   const handleReply = async (commentId: string) => {
     if (!replyText[commentId]) return;
@@ -207,127 +396,53 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
       ];
       await updateComment(commentId, { replies: updatedReplies });
       setReplyText((prev) => ({ ...prev, [commentId]: "" }));
+      refetch(); // Trigger refetch after updating reply
     } catch (error) {
       console.error("Error adding reply:", error);
+    }
+  };
+
+  const handleNewComment = async () => {
+    if (!newCommentText) return;
+    try {
+      await commentOnProduct(productId, newCommentText, 0);
+      setNewCommentText("");
+      refetch(); // Trigger refetch after adding new comment
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
   const sortedComments = [...comments].sort((a, b) => {
     if (selectedSort === "newest")
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    if (selectedSort === "highest") return b.rating - a.rating;
-    return 0;
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
-
-  const handleViewAllReviews = () => {
-    setVisibleReviews(reviewsPerPage);
-  };
-
-  const handleShowMoreReviews = () => {
-    setVisibleReviews((prev) => prev + reviewsPerPage);
-  };
-
-  const totalReviews = comments.length;
-  const hasMoreReviews = visibleReviews < totalReviews;
 
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-bold mb-2">Reviews {data?.name}</h2>
-          <div className="flex items-center gap-2">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`w-4 h-4 ${
-                    star <=
-                    comments.reduce((sum, c) => sum + c.rating, 0) /
-                      (comments.length || 1)
-                      ? "text-[#FFC107] fill-[#FFC107]"
-                      : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-gray-600">
-              {(
-                comments.reduce((sum, c) => sum + c.rating, 0) /
-                (comments.length || 1)
-              ).toFixed(1)}{" "}
-              based on ({comments.length} reviews)
-            </span>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setIsReviewModalOpen(true)}
-            className="px-4 py-2 bg-[#198E49] text-white rounded-lg hover:bg-[#198E49]/90 transition-colors mb-8"
-          >
-            Leave a Review
-          </button>
-          {activeTab === "overview" && visibleReviews === 2 && (
-            <div>
-              <button
-                onClick={handleViewAllReviews}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
-              >
-                View all reviews
-              </button>
-            </div>
-          )}
-        </div>
+        <h2 className="text-2xl font-bold">Comments ({comments.length})</h2>
       </div>
 
-      <div className="bg-[#F5F5F5] rounded-lg p-6 mb-8">
-        <div className="flex gap-8">
-          <div>
-            <div className="text-4xl font-bold">
-              {(
-                comments.reduce((sum, c) => sum + c.rating, 0) /
-                (comments.length || 1)
-              ).toFixed(1)}
-            </div>
-            <div className="flex gap-1 mb-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star
-                  key={star}
-                  className={`w-4 h-4 ${
-                    star <=
-                    comments.reduce((sum, c) => sum + c.rating, 0) /
-                      (comments.length || 1)
-                      ? "text-[#FFC107] fill-[#FFC107]"
-                      : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="text-sm text-gray-600">
-              {comments.length} reviews
-            </div>
-          </div>
-          <div className="flex-1">
-            {[5, 4, 3, 2, 1].map((rating) => {
-              const count = comments.filter((c) => c.rating === rating).length;
-              const percentage =
-                comments.length > 0 ? (count / comments.length) * 100 : 0;
-              return (
-                <div key={rating} className="flex items-center gap-2 mb-1">
-                  <span className="text-sm text-gray-600 w-4">{rating}</span>
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#FFC107]"
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-sm text-gray-600 w-12">
-                    {Math.round(percentage)}%
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      <div className="mb-6">
+        <Editor
+          apiKey="9i9siri6weyxjml0qbccbm35m7o5r42axcf3lv0mbr0k3pkl"
+          init={TINY_MCE_EDITOR_INIT}
+          value={newCommentText || ""}
+          onEditorChange={(newValue: string) => setNewCommentText(newValue)}
+        />
+        <button
+          onClick={handleNewComment}
+          disabled={!newCommentText}
+          className={`mt-2 px-4 py-2 rounded-lg text-white ${
+            newCommentText
+              ? "bg-[#AF583B] hover:bg-[#AF583B]/90"
+              : "bg-gray-300 cursor-not-allowed"
+          } transition-colors`}
+        >
+          Post Comment
+        </button>
       </div>
 
       <div className="flex items-center gap-2 mb-6">
@@ -335,24 +450,26 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
         <select
           value={selectedSort}
           onChange={(e) =>
-            setSelectedSort(e.target.value as "newest" | "highest")
+            setSelectedSort(e.target.value as "newest" | "oldest")
           }
           className="border rounded-lg p-1 text-sm"
         >
           <option value="newest">Newest</option>
-          <option value="highest">Highest Rated</option>
+          <option value="oldest">Oldest</option>
         </select>
       </div>
 
       <div className="space-y-6">
-        {sortedComments.slice(0, visibleReviews).map((comment) => (
+        {sortedComments.map((comment) => (
           <div key={comment.id} className="border rounded-lg p-6">
             <div className="flex justify-between mb-4">
               <div className="flex gap-3">
-                <img
+                <Image
                   src={comment.profilePicture || "/default-avatar.png"}
                   alt={comment.user?.name || "User"}
                   className="w-10 h-10 rounded-full"
+                  width={40}
+                  height={40}
                 />
                 <div>
                   <div className="font-semibold">
@@ -363,20 +480,11 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-4 h-4 ${
-                      star <= comment.rating
-                        ? "text-[#FFC107] fill-[#FFC107]"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
-            <p className="text-gray-600 mb-4">{comment.body}</p>
+            <p
+              className="text-gray-600 mb-4"
+              dangerouslySetInnerHTML={{ __html: comment.body }}
+            />
             <div className="flex gap-4 text-sm">
               <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
                 <ThumbsUp className="w-4 h-4" />
@@ -403,16 +511,16 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
 
             {replyText[comment.id] !== undefined && (
               <div className="mt-4">
-                <textarea
-                  value={replyText[comment.id]}
-                  onChange={(e) =>
+                <Editor
+                  apiKey="9i9siri6weyxjml0qbccbm35m7o5r42axcf3lv0mbr0k3pkl"
+                  init={TINY_MCE_EDITOR_INIT}
+                  value={replyText[comment.id] || ""}
+                  onEditorChange={(newValue: string) =>
                     setReplyText((prev) => ({
                       ...prev,
-                      [comment.id]: e.target.value,
+                      [comment.id]: newValue,
                     }))
                   }
-                  placeholder="Write a reply..."
-                  className="w-full p-2 border rounded-lg resize-none"
                 />
                 <button
                   onClick={() => handleReply(comment.id)}
@@ -435,10 +543,12 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
                   : comment.replies.slice(0, 1)
                 ).map((reply, index) => (
                   <div key={index} className="flex gap-3 mb-4">
-                    <img
+                    <Image
                       src={reply.profilePicture || "/default-avatar.png"}
                       alt="Reply author"
                       className="w-8 h-8 rounded-full"
+                      width={32}
+                      height={32}
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -447,7 +557,10 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
                           {new Date(reply.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-gray-600 text-sm mt-1">{reply.body}</p>
+                      <p
+                        className="text-gray-600 text-sm mt-1"
+                        dangerouslySetInnerHTML={{ __html: reply.body }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -469,18 +582,6 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
           </div>
         ))}
       </div>
-
-      {/* Show More Button */}
-      {hasMoreReviews && visibleReviews >= reviewsPerPage && (
-        <div className="mt-6 text-center">
-          <button
-            onClick={handleShowMoreReviews}
-            className="px-6 py-2 bg-[#AF583B] text-white rounded-lg hover:bg-[#AF583B]/90 transition-colors"
-          >
-            Show remaining reviews ({totalReviews - visibleReviews} more)
-          </button>
-        </div>
-      )}
     </section>
   );
 };
@@ -488,14 +589,17 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
 // Main App Component
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "launches" | "reviews"
+    "overview" | "reviews" | "comments"
   >("overview");
+  const [overviewSubTab, setOverviewSubTab] = useState<"reviews" | "comments">(
+    "reviews"
+  );
   const [isReviewModalOpen, setIsReviewModalOpen] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
   const [data, setData] = useState<Product | null>(null);
-  const [users, setUsers] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const alternatives: Alternative[] = [
@@ -536,31 +640,37 @@ const App: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    const fetchProductDetails = async () => {
-      if (!id) return;
-      try {
-        const productData = await getProductById(id);
-        setData(productData as unknown as Product);
-      } catch (error) {
-        console.error("Error fetching product details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProductDetails();
+  // Refetch function
+  const fetchProductDetails = useCallback(async () => {
+    if (!id) return;
+    try {
+      setLoading(true);
+      const productData = await getProductById(id);
+      setData({
+        ...productData,
+        reviews: Array.isArray(productData?.reviews) ? productData.reviews : [],
+        comments: Array.isArray(productData?.comments)
+          ? productData.comments
+          : [],
+      } as unknown as Product);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  useEffect(() => {
+    fetchProductDetails(); // Initial fetch
+  }, [fetchProductDetails]);
+
   useEffect(() => {
     const fetchUsers = async () => {
-      if (!id) return;
       try {
-        const users = await getUsers();
-        setUsers(users as any);
+        const usersData = await getUsers();
+        setUsers(usersData as User[]);
       } catch (error) {
         console.error("Error fetching user details:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchUsers();
@@ -569,9 +679,6 @@ const App: React.FC = () => {
   const makers = Array.isArray(users)
     ? users.filter((user) => data?.makers?.includes(user.id))
     : [];
-
-  console.log(data);
-  console.log(makers);
 
   if (loading)
     return (
@@ -612,12 +719,7 @@ const App: React.FC = () => {
                         <Star
                           key={star}
                           className={`w-4 h-4 ${
-                            star <=
-                            data.comments.reduce(
-                              (sum, c) => sum + c.rating,
-                              0
-                            ) /
-                              (data.comments.length || 1)
+                            star <= (data.averageRating || 0)
                               ? "text-[#FFC107] fill-[#FFC107]"
                               : "text-gray-300"
                           }`}
@@ -626,9 +728,9 @@ const App: React.FC = () => {
                     </div>
                   </div>
                   <span>•</span>
-                  <span>{data.comments.length} reviews</span>
+                  <span>{data.reviews.length} reviews</span>
                   <span>•</span>
-                  <span>{data.comments.length} reviews</span>
+                  <span>{data.comments.length} comments</span>
                 </div>
               </div>
             </div>
@@ -672,7 +774,7 @@ const App: React.FC = () => {
       <nav className="border-b sticky top-0 bg-white z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex space-x-8">
-            {(["overview", "launches", "reviews"] as const).map((tab) => (
+            {(["overview", "reviews", "comments"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -700,18 +802,6 @@ const App: React.FC = () => {
                 <section className="mb-8">
                   <h2 className="text-2xl font-bold mb-4">Overview</h2>
                   <p className="text-gray-600 mb-6">{data.description}</p>
-                  {/* User Poll */}
-                  <div className="bg-[#F5F5F5] rounded-lg p-6 mb-8">
-                    <h3 className="font-semibold mb-4">Do you use this?</h3>
-                    <div className="flex gap-4">
-                      <button className="bg-[#AF583B] text-white px-4 py-2 rounded-lg hover:bg-[#AF583B]/90 transition-colors">
-                        I use this
-                      </button>
-                      <button className="bg-[#198E49] text-white px-4 py-2 rounded-lg hover:bg-[#198E49]/90 transition-colors">
-                        I use something else
-                      </button>
-                    </div>
-                  </div>
 
                   <div className="relative overflow-hidden rounded-lg mb-8">
                     <ImageSlider photos={data.photos || []} />
@@ -723,23 +813,23 @@ const App: React.FC = () => {
                     Awards & Recognition
                   </h2>
                   <div className="grid grid-cols-2 gap-4">
-                    {/* {data.featured && ( */}
-                    <div className="bg-white p-4 rounded-lg">
-                      <Star className="w-6 h-6 text-[#FFC107] mb-2" />
-                      <h3 className="font-semibold mb-1">Featured Product</h3>
-                      <p className="text-sm text-gray-600">2023</p>
-                    </div>
-                    {/* )} */}
-                    {/* {data.top && ( */}
-                    <div className="bg-white p-4 rounded-lg">
-                      <Trophy className="w-6 h-6 text-purple-600 mb-2" />
-                      <h3 className="font-semibold mb-1">Top Ranked</h3>
-                      <p className="text-sm text-gray-600">2023</p>
-                    </div>
-                    {/* )} */}
+                    {data.featured && (
+                      <div className="bg-white p-4 rounded-lg">
+                        <Star className="w-6 h-6 text-[#FFC107] mb-2" />
+                        <h3 className="font-semibold mb-1">Featured Product</h3>
+                        <p className="text-sm text-gray-600">2023</p>
+                      </div>
+                    )}
+                    {data.top && (
+                      <div className="bg-white p-4 rounded-lg">
+                        <Trophy className="w-6 h-6 text-purple-600 mb-2" />
+                        <h3 className="font-semibold mb-1">Top Ranked</h3>
+                        <p className="text-sm text-gray-600">2023</p>
+                      </div>
+                    )}
                   </div>
                 </section>
-                {/* Recent Launches */}
+
                 <section className="mb-8">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold">Recent Launches</h2>
@@ -769,56 +859,70 @@ const App: React.FC = () => {
                     ))}
                   </div>
                 </section>
+                <AllReviewSection data={data} safeReviews={data.reviews} />
 
-                {/* Alternatives */}
-                <section className="mb-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Alternatives</h2>
-                    <button className="text-[#AF583B] hover:underline">
-                      View all alternatives
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    {[1, 2].map((alt) => (
-                      <div key={alt} className="border rounded-lg p-4">
-                        <div className="flex gap-3 mb-2">
-                          <div className="w-12 h-12 bg-gray-100 rounded-lg"></div>
-                          <div>
-                            <h3 className="font-semibold">Alternative {alt}</h3>
-                            <p className="text-sm text-gray-600">
-                              Similar workspace solution
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Star className="w-4 h-4 text-[#FFC107]" />
-                          <span className="text-sm text-gray-600">4.8/5</span>
-                        </div>
-                      </div>
+                {/* Nested Tabs for Reviews and Comments */}
+                <div className="mb-8">
+                  <div className="flex space-x-8 border-b mb-4">
+                    {(["reviews", "comments"] as const).map((subTab) => (
+                      <button
+                        key={subTab}
+                        onClick={() => setOverviewSubTab(subTab)}
+                        className={`py-2 px-1 relative ${
+                          overviewSubTab === subTab
+                            ? "text-[#AF583B]"
+                            : "text-gray-500 hover:text-gray-700"
+                        }`}
+                      >
+                        {subTab.charAt(0).toUpperCase() + subTab.slice(1)}
+                        {overviewSubTab === subTab && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#AF583B]" />
+                        )}
+                      </button>
                     ))}
                   </div>
-                </section>
 
-                <ReviewsSection
-                  productId={data.id}
-                  comments={data.comments}
-                  activeTab={activeTab}
-                  data={data}
-                  setIsReviewModalOpen={setIsReviewModalOpen}
-                />
+                  {overviewSubTab === "reviews" && (
+                    <ReviewsSection
+                      productId={data.id}
+                      reviews={data.reviews}
+                      activeTab={activeTab}
+                      data={data}
+                      setIsReviewModalOpen={setIsReviewModalOpen}
+                      isOverview={true}
+                    />
+                  )}
+
+                  {overviewSubTab === "comments" && (
+                    <CommentsSection
+                      productId={data.id}
+                      comments={data.comments}
+                      data={data}
+                      refetch={fetchProductDetails}
+                    />
+                  )}
+                </div>
               </div>
             )}
 
             {activeTab === "reviews" && (
-              <div>
-                <ReviewsSection
-                  productId={data.id}
-                  comments={data.comments}
-                  activeTab={activeTab}
-                  data={data}
-                  setIsReviewModalOpen={setIsReviewModalOpen}
-                />
-              </div>
+              <ReviewsSection
+                productId={data.id}
+                reviews={data.reviews}
+                activeTab={activeTab}
+                data={data}
+                setIsReviewModalOpen={setIsReviewModalOpen}
+                isOverview={false}
+              />
+            )}
+
+            {activeTab === "comments" && (
+              <CommentsSection
+                productId={data.id}
+                comments={data.comments}
+                data={data}
+                refetch={fetchProductDetails}
+              />
             )}
           </div>
 
@@ -859,27 +963,9 @@ const App: React.FC = () => {
                       <Twitter className="w-5 h-5 text-gray-600 hover:text-black cursor-pointer" />
                     </a>
                   )}
-                  {data.linekdin && (
+                  {data.linkedin && (
                     <a
-                      href={data.linekdin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Linkedin className="w-5 h-5 text-gray-600 hover:text-black cursor-pointer" />
-                    </a>
-                  )}
-                  {data.twitter && (
-                    <a
-                      href={data.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Twitter className="w-5 h-5 text-gray-600 hover:text-black cursor-pointer" />
-                    </a>
-                  )}
-                  {data.linekdin && (
-                    <a
-                      href={data.linekdin}
+                      href={data.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -891,31 +977,29 @@ const App: React.FC = () => {
 
               <div className="border-t pt-6 mb-6">
                 <h3 className="font-semibold mb-4">Makers</h3>
-
                 <div className="flex -space-x-2">
-                  {makers?.map((data, index) => {
-                    return (
-                      <Image
-                        key={index}
-                        src={data?.image}
-                        alt="profile"
-                        className="w-10 h-10 rounded-full border-2 border-white"
-                        width={100}
-                        height={100}
-                      />
-                    );
-                  })}
+                  {makers?.map((maker, index) => (
+                    <Image
+                      key={index}
+                      src={maker?.image || "/default-avatar.png"}
+                      alt="profile"
+                      className="w-10 h-10 rounded-full border-2 border-white"
+                      width={100}
+                      height={100}
+                    />
+                  ))}
                 </div>
               </div>
 
-              {/* Updated Sponsored Ad Card */}
               <div className="border rounded-lg p-4 mb-6">
                 <div className="flex items-start justify-between mb-2">
                   <span className="text-xs text-gray-500">Ad</span>
-                  <img
+                  <Image
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=40&h=40&q=80"
                     alt="Efficient App"
                     className="w-10 h-10 rounded-lg"
+                    width={40}
+                    height={40}
                   />
                 </div>
                 <h4 className="font-semibold text-lg mb-2">Efficient App</h4>
@@ -929,7 +1013,6 @@ const App: React.FC = () => {
                 </button>
               </div>
 
-              {/* Product Alternatives Section */}
               <div className="border-t pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold">Product Alternatives</h3>
@@ -979,6 +1062,7 @@ const App: React.FC = () => {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         productId={data.id}
+        refetch={fetchProductDetails}
       />
     </div>
   );

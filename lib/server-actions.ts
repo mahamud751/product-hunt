@@ -57,7 +57,7 @@ export const createProduct = async ({
   name,
   tags,
   banner,
-  linekdin,
+  linkedin,
   weburl,
   suggestUrl,
   promoOffer,
@@ -80,6 +80,7 @@ export const createProduct = async ({
   isMaker,
   makers,
   photos,
+  averageRating,
 }: ProductData): Promise<any> => {
   try {
     const authenticatedUser = await auth();
@@ -114,7 +115,7 @@ export const createProduct = async ({
         name,
         tags,
         banner,
-        linekdin,
+        linkedin,
         weburl,
         suggestUrl,
         promoOffer,
@@ -127,6 +128,7 @@ export const createProduct = async ({
         headline,
         description,
         logo,
+        averageRating,
         releaseDate,
         promoExpire,
         website,
@@ -478,6 +480,11 @@ export const getProductById = async (productId: string) => {
             user: true,
           },
         },
+        reviews: {
+          include: {
+            user: true,
+          },
+        },
         upvotes: {
           include: {
             user: true,
@@ -487,9 +494,26 @@ export const getProductById = async (productId: string) => {
       },
     });
 
+    if (!product) return null;
+
+    // Recalculate averageRating to ensure it’s current
+    const reviews = product.reviews;
+    const avgRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0.0;
+
+    if (product.averageRating !== avgRating) {
+      await db.product.update({
+        where: { id: productId },
+        data: { averageRating: avgRating },
+      });
+      product.averageRating = avgRating; // Update the returned object
+    }
+
     return product;
   } catch (error) {
-    console.error(error);
+    console.error("Error getting product by id:", error);
     return null;
   }
 };
@@ -676,6 +700,80 @@ export const getTopUpvotedProducts = async (
   return topUpvotedProducts;
 };
 
+export const reviewOnProduct = async (
+  productId: string,
+  reviewText: string,
+  rating: number
+) => {
+  try {
+    const authenticatedUser = await auth();
+
+    if (
+      !authenticatedUser ||
+      !authenticatedUser.user ||
+      !authenticatedUser.user.id
+    ) {
+      throw new Error("User ID is missing or invalid");
+    }
+
+    const userId = authenticatedUser.user.id;
+    const profilePicture = authenticatedUser?.user?.image || "";
+
+    // Create a new review
+    await db.review.create({
+      data: {
+        createdAt: new Date(),
+        productId,
+        userId,
+        body: reviewText,
+        profilePicture: profilePicture,
+        rating: rating,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    // Calculate and update average rating
+    const reviews = await db.review.findMany({
+      where: { productId },
+      select: { rating: true },
+    });
+    const avgRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0.0;
+
+    await db.product.update({
+      where: { id: productId },
+      data: { averageRating: avgRating },
+    });
+
+    // Fetch product details for notification
+    const productDetails = await db.product.findUnique({
+      where: { id: productId },
+      select: { userId: true, name: true },
+    });
+
+    // Notify the product owner if the reviewer is not the owner
+    if (productDetails && productDetails.userId !== userId) {
+      await db.notification.create({
+        data: {
+          userId: productDetails.userId,
+          body: `Reviewed your product "${productDetails.name}" with a ${rating}-star rating`,
+          profilePicture: profilePicture,
+          productId: productId,
+          type: "REVIEW",
+          status: "UNREAD",
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error reviewing product:", error);
+    throw error;
+  }
+};
+
 export const commentOnProduct = async (
   productId: string,
   commentText: string,
@@ -701,7 +799,6 @@ export const commentOnProduct = async (
         createdAt: new Date(),
         productId,
         userId,
-        rating,
         body: commentText,
         profilePicture: profilePicture,
       },
@@ -1460,7 +1557,26 @@ export const getUser = async (userId: string) => {
       id: userId,
     },
     include: {
-      products: true,
+      products: {
+        include: {
+          category: true,
+        },
+      },
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+      reviews: {
+        include: {
+          user: true,
+          product: {
+            include: {
+              reviews: true,
+            },
+          },
+        },
+      },
     },
   });
 

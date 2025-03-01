@@ -789,7 +789,7 @@ const NewProduct: React.FC = () => {
         tags: formData.tags,
 
         //@ts-ignore
-        linekdin: formData.socialLinks.linkedin,
+        linkedin: formData.socialLinks.linkedin,
         weburl: formData.websiteUrl,
         suggestUrl: "",
         promoOffer,
@@ -892,9 +892,9 @@ const NewProduct: React.FC = () => {
           tooltip="Add relevant tags to help people discover your product."
         >
           <MultiSelect
-            options={categories?.map((cat) => cat.name)}
-            value={formData.tags}
-            onChange={(value) => handleInputChange("tags", value)}
+            options={categories?.map((cat) => cat.name) || []} // Ensure options are available
+            value={formData.tags} // Array of selected tags
+            onChange={(value) => handleInputChange("tags", value)} // Passes array directly
             placeholder="e.g., SaaS, AI, Productivity"
             maxItems={3}
           />
@@ -1129,6 +1129,7 @@ const NewProduct: React.FC = () => {
             onFileSelect={(file) => handleProductImagesUpload([file])}
             value={formData.productImages[0]}
             className="h-48"
+            multiple
           />
         </div>
         <div className="mt-2 grid grid-cols-3 gap-4">
