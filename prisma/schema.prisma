@@ -33,6 +33,17 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String   // e.g., "COMMENTED", "REVIEWED"
+  targetId  String   // ID of the comment or review
+  productId String   // Associated product
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
 model User {
   id              String           @id @default(cuid())
   image           String?
@@ -60,6 +71,7 @@ model User {
   blogs           Blog[]
   helpfulComments CommentHelpful[]
   helpfulReviews  ReviewHelpful[]
+  activityLogs  ActivityLog[]
 }
 
 model Category {
@@ -146,6 +158,7 @@ model Product {
   user          User           @relation(fields: [userId], references: [id])
   upvotes       Upvote[]
   views         Int            @default(0)
+  activityLogs  ActivityLog[]
 
   @@index([userId])
   @@index([status])
@@ -210,7 +223,7 @@ model Review {
   helpful        Int             @default(0) // Total helpful count
   product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   user           User            @relation(fields: [userId], references: [id])
-  helpfulUsers   ReviewHelpful[] // Relation to track users who marked it helpful
+  helpfulUsers   ReviewHelpful[] 
 }
 
 model ReviewHelpful {
@@ -221,7 +234,7 @@ model ReviewHelpful {
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([reviewId, userId]) // Ensure a user can only mark a review helpful once
+  @@unique([reviewId, userId]) 
 }
 
 model Notification {
