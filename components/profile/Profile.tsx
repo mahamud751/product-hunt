@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { format, formatDistanceToNow } from "date-fns";
-
 import {
   Users,
   Award,
@@ -27,9 +26,15 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/services/types";
+import {
+  getUser,
+  getUserActivityLogs,
+  toggleReviewHelpful,
+} from "@/lib/server-actions";
 
 interface AvatarProps {
   user: any;
+  activityLogs: any;
 }
 
 type Tab =
@@ -41,14 +46,39 @@ type Tab =
   | "reviews"
   | "products";
 
-const Profile: React.FC<AvatarProps> = ({ user }) => {
+const Profile: React.FC<AvatarProps> = ({
+  user: initialUser,
+  activityLogs: initialActivityLogs,
+}) => {
   const [showAll, setShowAll] = useState(false);
   const [showAllExp, setShowAllExp] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("about");
   const [searchQuery, setSearchQuery] = useState("");
   const [showFullBio, setShowFullBio] = useState(false);
+  const [user, setUser] = useState(initialUser);
+  const [activityLogs, setActivityLogs] = useState(initialActivityLogs);
+
+  const authenticatedUserId = initialUser?.id || "";
+
+  const refetch = useCallback(async () => {
+    if (!authenticatedUserId) return;
+    try {
+      const updatedUser = await getUser(authenticatedUserId);
+      const updatedLogs = await getUserActivityLogs(authenticatedUserId);
+      setUser(updatedUser);
+      setActivityLogs(updatedLogs);
+    } catch (error) {
+      console.error("Error refetching data:", error);
+    }
+  }, [authenticatedUserId]);
+
+  useEffect(() => {
+    setUser(initialUser);
+    setActivityLogs(initialActivityLogs);
+  }, [initialUser, initialActivityLogs]);
 
   console.log("user", user);
+  console.log("activityLogs", activityLogs);
 
   const formattedDate = format(new Date(user?.createdAt), "MMMM do, yyyy");
 
@@ -61,6 +91,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     { id: "knowledge", label: "Knowledge" },
     { id: "reviews", label: "Reviews" },
   ];
+
   const platformIcons = {
     linkedin: <Linkedin size={20} />,
     twitter: <Twitter size={20} />,
@@ -170,6 +201,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     (sum, product) => sum + product.upvotes,
     0
   );
+
   const formatDate = (dateString: string) => {
     if (!dateString) return "Present";
     const date = new Date(dateString);
@@ -196,6 +228,19 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
     );
   };
 
+  const isHelpfulByUser = (review: any) =>
+    review.helpfulUsers?.some((h: any) => h.userId === authenticatedUserId) ||
+    false;
+
+  const handleToggleHelpful = async (reviewId: string) => {
+    try {
+      await toggleReviewHelpful(reviewId);
+      await refetch(); // Refetch user data and activity logs after toggling
+    } catch (error) {
+      console.error("Error toggling review helpful:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -203,7 +248,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex items-center gap-8">
             <Image
-              src={user?.image}
+              src={user?.image || "/default-avatar.png"}
               alt="profile"
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
               width={200}
@@ -211,9 +256,11 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
             />
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-[#1F1F1F]">
-                {user?.name}
+                {user?.name || "Anonymous"}
               </h1>
-              <p className="text-lg text-gray-600 mt-1">{user?.headline}</p>
+              <p className="text-lg text-gray-600 mt-1">
+                {user?.headline || ""}
+              </p>
               <div className="flex items-center gap-6 mt-4">
                 <div className="flex items-center gap-2">
                   <Users size={18} />
@@ -229,22 +276,32 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                 </div>
               </div>
             </div>
-            <button className="btn-primary">Follow</button>
+            <button className="px-4 py-2 bg-[#AF583B] text-white rounded-lg hover:bg-[#8F4731] transition-colors">
+              Follow
+            </button>
           </div>
         </div>
       </header>
 
       {/* Navigation */}
-      <nav className="sticky top-0 bg-white shadow-sm z-10">
+      <nav className="sticky top-0 bg-white shadow-sm z-10 border-b">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex space-x-6">
+          <div className="flex space-x-8">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={clsx("tab", activeTab === tab.id && "active")}
+                className={clsx(
+                  "relative py-4 px-2 text-base font-medium transition-colors",
+                  activeTab === tab.id
+                    ? "text-[#AF583B]"
+                    : "text-gray-600 hover:text-gray-800"
+                )}
               >
                 {tab.label}
+                {activeTab === tab.id && (
+                  <span className="absolute bottom-0 left-0 w-full h-1 bg-[#AF583B] rounded-t" />
+                )}
               </button>
             ))}
           </div>
@@ -280,12 +337,11 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-4">Links</h2>
               <div className="flex gap-4">
-                {user.socialLinks?.map((link: any, index: number) =>
+                {user?.socialLinks?.map((link: any, index: number) =>
                   link.url ? (
                     <Link
                       key={index}
                       href={link.url}
-                      passHref
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900"
@@ -305,8 +361,11 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
             <section className="bg-white rounded-2xl border p-6">
               <h2 className="text-xl font-bold mb-4">Interests</h2>
               <div className="flex flex-wrap gap-2">
-                {user?.interests.map((interest: string, index: number) => (
-                  <span key={index} className="badge">
+                {user?.interests?.map((interest: string, index: number) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                  >
                     {interest}
                   </span>
                 ))}
@@ -505,7 +564,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                               src={
                                 "https://i.ibb.co.com/XZ5ggT15/istockphoto-1147544807-612x612.jpg"
                               }
-                              alt={edu.school}
+                              alt={edu.institution || "Education"}
                               className="w-12 h-12 rounded-lg"
                               height={200}
                               width={200}
@@ -524,8 +583,7 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                             />
                           </div>
                           <p className="text-gray-800">{edu?.degree}</p>
-                          <p className="text-gray-600">{`${startYear} - ${endYear}`}</p>{" "}
-                          {/* Year range */}
+                          <p className="text-gray-600">{`${startYear} - ${endYear}`}</p>
                         </div>
                       </div>
                     );
@@ -610,9 +668,6 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                         <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                           <ArrowUp size={20} className="text-gray-500" />
                         </button>
-                        {/* <span className="text-sm font-medium">
-                          {product?.upvotes}
-                        </span> */}
                       </div>
                     </div>
                   </div>
@@ -692,15 +747,15 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                   {/* User Info */}
                   <div className="flex items-center gap-3">
                     <Image
-                      src={review?.user?.image}
-                      alt={review?.user?.name}
+                      src={review?.user?.image || "/default-avatar.png"}
+                      alt={review?.user?.name || "Anonymous"}
                       className="w-12 h-12 rounded-full"
                       width={200}
                       height={200}
                     />
                     <div>
                       <h3 className="font-bold text-gray-900">
-                        {review?.user?.name}
+                        {review?.user?.name || "Anonymous"}
                       </h3>
                       <p className="text-sm text-gray-500">
                         left a review •{" "}
@@ -714,34 +769,49 @@ const Profile: React.FC<AvatarProps> = ({ user }) => {
                   {/* Rating and Review */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
                     <img
-                      src={review?.product?.logo}
-                      alt={review?.product?.name}
+                      src={review?.product?.logo || "/default-product.png"}
+                      alt={review?.product?.name || "Product"}
                       className="w-12 h-12 rounded-lg"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <div>
                           <h4 className="font-bold text-gray-900">
-                            {review?.product?.name}
+                            {review?.product?.name || "Unknown Product"}
                           </h4>
                           <p className="text-sm text-gray-600">
-                            {review?.product?.description}
+                            {review?.product?.description || "No description"}
                           </p>
                         </div>
-                        <StarRating rating={review?.product?.averageRating} />
+                        <StarRating rating={review?.rating || 0} />
                       </div>
                     </div>
                   </div>
 
                   {/* Review Content */}
-                  <p className="text-gray-600">{review?.content}</p>
+                  <p className="text-gray-600">
+                    {review?.body || "No content"}
+                  </p>
 
                   {/* Actions */}
                   <div className="flex items-center justify-between pt-2">
-                    <button className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
-                      <ThumbsUp size={16} />
+                    <button
+                      onClick={() => handleToggleHelpful(review.id)}
+                      className={clsx(
+                        "flex items-center gap-2",
+                        isHelpfulByUser(review)
+                          ? "text-green-500"
+                          : "text-gray-500 hover:text-gray-700"
+                      )}
+                    >
+                      <ThumbsUp
+                        size={16}
+                        className={
+                          isHelpfulByUser(review) ? "fill-green-500" : ""
+                        }
+                      />
                       <span className="text-sm">
-                        Helpful ({review?.helpfulCount})
+                        Helpful ({review?.helpful || 0})
                       </span>
                     </button>
                     <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">

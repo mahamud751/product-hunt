@@ -721,8 +721,7 @@ export const reviewOnProduct = async (
     const userId = authenticatedUser.user.id;
     const profilePicture = authenticatedUser?.user?.image || "";
 
-    // Create a new review
-    await db.review.create({
+    const review = await db.review.create({
       data: {
         createdAt: new Date(),
         productId,
@@ -730,34 +729,39 @@ export const reviewOnProduct = async (
         body: reviewText,
         profilePicture: profilePicture,
         rating: rating,
+        helpful: 0,
       },
       include: {
         user: true,
       },
     });
 
-    // Calculate and update average rating
-    const reviews = await db.review.findMany({
-      where: { productId },
-      select: { rating: true },
+    // Log the full review object as JSON
+    await db.activityLog.create({
+      data: {
+        userId,
+        action: "REVIEWED",
+        targetId: review.id,
+        productId,
+        details: {
+          id: review.id,
+          profilePicture: review.profilePicture,
+          productId: review.productId,
+          userId: review.userId,
+          body: review.body,
+          rating: review.rating,
+          createdAt: review.createdAt.toISOString(),
+          updatedAt: review.updatedAt.toISOString(),
+          helpful: review.helpful,
+        },
+      },
     });
-    const avgRating =
-      reviews.length > 0
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        : 0.0;
 
-    await db.product.update({
-      where: { id: productId },
-      data: { averageRating: avgRating },
-    });
-
-    // Fetch product details for notification
     const productDetails = await db.product.findUnique({
       where: { id: productId },
       select: { userId: true, name: true },
     });
 
-    // Notify the product owner if the reviewer is not the owner
     if (productDetails && productDetails.userId !== userId) {
       await db.notification.create({
         data: {
@@ -770,6 +774,8 @@ export const reviewOnProduct = async (
         },
       });
     }
+
+    return review;
   } catch (error) {
     console.error("Error reviewing product:", error);
     throw error;
@@ -793,30 +799,45 @@ export const commentOnProduct = async (
     }
 
     const userId = authenticatedUser.user.id;
-
     const profilePicture = authenticatedUser?.user?.image || "";
 
-    await db.comment.create({
+    const comment = await db.comment.create({
       data: {
         createdAt: new Date(),
         productId,
         userId,
         body: commentText,
         profilePicture: profilePicture,
+        helpful: 0,
       },
       include: {
         user: true,
       },
     });
 
+    // Log the full comment object as JSON
+    await db.activityLog.create({
+      data: {
+        userId,
+        action: "COMMENTED",
+        targetId: comment.id,
+        productId,
+        details: {
+          id: comment.id,
+          profilePicture: comment.profilePicture,
+          productId: comment.productId,
+          userId: comment.userId,
+          body: comment.body,
+          createdAt: comment.createdAt.toISOString(),
+          updatedAt: comment.updatedAt.toISOString(),
+          helpful: comment.helpful,
+        },
+      },
+    });
+
     const productDetails = await db.product.findUnique({
-      where: {
-        id: productId,
-      },
-      select: {
-        userId: true,
-        name: true,
-      },
+      where: { id: productId },
+      select: { userId: true, name: true },
     });
 
     if (productDetails && productDetails.userId !== userId) {
@@ -831,8 +852,27 @@ export const commentOnProduct = async (
         },
       });
     }
+
+    return comment;
   } catch (error) {
     console.error("Error commenting on product:", error);
+    throw error;
+  }
+};
+
+export const getUserActivityLogs = async (userId: string) => {
+  try {
+    const logs = await db.activityLog.findMany({
+      where: { userId },
+      include: {
+        user: true,
+        product: { select: { id: true, name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return logs;
+  } catch (error) {
+    console.error("Error fetching activity logs:", error);
     throw error;
   }
 };

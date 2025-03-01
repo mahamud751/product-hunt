@@ -36,12 +36,15 @@ model Session {
 model ActivityLog {
   id        String   @id @default(cuid())
   userId    String
-  action    String   // e.g., "COMMENTED", "REVIEWED"
-  targetId  String   // ID of the comment or review
-  productId String   // Associated product
+  action    String 
+  targetId  String 
+  productId String 
+  details   Json 
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -71,7 +74,7 @@ model User {
   blogs           Blog[]
   helpfulComments CommentHelpful[]
   helpfulReviews  ReviewHelpful[]
-  activityLogs  ActivityLog[]
+  activityLogs    ActivityLog[]
 }
 
 model Category {
@@ -223,7 +226,7 @@ model Review {
   helpful        Int             @default(0) // Total helpful count
   product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   user           User            @relation(fields: [userId], references: [id])
-  helpfulUsers   ReviewHelpful[] 
+  helpfulUsers   ReviewHelpful[]
 }
 
 model ReviewHelpful {
@@ -234,7 +237,7 @@ model ReviewHelpful {
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([reviewId, userId]) 
+  @@unique([reviewId, userId])
 }
 
 model Notification {
