@@ -23,6 +23,8 @@ import {
   getProductById,
   getUsers,
   reviewOnProduct,
+  toggleHelpful,
+  toggleReviewHelpful,
   updateComment,
 } from "@/lib/server-actions";
 import Image from "next/image";
@@ -51,6 +53,8 @@ interface Review {
   createdAt: Date;
   updatedAt: Date;
   user: User;
+  helpful: number;
+  helpfulUsers?: { userId: string }[];
 }
 
 interface Comment {
@@ -63,6 +67,8 @@ interface Comment {
   updatedAt: Date;
   replies?: Reply[];
   user: User;
+  helpful: number;
+  helpfulUsers?: { userId: string }[];
 }
 
 interface Reply {
@@ -190,6 +196,7 @@ interface ReviewsSectionProps {
   data: any;
   setIsReviewModalOpen: any;
   isOverview?: boolean;
+  refetch: () => void; // Added refetch prop
 }
 
 const ReviewsSection: React.FC<ReviewsSectionProps> = ({
@@ -199,6 +206,7 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
   data,
   setIsReviewModalOpen,
   isOverview = false,
+  refetch,
 }) => {
   const [visibleReviews, setVisibleReviews] = useState<number>(2);
   const reviewsPerPage = 10;
@@ -223,8 +231,24 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
     setVisibleReviews((prev) => prev + reviewsPerPage);
   };
 
+  const handleToggleHelpful = async (reviewId: string) => {
+    try {
+      await toggleReviewHelpful(reviewId);
+      // Assuming refetch is passed from parent, call it here
+      // For now, we’ll rely on App-level refetch via ReviewModal
+      refetch();
+    } catch (error) {
+      console.error("Error toggling review helpful:", error);
+    }
+  };
+
   const totalReviews = safeReviews.length;
   const hasMoreReviews = visibleReviews < totalReviews;
+
+  const isHelpfulByUser = (
+    review: Review,
+    userId: string = "currentUserId" // Replace with actual user ID
+  ) => review.helpfulUsers?.some((h) => h.userId === userId) || false;
 
   return (
     <section className="mb-8">
@@ -326,9 +350,20 @@ const ReviewsSection: React.FC<ReviewsSectionProps> = ({
             </div>
             <p className="text-gray-600 mb-4">{review.body}</p>
             <div className="flex gap-4 text-sm">
-              <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
-                <ThumbsUp className="w-4 h-4" />
-                <span>Helpful</span>
+              <button
+                onClick={() => handleToggleHelpful(review.id)}
+                className={`flex items-center gap-1 ${
+                  isHelpfulByUser(review)
+                    ? "text-green-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <ThumbsUp
+                  className={`w-4 h-4 ${
+                    isHelpfulByUser(review) ? "fill-green-500" : ""
+                  }`}
+                />
+                <span>Helpful ({review.helpful || 0})</span>
               </button>
               <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
                 <Share2 className="w-4 h-4" />
@@ -388,7 +423,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       const updatedReplies: Reply[] = [
         ...(existingComment.replies || []),
         {
-          userId: "currentUserId", // Replace with actual user ID from auth
+          userId: "currentUserId", // Replace with actual user ID
           body: replyText[commentId],
           createdAt: new Date().toISOString(),
           profilePicture: existingComment.user.image || "/default-avatar.png",
@@ -396,7 +431,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       ];
       await updateComment(commentId, { replies: updatedReplies });
       setReplyText((prev) => ({ ...prev, [commentId]: "" }));
-      refetch(); // Trigger refetch after updating reply
+      refetch();
     } catch (error) {
       console.error("Error adding reply:", error);
     }
@@ -407,9 +442,18 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     try {
       await commentOnProduct(productId, newCommentText, 0);
       setNewCommentText("");
-      refetch(); // Trigger refetch after adding new comment
+      refetch();
     } catch (error) {
       console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleToggleHelpful = async (commentId: string) => {
+    try {
+      await toggleHelpful(commentId);
+      refetch(); // Refetch to update helpful count and user status
+    } catch (error) {
+      console.error("Error toggling helpful:", error);
     }
   };
 
@@ -418,6 +462,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
+
+  const isHelpfulByUser = (
+    comment: Comment,
+    userId: string = "currentUserId"
+  ) => comment.helpfulUsers?.some((h) => h.userId === userId) || false;
 
   return (
     <section className="mb-8">
@@ -486,9 +535,20 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
               dangerouslySetInnerHTML={{ __html: comment.body }}
             />
             <div className="flex gap-4 text-sm">
-              <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
-                <ThumbsUp className="w-4 h-4" />
-                <span>Helpful</span>
+              <button
+                onClick={() => handleToggleHelpful(comment.id)}
+                className={`flex items-center gap-1 ${
+                  isHelpfulByUser(comment)
+                    ? "text-green-500"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                <ThumbsUp
+                  className={`w-4 h-4 ${
+                    isHelpfulByUser(comment) ? "fill-green-500" : ""
+                  }`}
+                />
+                <span>Helpful ({comment.helpful || 0})</span>
               </button>
               <button
                 onClick={() =>
@@ -890,6 +950,7 @@ const App: React.FC = () => {
                       data={data}
                       setIsReviewModalOpen={setIsReviewModalOpen}
                       isOverview={true}
+                      refetch={fetchProductDetails}
                     />
                   )}
 
@@ -913,6 +974,7 @@ const App: React.FC = () => {
                 data={data}
                 setIsReviewModalOpen={setIsReviewModalOpen}
                 isOverview={false}
+                refetch={fetchProductDetails}
               />
             )}
 

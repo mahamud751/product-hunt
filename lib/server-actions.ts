@@ -478,11 +478,13 @@ export const getProductById = async (productId: string) => {
         comments: {
           include: {
             user: true,
+            helpfulUsers: true,
           },
         },
         reviews: {
           include: {
             user: true,
+            helpfulUsers: true, // Added to fetch helpfulUsers for reviews
           },
         },
         upvotes: {
@@ -861,6 +863,130 @@ export const updateComment = async (
     };
   } catch (error) {
     console.error("Error updating comment:", error);
+    throw error;
+  }
+};
+
+export const toggleHelpful = async (commentId: string) => {
+  try {
+    const authenticatedUser = await auth();
+
+    if (
+      !authenticatedUser ||
+      !authenticatedUser.user ||
+      !authenticatedUser.user.id
+    ) {
+      throw new Error("User ID is missing or invalid");
+    }
+
+    const userId = authenticatedUser.user.id;
+
+    const comment = await db.comment.findUnique({
+      where: { id: commentId },
+      include: { helpfulUsers: true },
+    });
+
+    if (!comment) {
+      throw new Error("Comment not found");
+    }
+
+    const hasHelped = comment.helpfulUsers.some(
+      (helpful) => helpful.userId === userId
+    );
+    const currentHelpful = comment.helpful || 0;
+
+    if (hasHelped) {
+      await db.commentHelpful.delete({
+        where: {
+          commentId_userId: { commentId, userId },
+        },
+      });
+      await db.comment.update({
+        where: { id: commentId },
+        data: { helpful: Math.max(0, currentHelpful - 1) },
+      });
+    } else {
+      await db.commentHelpful.create({
+        data: {
+          commentId,
+          userId,
+        },
+      });
+      await db.comment.update({
+        where: { id: commentId },
+        data: { helpful: currentHelpful + 1 },
+      });
+    }
+
+    return await db.comment.findUnique({
+      where: { id: commentId },
+      include: { helpfulUsers: true },
+    });
+  } catch (error) {
+    console.error("Error toggling helpful:", error);
+    throw error;
+  }
+};
+
+export const toggleReviewHelpful = async (reviewId: string) => {
+  try {
+    const authenticatedUser = await auth();
+
+    if (
+      !authenticatedUser ||
+      !authenticatedUser.user ||
+      !authenticatedUser.user.id
+    ) {
+      throw new Error("User ID is missing or invalid");
+    }
+
+    const userId = authenticatedUser.user.id;
+
+    const review = await db.review.findUnique({
+      where: { id: reviewId },
+      include: { helpfulUsers: true },
+    });
+
+    if (!review) {
+      throw new Error("Review not found");
+    }
+
+    const hasHelped = review.helpfulUsers.some(
+      (helpful) => helpful.userId === userId
+    );
+    const currentHelpful = review.helpful || 0;
+
+    if (hasHelped) {
+      // User has already marked it helpful, so remove it
+      await db.reviewHelpful.delete({
+        where: {
+          reviewId_userId: { reviewId, userId },
+        },
+      });
+      await db.review.update({
+        where: { id: reviewId },
+        data: { helpful: Math.max(0, currentHelpful - 1) },
+      });
+    } else {
+      // User hasn’t marked it helpful, so add it
+      await db.reviewHelpful.create({
+        data: {
+          reviewId,
+          userId,
+        },
+      });
+      await db.review.update({
+        where: { id: reviewId },
+        data: { helpful: currentHelpful + 1 },
+      });
+    }
+
+    return await db.review.findUnique({
+      where: { id: reviewId },
+      include: { helpfulUsers: true },
+    });
+  } catch (error) {
+    console.error("Error toggling review helpful:", error);
     throw error;
   }
 };

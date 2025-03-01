@@ -237,7 +237,10 @@ export interface Comment {
   replies?: any;
   product: Product;
   user: User;
+  helpful: number;
+  helpfulUsers?: { userId: string }[];
 }
+
 export interface Review {
   id: string;
   profilePicture: string;
@@ -249,6 +252,8 @@ export interface Review {
   product: Product;
   user: User;
   rating: number;
+  helpful: number; // Added
+  helpfulUsers?: { userId: string }[];
 }
 
 export interface Notification {
