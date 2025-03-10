@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Plus, Edit3, Trash2, Star, Upload, Download } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Plus,
+  Edit3,
+  Trash2,
+  Star,
+  Upload,
+  Download,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Product {
   id: string;
@@ -7,7 +18,7 @@ interface Product {
   description: string;
   logo: string;
   category: string;
-  status: 'Active' | 'Draft' | 'Archived';
+  status: "Active" | "Draft" | "Archived";
   featured: boolean;
   metrics: {
     views: number;
@@ -15,7 +26,7 @@ interface Product {
     reviews: number;
   };
   pricing: {
-    type: 'Free' | 'Paid' | 'Freemium';
+    type: "Free" | "Paid" | "Freemium";
     startingPrice?: number;
   };
   lastUpdated: string;
@@ -23,75 +34,80 @@ interface Product {
 
 const mockProducts: Product[] = [
   {
-    id: '1',
-    name: 'TechLaunch Pro',
-    description: 'A comprehensive platform for launching tech products with built-in analytics and marketing tools.',
-    logo: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    category: 'Development Tools',
-    status: 'Active',
+    id: "1",
+    name: "TechLaunch Pro",
+    description:
+      "A comprehensive platform for launching tech products with built-in analytics and marketing tools.",
+    logo: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    category: "Development Tools",
+    status: "Active",
     featured: true,
     metrics: {
       views: 15420,
       upvotes: 324,
-      reviews: 45
+      reviews: 45,
     },
     pricing: {
-      type: 'Paid',
-      startingPrice: 49
+      type: "Paid",
+      startingPrice: 49,
     },
-    lastUpdated: '2024-02-15T10:00:00Z'
+    lastUpdated: "2024-02-15T10:00:00Z",
   },
   {
-    id: '2',
-    name: 'DesignFlow',
-    description: 'AI-powered design tool for creating stunning user interfaces with automated workflows.',
-    logo: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    category: 'Design Tools',
-    status: 'Active',
+    id: "2",
+    name: "DesignFlow",
+    description:
+      "AI-powered design tool for creating stunning user interfaces with automated workflows.",
+    logo: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    category: "Design Tools",
+    status: "Active",
     featured: false,
     metrics: {
       views: 12350,
       upvotes: 256,
-      reviews: 38
+      reviews: 38,
     },
     pricing: {
-      type: 'Freemium',
-      startingPrice: 29
+      type: "Freemium",
+      startingPrice: 29,
     },
-    lastUpdated: '2024-02-14T15:30:00Z'
+    lastUpdated: "2024-02-14T15:30:00Z",
   },
   {
-    id: '3',
-    name: 'MarketMaster',
-    description: 'Marketing automation platform with advanced analytics and campaign management.',
-    logo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    category: 'Marketing',
-    status: 'Draft',
+    id: "3",
+    name: "MarketMaster",
+    description:
+      "Marketing automation platform with advanced analytics and campaign management.",
+    logo: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    category: "Marketing",
+    status: "Draft",
     featured: false,
     metrics: {
       views: 9870,
       upvotes: 198,
-      reviews: 32
+      reviews: 32,
     },
     pricing: {
-      type: 'Free'
+      type: "Free",
     },
-    lastUpdated: '2024-02-13T09:15:00Z'
-  }
+    lastUpdated: "2024-02-13T09:15:00Z",
+  },
 ];
 
 export default function ProductList({ dateFilter }: { dateFilter: string }) {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [pricingFilter, setPricingFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'name' | 'views' | 'upvotes' | 'lastUpdated'>('lastUpdated');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [pricingFilter, setPricingFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<
+    "name" | "views" | "upvotes" | "lastUpdated"
+  >("lastUpdated");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedProducts(mockProducts.map(product => product.id));
+      setSelectedProducts(mockProducts.map((product) => product.id));
     } else {
       setSelectedProducts([]);
     }
@@ -99,7 +115,7 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
 
   const handleSelectProduct = (productId: string) => {
     if (selectedProducts.includes(productId)) {
-      setSelectedProducts(selectedProducts.filter(id => id !== productId));
+      setSelectedProducts(selectedProducts.filter((id) => id !== productId));
     } else {
       setSelectedProducts([...selectedProducts, productId]);
     }
@@ -107,46 +123,51 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Draft':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Archived':
-        return 'bg-gray-100 text-gray-800';
+      case "Active":
+        return "bg-green-100 text-green-800";
+      case "Draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "Archived":
+        return "bg-gray-100 text-gray-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getPricingColor = (type: string) => {
     switch (type) {
-      case 'Free':
-        return 'bg-green-100 text-green-800';
-      case 'Paid':
-        return 'bg-blue-100 text-blue-800';
-      case 'Freemium':
-        return 'bg-purple-100 text-purple-800';
+      case "Free":
+        return "bg-green-100 text-green-800";
+      case "Paid":
+        return "bg-blue-100 text-blue-800";
+      case "Freemium":
+        return "bg-purple-100 text-purple-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredProducts = mockProducts
-    .filter(product => 
-      (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       product.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (categoryFilter === 'All' || product.category === categoryFilter) &&
-      (statusFilter === 'All' || product.status === statusFilter) &&
-      (pricingFilter === 'All' || product.pricing.type === pricingFilter)
+    .filter(
+      (product) =>
+        (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) &&
+        (categoryFilter === "All" || product.category === categoryFilter) &&
+        (statusFilter === "All" || product.status === statusFilter) &&
+        (pricingFilter === "All" || product.pricing.type === pricingFilter)
     )
     .sort((a, b) => {
-      if (sortBy === 'views' || sortBy === 'upvotes') {
+      if (sortBy === "views" || sortBy === "upvotes") {
         const aValue = a.metrics[sortBy];
         const bValue = b.metrics[sortBy];
-        return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -186,9 +207,9 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
@@ -199,7 +220,7 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
             <option value="Marketing">Marketing</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -210,7 +231,7 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
             <option value="Archived">Archived</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={pricingFilter}
             onChange={(e) => setPricingFilter(e.target.value)}
@@ -223,7 +244,7 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -234,10 +255,10 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
               <option value="lastUpdated">Sort by Updated</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -279,22 +300,40 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Product
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Category
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Pricing
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Metrics
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Last Updated
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -316,16 +355,26 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
                 <td className="px-6 py-4">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <img className="h-10 w-10 rounded-lg object-cover" src={product.logo} alt="" />
+                      <Image
+                        className="h-10 w-10 rounded-lg object-cover"
+                        src={product.logo}
+                        alt=""
+                        height={40}
+                        width={40}
+                      />
                     </div>
                     <div className="ml-4">
                       <div className="flex items-center">
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
                         {product.featured && (
                           <Star className="w-4 h-4 ml-2 text-yellow-400 fill-current" />
                         )}
                       </div>
-                      <div className="text-sm text-gray-500">{product.description}</div>
+                      <div className="text-sm text-gray-500">
+                        {product.description}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -333,13 +382,21 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
                   {product.category}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(product.status)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      product.status
+                    )}`}
+                  >
                     {product.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div>
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPricingColor(product.pricing.type)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPricingColor(
+                        product.pricing.type
+                      )}`}
+                    >
                       {product.pricing.type}
                     </span>
                     {product.pricing.startingPrice && (
@@ -353,15 +410,21 @@ export default function ProductList({ dateFilter }: { dateFilter: string }) {
                   <div className="space-y-1">
                     <div className="flex items-center text-sm text-gray-500">
                       <span className="w-16">Views:</span>
-                      <span className="font-medium text-gray-900">{product.metrics.views.toLocaleString()}</span>
+                      <span className="font-medium text-gray-900">
+                        {product.metrics.views.toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
                       <span className="w-16">Upvotes:</span>
-                      <span className="font-medium text-gray-900">{product.metrics.upvotes.toLocaleString()}</span>
+                      <span className="font-medium text-gray-900">
+                        {product.metrics.upvotes.toLocaleString()}
+                      </span>
                     </div>
                     <div className="flex items-center text-sm text-gray-500">
                       <span className="w-16">Reviews:</span>
-                      <span className="font-medium text-gray-900">{product.metrics.reviews.toLocaleString()}</span>
+                      <span className="font-medium text-gray-900">
+                        {product.metrics.reviews.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </td>

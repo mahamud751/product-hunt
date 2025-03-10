@@ -1,6 +1,12 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { DollarSign, CreditCard, Receipt, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  DollarSign,
+  CreditCard,
+  Receipt,
+  ArrowUpRight,
+  ArrowDownRight,
+} from "lucide-react";
 
 interface RevenueOverviewProps {
   dateFilter: string;
@@ -8,21 +14,21 @@ interface RevenueOverviewProps {
 }
 
 const revenueData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Subscription Revenue',
+      label: "Subscription Revenue",
       data: [30000, 35000, 32000, 40000, 38000, 42000],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
     },
     {
-      label: 'One-Time Purchases',
+      label: "One-Time Purchases",
       data: [15000, 18000, 16000, 20000, 19000, 21000],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -30,26 +36,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: any;
+  title: string;
+  value: string;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -59,7 +85,10 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-export default function RevenueOverview({ dateFilter, onDateFilterChange }: RevenueOverviewProps) {
+export default function RevenueOverview({
+  dateFilter,
+  onDateFilterChange,
+}: RevenueOverviewProps) {
   return (
     <div className="space-y-6 mb-8">
       {/* Header with Date Filter */}
@@ -106,7 +135,9 @@ export default function RevenueOverview({ dateFilter, onDateFilterChange }: Reve
       {/* Revenue Chart */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-[#1F1F1F]">Revenue Breakdown</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F]">
+            Revenue Breakdown
+          </h3>
           <select className="border border-gray-200 rounded-lg px-3 py-1 text-sm">
             <option value="monthly">Monthly</option>
             <option value="quarterly">Quarterly</option>

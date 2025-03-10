@@ -619,10 +619,12 @@ const Profile: React.FC<AvatarProps> = ({
           <div className="grid gap-6">
             <div className="card">
               <div className="flex items-start gap-4">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=48&h=48&q=80"
                   alt="Product"
                   className="w-12 h-12 rounded-lg"
+                  width={200}
+                  height={200}
                 />
                 <div className="flex-1">
                   <h3 className="font-bold text-lg">AI Writing Assistant</h3>
@@ -644,10 +646,12 @@ const Profile: React.FC<AvatarProps> = ({
             {user?.products?.map((product: Product) => (
               <div key={product.id} className="card hover:bg-white">
                 <div className="flex items-start gap-4">
-                  <img
-                    src={product?.logo}
-                    alt={product?.name}
+                  <Image
+                    src={product?.logo || ""}
+                    alt={product?.name ?? ""}
                     className="w-12 h-12 rounded-lg"
+                    height={200}
+                    width={200}
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
@@ -702,10 +706,12 @@ const Profile: React.FC<AvatarProps> = ({
               {filteredUpvotes.map((product) => (
                 <div key={product.id} className="card hover:bg-white">
                   <div className="flex items-start gap-4">
-                    <img
+                    <Image
                       src={product.logo}
                       alt={product.name}
                       className="w-12 h-12 rounded-lg"
+                      height={200}
+                      width={200}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-4">
@@ -768,10 +774,12 @@ const Profile: React.FC<AvatarProps> = ({
 
                   {/* Rating and Review */}
                   <div className="flex items-start gap-4 bg-gray-50 rounded-xl p-4">
-                    <img
+                    <Image
                       src={review?.product?.logo || "/default-product.png"}
                       alt={review?.product?.name || "Product"}
                       className="w-12 h-12 rounded-lg"
+                      width={200}
+                      height={200}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
@@ -827,10 +835,12 @@ const Profile: React.FC<AvatarProps> = ({
         {activeTab === "knowledge" && (
           <div className="grid grid-cols-3 gap-6">
             <article className="card">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&h=400&q=80"
                 alt="Article"
                 className="w-full h-48 object-cover rounded-lg mb-4"
+                height={400}
+                width={800}
               />
               <h3 className="font-bold text-xl mb-2">
                 The Future of SaaS in 2025

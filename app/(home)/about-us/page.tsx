@@ -3,6 +3,7 @@ import { Users, Rocket, Heart, MessageCircle, Home } from "lucide-react";
 import { Breadcrumbs } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Link from "next/link";
+import Image from "next/image";
 const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -96,10 +97,12 @@ const App: React.FC = () => {
             </h2>
           </div>
           <div className="flex gap-8 items-start">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80"
               alt="Shariful Islam"
               className="w-28 h-28 rounded-full object-cover ring-4 ring-white"
+              height={112}
+              width={112}
             />
             <div>
               <h3 className="text-xl font-semibold text-[#1F1F1F] mb-3">

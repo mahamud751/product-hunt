@@ -1,51 +1,68 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, Star, MessageSquare, Flag, TrendingUp } from 'lucide-react';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  Star,
+  MessageSquare,
+  Flag,
+  TrendingUp,
+} from "lucide-react";
+import Image from "next/image";
+
+interface ProductPerformanceCardProps {
+  name: string;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  responseRate: number;
+  avgResponseTime: string;
+}
 
 interface ReviewAnalyticsProps {
   dateFilter: string;
 }
 
 const reviewTrendsData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Total Reviews',
+      label: "Total Reviews",
       data: [150, 230, 180, 290, 320, 250],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
     },
     {
-      label: 'Average Rating',
+      label: "Average Rating",
       data: [4.2, 4.3, 4.1, 4.4, 4.5, 4.3],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const sentimentData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Positive',
+      label: "Positive",
       data: [65, 75, 70, 80, 85, 78],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
     },
     {
-      label: 'Neutral',
+      label: "Neutral",
       data: [25, 20, 22, 15, 12, 18],
-      borderColor: '#9CA3AF',
+      borderColor: "#9CA3AF",
       tension: 0.4,
     },
     {
-      label: 'Negative',
+      label: "Negative",
       data: [10, 5, 8, 5, 3, 4],
-      borderColor: '#DC2626',
+      borderColor: "#DC2626",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -53,26 +70,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: any;
+  title: any;
+  value: any;
+  trend: any;
+  isPositive: any;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -82,7 +119,17 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function TopKeywordCard({ keyword, count, sentiment, trend }) {
+function TopKeywordCard({
+  keyword,
+  count,
+  sentiment,
+  trend,
+}: {
+  keyword: any;
+  count: any;
+  sentiment: any;
+  trend: any;
+}) {
   return (
     <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
       <div>
@@ -90,47 +137,79 @@ function TopKeywordCard({ keyword, count, sentiment, trend }) {
         <p className="text-sm text-gray-500">{count} mentions</p>
       </div>
       <div className="flex items-center space-x-3">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-          sentiment === 'Positive' ? 'bg-green-100 text-green-800' :
-          sentiment === 'Negative' ? 'bg-red-100 text-red-800' :
-          'bg-gray-100 text-gray-800'
-        }`}>
+        <span
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            sentiment === "Positive"
+              ? "bg-green-100 text-green-800"
+              : sentiment === "Negative"
+              ? "bg-red-100 text-red-800"
+              : "bg-gray-100 text-gray-800"
+          }`}
+        >
           {sentiment}
         </span>
-        <span className={`text-sm ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-          {trend >= 0 ? '+' : ''}{trend}%
+        <span
+          className={`text-sm ${
+            trend >= 0 ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {trend >= 0 ? "+" : ""}
+          {trend}%
         </span>
       </div>
     </div>
   );
 }
 
-function ProductPerformanceCard({ name, image, rating, reviewCount, responseRate, avgResponseTime }) {
+function ProductPerformanceCard({
+  name,
+  image,
+  rating,
+  reviewCount,
+  responseRate,
+  avgResponseTime,
+}: ProductPerformanceCardProps) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
       <div className="flex items-center mb-4">
-        <img src={image} alt={name} className="w-12 h-12 rounded-lg object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          className="w-12 h-12 rounded-lg object-cover"
+          width={64}
+          height={64}
+        />
         <div className="ml-4">
           <h3 className="text-lg font-medium text-gray-900">{name}</h3>
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                className={`w-4 h-4 ${
+                  i < Math.floor(rating)
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
+                }`}
               />
             ))}
-            <span className="ml-2 text-sm text-gray-500">{rating.toFixed(1)} ({reviewCount} reviews)</span>
+            <span className="ml-2 text-sm text-gray-500">
+              {rating.toFixed(1)} ({reviewCount} reviews)
+            </span>
           </div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <p className="text-sm text-gray-500">Response Rate</p>
-          <p className="text-lg font-semibold text-green-600">{responseRate}%</p>
+          <p className="text-lg font-semibold text-green-600">
+            {responseRate}%
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-500">Avg. Response Time</p>
-          <p className="text-lg font-semibold text-blue-600">{avgResponseTime}</p>
+          <p className="text-lg font-semibold text-blue-600">
+            {avgResponseTime}
+          </p>
         </div>
       </div>
     </div>
@@ -186,13 +265,17 @@ export default function ReviewAnalytics({ dateFilter }: ReviewAnalyticsProps) {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Review Trends</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Review Trends
+          </h3>
           <div className="h-80">
             <Line data={reviewTrendsData} options={chartOptions} />
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Sentiment Analysis</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Sentiment Analysis
+          </h3>
           <div className="h-80">
             <Line data={sentimentData} options={chartOptions} />
           </div>
@@ -201,7 +284,9 @@ export default function ReviewAnalytics({ dateFilter }: ReviewAnalyticsProps) {
 
       {/* Top Keywords */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Top Keywords</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Top Keywords
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <TopKeywordCard
             keyword="User Interface"
@@ -244,7 +329,9 @@ export default function ReviewAnalytics({ dateFilter }: ReviewAnalyticsProps) {
 
       {/* Product Performance */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Product Performance</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Product Performance
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <ProductPerformanceCard
             name="TechLaunch Pro"

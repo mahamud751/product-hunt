@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import Image from "next/image";
 
 const spotlightProducts = [
   {
@@ -114,8 +115,8 @@ function App() {
 
   return (
     <div className="bg-background">
-      <div className="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[1080px] h-[250px] mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-4 relative">
+      <div className="mx-auto py-12">
+        <div className="w-full h-[250px] mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-4 relative">
           <div className="absolute -top-6 left-0 w-full h-32 bg-surface blur-3xl -z-10" />
 
           <div className="w-full md:w-[520px] space-y-3 text-left">
@@ -152,30 +153,40 @@ function App() {
 
                 <div className="flex items-center mt-2">
                   <div className="flex -space-x-2">
-                    <img
+                    <Image
                       className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                       src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"
                       alt="User avatar"
+                      height={24}
+                      width={24}
                     />
-                    <img
+                    <Image
                       className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                       src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100"
                       alt="User avatar"
+                      height={24}
+                      width={24}
                     />
-                    <img
+                    <Image
                       className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                       src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100"
                       alt="User avatar"
+                      height={24}
+                      width={24}
                     />
-                    <img
+                    <Image
                       className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                       src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100"
                       alt="User avatar"
+                      height={24}
+                      width={24}
                     />
-                    <img
+                    <Image
                       className="w-6 h-6 rounded-full border-2 border-background shadow-sm"
                       src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100"
                       alt="User avatar"
+                      height={24}
+                      width={24}
                     />
                   </div>
                   <span className="ml-3 text-xs sm:text-sm text-text/70">
@@ -226,10 +237,12 @@ function App() {
                     }`}
                   >
                     <div className="relative w-full h-[150px] bg-text">
-                      <img
+                      <Image
                         src={product.image}
                         alt={product.title}
                         className="w-full h-full object-cover opacity-70"
+                        height={150}
+                        width={360}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-text/80 via-text/20 to-transparent" />
                     </div>

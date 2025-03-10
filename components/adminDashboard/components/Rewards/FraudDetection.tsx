@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Shield, AlertTriangle, Ban, CheckCircle, XCircle, Clock, Activity } from 'lucide-react';
-import { Line } from 'react-chartjs-2';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Shield,
+  AlertTriangle,
+  Ban,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Activity,
+  Flag,
+} from "lucide-react";
+import { Line } from "react-chartjs-2";
+import Image from "next/image";
 
 interface FraudAlert {
   id: string;
   userId: string;
   userName: string;
   email: string;
-  type: 'Multiple Accounts' | 'Rapid Actions' | 'Point Farming' | 'Suspicious IP';
-  severity: 'High' | 'Medium' | 'Low';
+  type:
+    | "Multiple Accounts"
+    | "Rapid Actions"
+    | "Point Farming"
+    | "Suspicious IP";
+  severity: "High" | "Medium" | "Low";
   description: string;
   detectedAt: string;
-  status: 'New' | 'Investigating' | 'Resolved';
+  status: "New" | "Investigating" | "Resolved";
   evidence: {
     type: string;
     value: string;
@@ -23,88 +40,88 @@ interface FraudAlert {
 
 const mockFraudAlerts: FraudAlert[] = [
   {
-    id: '1',
-    userId: 'user_1',
-    userName: 'John Doe',
-    email: 'john@example.com',
-    type: 'Rapid Actions',
-    severity: 'High',
-    description: 'Unusual number of upvotes in short time period',
-    detectedAt: '2024-02-15T10:00:00Z',
-    status: 'New',
+    id: "1",
+    userId: "user_1",
+    userName: "John Doe",
+    email: "john@example.com",
+    type: "Rapid Actions",
+    severity: "High",
+    description: "Unusual number of upvotes in short time period",
+    detectedAt: "2024-02-15T10:00:00Z",
+    status: "New",
     evidence: [
       {
-        type: 'Action Rate',
-        value: '45 actions/minute',
-        timestamp: '2024-02-15T09:55:00Z'
+        type: "Action Rate",
+        value: "45 actions/minute",
+        timestamp: "2024-02-15T09:55:00Z",
       },
       {
-        type: 'Normal Rate',
-        value: '5 actions/minute',
-        timestamp: '2024-02-15T09:50:00Z'
-      }
+        type: "Normal Rate",
+        value: "5 actions/minute",
+        timestamp: "2024-02-15T09:50:00Z",
+      },
     ],
-    ipAddresses: ['192.168.1.1'],
-    previousFlags: 2
+    ipAddresses: ["192.168.1.1"],
+    previousFlags: 2,
   },
   {
-    id: '2',
-    userId: 'user_2',
-    userName: 'Jane Smith',
-    email: 'jane@example.com',
-    type: 'Multiple Accounts',
-    severity: 'Medium',
-    description: 'Multiple accounts sharing same IP address',
-    detectedAt: '2024-02-14T15:30:00Z',
-    status: 'Investigating',
+    id: "2",
+    userId: "user_2",
+    userName: "Jane Smith",
+    email: "jane@example.com",
+    type: "Multiple Accounts",
+    severity: "Medium",
+    description: "Multiple accounts sharing same IP address",
+    detectedAt: "2024-02-14T15:30:00Z",
+    status: "Investigating",
     evidence: [
       {
-        type: 'Shared IP',
-        value: '192.168.1.2',
-        timestamp: '2024-02-14T15:25:00Z'
-      }
+        type: "Shared IP",
+        value: "192.168.1.2",
+        timestamp: "2024-02-14T15:25:00Z",
+      },
     ],
-    ipAddresses: ['192.168.1.2'],
-    previousFlags: 1
+    ipAddresses: ["192.168.1.2"],
+    previousFlags: 1,
   },
   {
-    id: '3',
-    userId: 'user_3',
-    userName: 'Mike Johnson',
-    email: 'mike@example.com',
-    type: 'Point Farming',
-    severity: 'Low',
-    description: 'Suspicious pattern of point accumulation',
-    detectedAt: '2024-02-13T09:15:00Z',
-    status: 'Resolved',
+    id: "3",
+    userId: "user_3",
+    userName: "Mike Johnson",
+    email: "mike@example.com",
+    type: "Point Farming",
+    severity: "Low",
+    description: "Suspicious pattern of point accumulation",
+    detectedAt: "2024-02-13T09:15:00Z",
+    status: "Resolved",
     evidence: [
       {
-        type: 'Point Pattern',
-        value: 'Repeated small transactions',
-        timestamp: '2024-02-13T09:10:00Z'
-      }
+        type: "Point Pattern",
+        value: "Repeated small transactions",
+        timestamp: "2024-02-13T09:10:00Z",
+      },
     ],
-    ipAddresses: ['192.168.1.3'],
-    previousFlags: 0
-  }
+    ipAddresses: ["192.168.1.3"],
+    previousFlags: 0,
+  },
 ];
 
 const fraudActivityData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Suspicious Activities',
+      label: "Suspicious Activities",
       data: [15, 23, 18, 29, 32, 25, 18],
-      borderColor: '#DC2626',
+      borderColor: "#DC2626",
       tension: 0.4,
     },
     {
-      label: 'Confirmed Fraud',
+      label: "Confirmed Fraud",
       data: [5, 8, 6, 12, 15, 10, 7],
-      borderColor: '#991B1B',
+      borderColor: "#991B1B",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -112,29 +129,31 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
 export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
   const [selectedAlerts, setSelectedAlerts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('All');
-  const [severityFilter, setSeverityFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'userName' | 'severity' | 'detectedAt'>('detectedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [severityFilter, setSeverityFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<"userName" | "severity" | "detectedAt">(
+    "detectedAt"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedAlerts(mockFraudAlerts.map(alert => alert.id));
+      setSelectedAlerts(mockFraudAlerts.map((alert) => alert.id));
     } else {
       setSelectedAlerts([]);
     }
@@ -142,7 +161,7 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
 
   const handleSelectAlert = (alertId: string) => {
     if (selectedAlerts.includes(alertId)) {
-      setSelectedAlerts(selectedAlerts.filter(id => id !== alertId));
+      setSelectedAlerts(selectedAlerts.filter((id) => id !== alertId));
     } else {
       setSelectedAlerts([...selectedAlerts, alertId]);
     }
@@ -150,59 +169,64 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'High':
-        return 'bg-red-100 text-red-800';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Low':
-        return 'bg-blue-100 text-blue-800';
+      case "High":
+        return "bg-red-100 text-red-800";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "Low":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'New':
-        return 'bg-blue-100 text-blue-800';
-      case 'Investigating':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Resolved':
-        return 'bg-green-100 text-green-800';
+      case "New":
+        return "bg-blue-100 text-blue-800";
+      case "Investigating":
+        return "bg-yellow-100 text-yellow-800";
+      case "Resolved":
+        return "bg-green-100 text-green-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredAlerts = mockFraudAlerts
-    .filter(alert => 
-      (alert.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       alert.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (typeFilter === 'All' || alert.type === typeFilter) &&
-      (severityFilter === 'All' || alert.severity === severityFilter)
+    .filter(
+      (alert) =>
+        (alert.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          alert.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (typeFilter === "All" || alert.type === typeFilter) &&
+        (severityFilter === "All" || alert.severity === severityFilter)
     )
     .sort((a, b) => {
-      if (sortBy === 'severity') {
+      if (sortBy === "severity") {
         const severityOrder = { High: 3, Medium: 2, Low: 1 };
-        return sortOrder === 'asc' 
+        return sortOrder === "asc"
           ? severityOrder[a.severity] - severityOrder[b.severity]
           : severityOrder[b.severity] - severityOrder[a.severity];
       }
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
 
-  const selectedAlert = selectedAlertId 
-    ? mockFraudAlerts.find(alert => alert.id === selectedAlertId)
+  const selectedAlert = selectedAlertId
+    ? mockFraudAlerts.find((alert) => alert.id === selectedAlertId)
     : null;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">Fraud Detection</h2>
+        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+          Fraud Detection
+        </h2>
         <button className="flex items-center space-x-2 bg-[#AF583B] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#8E4730] transition-colors">
           <Shield className="w-4 h-4" />
           <span>Run Detection</span>
@@ -212,7 +236,9 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
       {/* Fraud Activity Chart */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-[#1F1F1F]">Fraud Activity Overview</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F]">
+            Fraud Activity Overview
+          </h3>
           <select className="border border-gray-200 rounded-lg px-3 py-1 text-sm">
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
@@ -238,9 +264,9 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
@@ -252,7 +278,7 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
             <option value="Suspicious IP">Suspicious IP</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
@@ -265,7 +291,7 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -275,10 +301,10 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
               <option value="detectedAt">Sort by Date</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -321,19 +347,34 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
                     className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                   />
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   User
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Type
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Severity
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Detected
                 </th>
                 <th scope="col" className="relative px-6 py-3">
@@ -343,12 +384,17 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredAlerts.map((alert) => (
-                <tr 
-                  key={alert.id} 
-                  className={`hover:bg-gray-50 cursor-pointer ${selectedAlertId === alert.id ? 'bg-gray-50' : ''}`}
+                <tr
+                  key={alert.id}
+                  className={`hover:bg-gray-50 cursor-pointer ${
+                    selectedAlertId === alert.id ? "bg-gray-50" : ""
+                  }`}
                   onClick={() => setSelectedAlertId(alert.id)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap" onClick={e => e.stopPropagation()}>
+                  <td
+                    className="px-6 py-4 whitespace-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={selectedAlerts.includes(alert.id)}
@@ -359,15 +405,21 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <img
+                        <Image
                           className="h-10 w-10 rounded-full"
                           src={`https://i.pravatar.cc/40?u=${alert.userId}`}
                           alt=""
+                          height={40}
+                          width={40}
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{alert.userName}</div>
-                        <div className="text-sm text-gray-500">{alert.email}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {alert.userName}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {alert.email}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -375,12 +427,20 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
                     {alert.type}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getSeverityColor(alert.severity)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getSeverityColor(
+                        alert.severity
+                      )}`}
+                    >
                       {alert.severity}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(alert.status)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                        alert.status
+                      )}`}
+                    >
                       {alert.status}
                     </span>
                   </td>
@@ -388,7 +448,10 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
                     {new Date(alert.detectedAt).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-gray-400 hover:text-gray-900" onClick={e => e.stopPropagation()}>
+                    <button
+                      className="text-gray-400 hover:text-gray-900"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <MoreVertical className="w-5 h-5" />
                     </button>
                   </td>
@@ -403,23 +466,34 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
           {selectedAlert ? (
             <>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-[#1F1F1F]">Alert Details</h3>
+                <h3 className="text-lg font-semibold text-[#1F1F1F]">
+                  Alert Details
+                </h3>
                 <Activity className="w-5 h-5 text-gray-400" />
               </div>
-              
+
               <div className="space-y-6">
                 {/* Description */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Description</h4>
-                  <p className="text-sm text-gray-600">{selectedAlert.description}</p>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    Description
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    {selectedAlert.description}
+                  </p>
                 </div>
 
                 {/* IP Addresses */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">IP Addresses</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    IP Addresses
+                  </h4>
                   <div className="space-y-1">
                     {selectedAlert.ipAddresses.map((ip, index) => (
-                      <div key={index} className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded">
+                      <div
+                        key={index}
+                        className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded"
+                      >
                         {ip}
                       </div>
                     ))}
@@ -428,7 +502,9 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
 
                 {/* Evidence Timeline */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Evidence Timeline</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    Evidence Timeline
+                  </h4>
                   <div className="space-y-4">
                     {selectedAlert.evidence.map((item, index) => (
                       <div key={index} className="flex items-start space-x-3">
@@ -436,7 +512,9 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
                           <Clock className="w-4 h-4 text-gray-400" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900">{item.type}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {item.type}
+                          </p>
                           <p className="text-sm text-gray-500">{item.value}</p>
                           <p className="text-xs text-gray-400">
                             {new Date(item.timestamp).toLocaleString()}
@@ -449,7 +527,9 @@ export default function FraudDetection({ dateFilter }: { dateFilter: string }) {
 
                 {/* Previous Flags */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Previous Flags</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    Previous Flags
+                  </h4>
                   <div className="flex items-center space-x-2">
                     <Flag className="w-4 h-4 text-gray-400" />
                     <span className="text-sm text-gray-600">

@@ -1,5 +1,15 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, CheckCircle, XCircle, MessageSquare, Flag, Clock } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  CheckCircle,
+  XCircle,
+  MessageSquare,
+  Flag,
+  Clock,
+} from "lucide-react";
+import Image from "next/image";
 
 interface PendingProduct {
   id: string;
@@ -12,77 +22,87 @@ interface PendingProduct {
     avatar: string;
   };
   submittedAt: string;
-  status: 'Pending' | 'Under Review' | 'Needs Info';
+  status: "Pending" | "Under Review" | "Needs Info";
   notes?: string;
   flags: {
-    type: 'Duplicate' | 'Inappropriate' | 'Spam';
+    type: "Duplicate" | "Inappropriate" | "Spam";
     count: number;
   }[];
 }
 
 const mockPendingProducts: PendingProduct[] = [
   {
-    id: '1',
-    name: 'TechLaunch Pro',
-    description: 'A comprehensive platform for launching tech products with built-in analytics and marketing tools.',
-    category: 'Development Tools',
+    id: "1",
+    name: "TechLaunch Pro",
+    description:
+      "A comprehensive platform for launching tech products with built-in analytics and marketing tools.",
+    category: "Development Tools",
     submittedBy: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+      name: "John Doe",
+      email: "john@example.com",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     },
-    submittedAt: '2024-02-15T10:00:00Z',
-    status: 'Pending',
-    flags: [
-      { type: 'Duplicate', count: 2 }
-    ]
+    submittedAt: "2024-02-15T10:00:00Z",
+    status: "Pending",
+    flags: [{ type: "Duplicate", count: 2 }],
   },
   {
-    id: '2',
-    name: 'DesignFlow',
-    description: 'AI-powered design tool for creating stunning user interfaces with automated workflows.',
-    category: 'Design Tools',
+    id: "2",
+    name: "DesignFlow",
+    description:
+      "AI-powered design tool for creating stunning user interfaces with automated workflows.",
+    category: "Design Tools",
     submittedBy: {
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+      name: "Jane Smith",
+      email: "jane@example.com",
+      avatar:
+        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
     },
-    submittedAt: '2024-02-14T15:30:00Z',
-    status: 'Under Review',
-    notes: 'Checking for similar products in the database',
-    flags: []
+    submittedAt: "2024-02-14T15:30:00Z",
+    status: "Under Review",
+    notes: "Checking for similar products in the database",
+    flags: [],
   },
   {
-    id: '3',
-    name: 'MarketMaster',
-    description: 'Marketing automation platform with advanced analytics and campaign management.',
-    category: 'Marketing',
+    id: "3",
+    name: "MarketMaster",
+    description:
+      "Marketing automation platform with advanced analytics and campaign management.",
+    category: "Marketing",
     submittedBy: {
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      avatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80",
     },
-    submittedAt: '2024-02-13T09:15:00Z',
-    status: 'Needs Info',
-    notes: 'Requesting additional pricing information',
-    flags: [
-      { type: 'Spam', count: 1 }
-    ]
-  }
+    submittedAt: "2024-02-13T09:15:00Z",
+    status: "Needs Info",
+    notes: "Requesting additional pricing information",
+    flags: [{ type: "Spam", count: 1 }],
+  },
 ];
 
-export default function PendingApprovals({ dateFilter }: { dateFilter: string }) {
+export default function PendingApprovals({
+  dateFilter,
+}: {
+  dateFilter: string;
+}) {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'name' | 'submittedAt' | 'status'>('submittedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<"name" | "submittedAt" | "status">(
+    "submittedAt"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedProducts(mockPendingProducts.map(product => product.id));
+      setSelectedProducts(mockPendingProducts.map((product) => product.id));
     } else {
       setSelectedProducts([]);
     }
@@ -90,7 +110,7 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
 
   const handleSelectProduct = (productId: string) => {
     if (selectedProducts.includes(productId)) {
-      setSelectedProducts(selectedProducts.filter(id => id !== productId));
+      setSelectedProducts(selectedProducts.filter((id) => id !== productId));
     } else {
       setSelectedProducts([...selectedProducts, productId]);
     }
@@ -98,53 +118,60 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Under Review':
-        return 'bg-blue-100 text-blue-800';
-      case 'Needs Info':
-        return 'bg-orange-100 text-orange-800';
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "Under Review":
+        return "bg-blue-100 text-blue-800";
+      case "Needs Info":
+        return "bg-orange-100 text-orange-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getFlagColor = (type: string) => {
     switch (type) {
-      case 'Duplicate':
-        return 'bg-purple-100 text-purple-800';
-      case 'Inappropriate':
-        return 'bg-red-100 text-red-800';
-      case 'Spam':
-        return 'bg-orange-100 text-orange-800';
+      case "Duplicate":
+        return "bg-purple-100 text-purple-800";
+      case "Inappropriate":
+        return "bg-red-100 text-red-800";
+      case "Spam":
+        return "bg-orange-100 text-orange-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredProducts = mockPendingProducts
-    .filter(product => 
-      (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       product.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (categoryFilter === 'All' || product.category === categoryFilter) &&
-      (statusFilter === 'All' || product.status === statusFilter)
+    .filter(
+      (product) =>
+        (product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) &&
+        (categoryFilter === "All" || product.category === categoryFilter) &&
+        (statusFilter === "All" || product.status === statusFilter)
     )
     .sort((a, b) => {
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
 
-  const selectedProduct = selectedProductId 
-    ? mockPendingProducts.find(product => product.id === selectedProductId)
+  const selectedProduct = selectedProductId
+    ? mockPendingProducts.find((product) => product.id === selectedProductId)
     : null;
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">Pending Approvals</h2>
+        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+          Pending Approvals
+        </h2>
       </div>
 
       {/* Search and Filters */}
@@ -161,9 +188,9 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
@@ -174,7 +201,7 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
             <option value="Marketing">Marketing</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -187,7 +214,7 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -197,10 +224,10 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
               <option value="status">Sort by Status</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -238,24 +265,41 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
                 <th scope="col" className="px-6 py-3 text-left">
                   <input
                     type="checkbox"
-                    checked={selectedProducts.length === mockPendingProducts.length}
+                    checked={
+                      selectedProducts.length === mockPendingProducts.length
+                    }
                     onChange={handleSelectAll}
                     className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                   />
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Product
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Category
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Flags
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
                   Submitted
                 </th>
                 <th scope="col" className="relative px-6 py-3">
@@ -265,12 +309,17 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.map((product) => (
-                <tr 
-                  key={product.id} 
-                  className={`hover:bg-gray-50 cursor-pointer ${selectedProductId === product.id ? 'bg-gray-50' : ''}`}
+                <tr
+                  key={product.id}
+                  className={`hover:bg-gray-50 cursor-pointer ${
+                    selectedProductId === product.id ? "bg-gray-50" : ""
+                  }`}
                   onClick={() => setSelectedProductId(product.id)}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap" onClick={e => e.stopPropagation()}>
+                  <td
+                    className="px-6 py-4 whitespace-nowrap"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={selectedProducts.includes(product.id)}
@@ -280,24 +329,34 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
                   </td>
                   <td className="px-6 py-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                      <div className="text-sm text-gray-500 line-clamp-1">{product.description}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {product.name}
+                      </div>
+                      <div className="text-sm text-gray-500 line-clamp-1">
+                        {product.description}
+                      </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {product.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(product.status)}`}>
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                        product.status
+                      )}`}
+                    >
                       {product.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex space-x-2">
                       {product.flags.map((flag, index) => (
-                        <span 
+                        <span
                           key={index}
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getFlagColor(flag.type)}`}
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getFlagColor(
+                            flag.type
+                          )}`}
                           title={`${flag.type}: ${flag.count}`}
                         >
                           {flag.count}
@@ -309,7 +368,10 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
                     {new Date(product.submittedAt).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-gray-400 hover:text-gray-900" onClick={e => e.stopPropagation()}>
+                    <button
+                      className="text-gray-400 hover:text-gray-900"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <MoreVertical className="w-5 h-5" />
                     </button>
                   </td>
@@ -324,35 +386,51 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
           {selectedProduct ? (
             <>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-[#1F1F1F]">Product Details</h3>
+                <h3 className="text-lg font-semibold text-[#1F1F1F]">
+                  Product Details
+                </h3>
                 <Clock className="w-5 h-5 text-gray-400" />
               </div>
-              
+
               <div className="space-y-6">
                 {/* Submitter Info */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Submitted By</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    Submitted By
+                  </h4>
                   <div className="flex items-center">
-                    <img 
-                      src={selectedProduct.submittedBy.avatar} 
+                    <Image
+                      src={selectedProduct.submittedBy.avatar}
                       alt={selectedProduct.submittedBy.name}
                       className="w-10 h-10 rounded-full"
+                      height={40}
+                      width={40}
                     />
                     <div className="ml-3">
-                      <p className="text-sm font-medium text-gray-900">{selectedProduct.submittedBy.name}</p>
-                      <p className="text-sm text-gray-500">{selectedProduct.submittedBy.email}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {selectedProduct.submittedBy.name}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {selectedProduct.submittedBy.email}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Product Info */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Product Information</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    Product Information
+                  </h4>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-900">{selectedProduct.description}</p>
+                    <p className="text-sm text-gray-900">
+                      {selectedProduct.description}
+                    </p>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm text-gray-500">Category:</span>
-                      <span className="text-sm text-gray-900">{selectedProduct.category}</span>
+                      <span className="text-sm text-gray-900">
+                        {selectedProduct.category}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -360,13 +438,22 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
                 {/* Flags */}
                 {selectedProduct.flags.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Flags</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">
+                      Flags
+                    </h4>
                     <div className="space-y-2">
                       {selectedProduct.flags.map((flag, index) => (
-                        <div key={index} className="flex items-center space-x-2">
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2"
+                        >
                           <Flag className="w-4 h-4 text-gray-400" />
-                          <span className="text-sm text-gray-900">{flag.type}</span>
-                          <span className="text-sm text-gray-500">({flag.count})</span>
+                          <span className="text-sm text-gray-900">
+                            {flag.type}
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            ({flag.count})
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -376,8 +463,12 @@ export default function PendingApprovals({ dateFilter }: { dateFilter: string })
                 {/* Notes */}
                 {selectedProduct.notes && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Notes</h4>
-                    <p className="text-sm text-gray-600">{selectedProduct.notes}</p>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">
+                      Notes
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      {selectedProduct.notes}
+                    </p>
                   </div>
                 )}
 

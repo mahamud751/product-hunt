@@ -10,6 +10,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
 
 type TimeFrame = "weekly" | "monthly" | "allTime";
 type User = {
@@ -216,10 +217,12 @@ const Page = () => {
                   <span className="font-bold text-lg text-[#1F1F1F] w-8">
                     #{user.rank}
                   </span>
-                  <img
+                  <Image
                     src={user.avatar}
                     alt={user.username}
                     className="w-12 h-12 rounded-full object-cover"
+                    width={48}
+                    height={48}
                   />
                   <div>
                     <div className="flex items-center space-x-2">
@@ -322,10 +325,12 @@ const Page = () => {
                 <span className="font-bold text-lg text-[#1F1F1F]">
                   #{currentUser.rank}
                 </span>
-                <img
+                <Image
                   src={currentUser.avatar}
                   alt={currentUser.username}
                   className="w-12 h-12 rounded-full object-cover"
+                  height={48}
+                  width={48}
                 />
                 <div>
                   <div className="flex items-center space-x-2">

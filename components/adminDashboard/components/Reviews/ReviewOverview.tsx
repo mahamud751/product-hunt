@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, Star, MessageSquare, Flag, TrendingUp } from 'lucide-react';
+import React, { useState } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  Star,
+  MessageSquare,
+  Flag,
+  TrendingUp,
+} from "lucide-react";
+import Image from "next/image";
 
 interface ReviewOverviewProps {
   dateFilter: string;
@@ -8,33 +16,33 @@ interface ReviewOverviewProps {
 }
 
 const reviewData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Total Reviews',
+      label: "Total Reviews",
       data: [150, 230, 180, 290, 320, 250, 180],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const sentimentData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Positive',
+      label: "Positive",
       data: [80, 120, 90, 150, 170, 130, 95],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
     },
     {
-      label: 'Negative',
+      label: "Negative",
       data: [30, 45, 35, 60, 65, 50, 35],
-      borderColor: '#DC2626',
+      borderColor: "#DC2626",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -42,26 +50,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -71,32 +99,62 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function TopReviewCard({ rank, productName, rating, reviewCount, image }) {
+function TopReviewCard({
+  rank,
+  productName,
+  rating,
+  reviewCount,
+  image,
+}: {
+  rank: number;
+  productName: string;
+  rating: number;
+  reviewCount: number;
+  image: string;
+}) {
   return (
     <div className="flex items-center space-x-4 p-4 bg-white rounded-lg border border-gray-200">
       <div className="flex-shrink-0 w-12 h-12">
-        <img src={image} alt={productName} className="w-full h-full rounded-lg object-cover" />
+        <Image
+          src={image}
+          alt={productName}
+          className="w-full h-full rounded-lg object-cover"
+          height={48}
+          width={48}
+        />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 truncate">{productName}</p>
+        <p className="text-sm font-medium text-gray-900 truncate">
+          {productName}
+        </p>
         <div className="flex items-center">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${i < Math.floor(rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                className={`w-4 h-4 ${
+                  i < Math.floor(rating)
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
+                }`}
               />
             ))}
           </div>
-          <span className="ml-2 text-sm text-gray-500">{reviewCount} reviews</span>
+          <span className="ml-2 text-sm text-gray-500">
+            {reviewCount} reviews
+          </span>
         </div>
       </div>
       <div className="flex-shrink-0">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          rank === 1 ? 'bg-yellow-100 text-yellow-800' :
-          rank === 2 ? 'bg-gray-100 text-gray-800' :
-          'bg-orange-100 text-orange-800'
-        }`}>
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            rank === 1
+              ? "bg-yellow-100 text-yellow-800"
+              : rank === 2
+              ? "bg-gray-100 text-gray-800"
+              : "bg-orange-100 text-orange-800"
+          }`}
+        >
           #{rank}
         </span>
       </div>
@@ -104,8 +162,11 @@ function TopReviewCard({ rank, productName, rating, reviewCount, image }) {
   );
 }
 
-export default function ReviewOverview({ dateFilter, onDateFilterChange }: ReviewOverviewProps) {
-  const [chartPeriod, setChartPeriod] = useState('daily');
+export default function ReviewOverview({
+  dateFilter,
+  onDateFilterChange,
+}: ReviewOverviewProps) {
+  const [chartPeriod, setChartPeriod] = useState("daily");
 
   return (
     <div className="space-y-6">
@@ -161,8 +222,10 @@ export default function ReviewOverview({ dateFilter, onDateFilterChange }: Revie
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Review Volume</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Review Volume
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -178,8 +241,10 @@ export default function ReviewOverview({ dateFilter, onDateFilterChange }: Revie
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Sentiment Analysis</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Sentiment Analysis
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -197,7 +262,9 @@ export default function ReviewOverview({ dateFilter, onDateFilterChange }: Revie
 
       {/* Top Reviewed Products */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Top Reviewed Products</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Top Reviewed Products
+        </h3>
         <div className="space-y-4">
           <TopReviewCard
             rank={1}

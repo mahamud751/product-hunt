@@ -17,6 +17,7 @@ import {
   Globe,
   ArrowLeft,
 } from "lucide-react";
+import Image from "next/image";
 
 // Mock data for demonstration
 const thread = {
@@ -201,10 +202,12 @@ const Page = () => {
                   </h1>
 
                   <div className="flex items-center space-x-4">
-                    <img
+                    <Image
                       src={thread.author.avatar}
                       alt={thread.author.name}
                       className="w-10 h-10 rounded-full"
+                      height={40}
+                      width={40}
                     />
                     <div>
                       <div className="flex items-center space-x-2">
@@ -344,10 +347,12 @@ const Page = () => {
                     {/* Comment */}
                     <div className="mb-4">
                       <div className="flex items-center space-x-4 mb-4">
-                        <img
+                        <Image
                           src={comment.author.avatar}
                           alt={comment.author.name}
                           className="w-10 h-10 rounded-full"
+                          height={40}
+                          width={40}
                         />
                         <div>
                           <div className="flex items-center space-x-2">
@@ -397,10 +402,12 @@ const Page = () => {
                           className="border-l-2 border-gray-100 pl-6"
                         >
                           <div className="flex items-center space-x-4 mb-4">
-                            <img
+                            <Image
                               src={reply.author.avatar}
                               alt={reply.author.name}
                               className="w-10 h-10 rounded-full"
+                              height={40}
+                              width={40}
                             />
                             <div>
                               <div className="flex items-center space-x-2">

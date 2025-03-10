@@ -389,10 +389,12 @@ const ProfileUpdate: React.FC<AvatarProps> = ({ authenticatedUser, user }) => {
         {/* Avatar Section */}
         <div className="mb-12 flex items-center gap-8">
           <div className="relative">
-            <img
+            <Image
               src={avatar}
               alt="Profile"
               className="w-32 h-32 rounded-full object-cover"
+              width={128}
+              height={128}
             />
             <label className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-lg cursor-pointer">
               <Upload className="w-5 h-5 text-[#1F1F1F]" />

@@ -1,64 +1,78 @@
-import React, { useState } from 'react';
-import { Search, MoreVertical, CheckCircle, XCircle, Trash2, Filter } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  MoreVertical,
+  CheckCircle,
+  XCircle,
+  Trash2,
+  Filter,
+} from "lucide-react";
+import Image from "next/image";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  plan: 'Free' | 'Premium' | 'Enterprise';
-  status: 'Active' | 'Suspended' | 'Pending';
+  plan: "Free" | "Premium" | "Enterprise";
+  status: "Active" | "Suspended" | "Pending";
   joinDate: string;
   avatar: string;
 }
 
 const mockUsers: User[] = [
   {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    plan: 'Premium',
-    status: 'Active',
-    joinDate: '2024-02-15',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    id: "1",
+    name: "John Doe",
+    email: "john@example.com",
+    plan: "Premium",
+    status: "Active",
+    joinDate: "2024-02-15",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
   },
   {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    plan: 'Enterprise',
-    status: 'Active',
-    joinDate: '2024-02-14',
-    avatar: 'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    id: "2",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    plan: "Enterprise",
+    status: "Active",
+    joinDate: "2024-02-14",
+    avatar:
+      "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
   },
   {
-    id: '3',
-    name: 'Mike Johnson',
-    email: 'mike@example.com',
-    plan: 'Free',
-    status: 'Suspended',
-    joinDate: '2024-02-13',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'
+    id: "3",
+    name: "Mike Johnson",
+    email: "mike@example.com",
+    plan: "Free",
+    status: "Suspended",
+    joinDate: "2024-02-13",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80",
   },
   {
-    id: '4',
-    name: 'Sarah Wilson',
-    email: 'sarah@example.com',
-    plan: 'Premium',
-    status: 'Pending',
-    joinDate: '2024-02-12',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'
+    id: "4",
+    name: "Sarah Wilson",
+    email: "sarah@example.com",
+    plan: "Premium",
+    status: "Pending",
+    joinDate: "2024-02-12",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80",
   },
 ];
 
 export default function Users() {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'email' | 'plan' | 'status' | 'joinDate'>('joinDate');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<
+    "name" | "email" | "plan" | "status" | "joinDate"
+  >("joinDate");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedUsers(mockUsers.map(user => user.id));
+      setSelectedUsers(mockUsers.map((user) => user.id));
     } else {
       setSelectedUsers([]);
     }
@@ -66,7 +80,7 @@ export default function Users() {
 
   const handleSelectUser = (userId: string) => {
     if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
     } else {
       setSelectedUsers([...selectedUsers, userId]);
     }
@@ -74,36 +88,39 @@ export default function Users() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Suspended':
-        return 'bg-red-100 text-red-800';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
+      case "Active":
+        return "bg-green-100 text-green-800";
+      case "Suspended":
+        return "bg-red-100 text-red-800";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getPlanColor = (plan: string) => {
     switch (plan) {
-      case 'Premium':
-        return 'bg-purple-100 text-purple-800';
-      case 'Enterprise':
-        return 'bg-blue-100 text-blue-800';
+      case "Premium":
+        return "bg-purple-100 text-purple-800";
+      case "Enterprise":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredUsers = mockUsers
-    .filter(user => 
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -133,7 +150,7 @@ export default function Users() {
           </div>
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -145,10 +162,10 @@ export default function Users() {
               <option value="joinDate">Sort by Join Date</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -190,16 +207,28 @@ export default function Users() {
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 User
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Plan
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Join Date
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -221,21 +250,37 @@ export default function Users() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <img className="h-10 w-10 rounded-full" src={user.avatar} alt="" />
+                      <Image
+                        className="h-10 w-10 rounded-full"
+                        src={user.avatar}
+                        alt=""
+                        height={40}
+                        width={40}
+                      />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </div>
                       <div className="text-sm text-gray-500">{user.email}</div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPlanColor(user.plan)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getPlanColor(
+                      user.plan
+                    )}`}
+                  >
                     {user.plan}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(user.status)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      user.status
+                    )}`}
+                  >
                     {user.status}
                   </span>
                 </td>

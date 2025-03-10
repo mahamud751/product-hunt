@@ -1,8 +1,8 @@
-import React from 'react';
-import { 
-  Users, 
-  Package, 
-  ThumbsUp, 
+import React from "react";
+import {
+  Users,
+  Package,
+  ThumbsUp,
   MessageSquare,
   DollarSign,
   TrendingUp,
@@ -10,8 +10,8 @@ import {
   Rocket,
   Clock,
   XCircle,
-  MessageCircle
-} from 'lucide-react';
+  MessageCircle,
+} from "lucide-react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,9 +20,10 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import Image from "next/image";
 
 // Register ChartJS components
 ChartJS.register(
@@ -37,27 +38,27 @@ ChartJS.register(
 
 // Chart data and options
 const revenueData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Revenue',
+      label: "Revenue",
       data: [30000, 35000, 32000, 40000, 38000, 42000],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const userGrowthData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Users',
+      label: "Users",
       data: [100, 150, 200, 250, 300, 350],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -65,29 +66,43 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
+      type: "linear" as const,
     },
     x: {
-      type: 'category' as const,
-    }
-  }
+      type: "category" as const,
+    },
+  },
 };
 
 // StatCard Component
-function StatCard({ icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
-        <div className="p-2 bg-[#F5F5F5] rounded-lg">
-          {icon}
-        </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+        <div className="p-2 bg-[#F5F5F5] rounded-lg">{icon}</div>
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
           <TrendingUp className="w-4 h-4" />
           <span className="text-sm font-medium">{trend}</span>
         </div>
@@ -99,14 +114,31 @@ function StatCard({ icon, title, value, trend, isPositive }) {
 }
 
 // ActivityItem Component
-function ActivityItem({ avatar, name, action, product, time }) {
+function ActivityItem({
+  avatar,
+  name,
+  action,
+  product,
+  time,
+}: {
+  avatar: string;
+  name: string;
+  action: string;
+  product: string;
+  time: string;
+}) {
   return (
     <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-      <img src={avatar} alt={name} className="w-10 h-10 rounded-full" />
+      <Image
+        src={avatar}
+        alt={name}
+        className="w-10 h-10 rounded-full"
+        height={40}
+        width={40}
+      />
       <div className="flex-1">
         <p className="text-sm text-gray-900">
-          <span className="font-medium">{name}</span>
-          {' '}{action}{' '}
+          <span className="font-medium">{name}</span> {action}{" "}
           <span className="font-medium">{product}</span>
         </p>
         <p className="text-sm text-gray-500">{time}</p>
@@ -117,12 +149,16 @@ function ActivityItem({ avatar, name, action, product, time }) {
 }
 
 // QuickActionButton Component
-function QuickActionButton({ icon, label }) {
+function QuickActionButton({
+  icon,
+  label,
+}: {
+  icon: React.ReactNode;
+  label: string;
+}) {
   return (
     <button className="flex flex-col items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-[#F5F5F5] transition-colors">
-      <div className="text-[#AF583B] mb-2">
-        {icon}
-      </div>
+      <div className="text-[#AF583B] mb-2">{icon}</div>
       <span className="text-sm font-medium text-gray-700">{label}</span>
     </button>
   );
@@ -132,7 +168,9 @@ export default function Dashboard() {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#1F1F1F]">Dashboard Overview</h2>
+        <h2 className="text-2xl font-bold text-[#1F1F1F]">
+          Dashboard Overview
+        </h2>
         <div className="flex space-x-4">
           <select className="border border-gray-200 rounded-lg px-4 py-2 text-sm">
             <option>Last 7 Days</option>
@@ -145,7 +183,7 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-      
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         <StatCard
@@ -210,7 +248,9 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Revenue Trends</h3>
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Revenue Trends
+            </h3>
             <select className="border border-gray-200 rounded-lg px-3 py-1 text-sm">
               <option>Last 7 Days</option>
               <option>This Month</option>
@@ -223,7 +263,9 @@ export default function Dashboard() {
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">User Growth</h3>
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              User Growth
+            </h3>
             <select className="border border-gray-200 rounded-lg px-3 py-1 text-sm">
               <option>Last 7 Days</option>
               <option>This Month</option>
@@ -241,8 +283,12 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="lg:col-span-2 bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Recent Activity</h3>
-            <button className="text-[#AF583B] text-sm hover:underline">View All</button>
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Recent Activity
+            </h3>
+            <button className="text-[#AF583B] text-sm hover:underline">
+              View All
+            </button>
           </div>
           <div className="space-y-4">
             <ActivityItem
@@ -271,7 +317,9 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Quick Actions</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Quick Actions
+          </h3>
           <div className="grid grid-cols-2 gap-4">
             <QuickActionButton
               icon={<Package className="w-5 h-5" />}

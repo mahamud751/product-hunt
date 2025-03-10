@@ -1,57 +1,71 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Award, Star, Calendar } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Award,
+  Star,
+  Calendar,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Badge {
   id: string;
-  type: 'Day' | 'Week' | 'Month' | 'Year';
+  type: "Day" | "Week" | "Month" | "Year";
   productName: string;
   productId: string;
   awardedAt: string;
   expiresAt: string;
-  status: 'Active' | 'Expired' | 'Revoked';
+  status: "Active" | "Expired" | "Revoked";
 }
 
 const mockBadges: Badge[] = [
   {
-    id: '1',
-    type: 'Day',
-    productName: 'TechLaunch Pro',
-    productId: 'prod_1',
-    awardedAt: '2024-02-15T00:00:00Z',
-    expiresAt: '2024-02-16T00:00:00Z',
-    status: 'Active'
+    id: "1",
+    type: "Day",
+    productName: "TechLaunch Pro",
+    productId: "prod_1",
+    awardedAt: "2024-02-15T00:00:00Z",
+    expiresAt: "2024-02-16T00:00:00Z",
+    status: "Active",
   },
   {
-    id: '2',
-    type: 'Week',
-    productName: 'DesignFlow',
-    productId: 'prod_2',
-    awardedAt: '2024-02-12T00:00:00Z',
-    expiresAt: '2024-02-19T00:00:00Z',
-    status: 'Active'
+    id: "2",
+    type: "Week",
+    productName: "DesignFlow",
+    productId: "prod_2",
+    awardedAt: "2024-02-12T00:00:00Z",
+    expiresAt: "2024-02-19T00:00:00Z",
+    status: "Active",
   },
   {
-    id: '3',
-    type: 'Month',
-    productName: 'MarketMaster',
-    productId: 'prod_3',
-    awardedAt: '2024-01-01T00:00:00Z',
-    expiresAt: '2024-02-01T00:00:00Z',
-    status: 'Expired'
-  }
+    id: "3",
+    type: "Month",
+    productName: "MarketMaster",
+    productId: "prod_3",
+    awardedAt: "2024-01-01T00:00:00Z",
+    expiresAt: "2024-02-01T00:00:00Z",
+    status: "Expired",
+  },
 ];
 
-export default function BadgeManagement({ dateFilter }: { dateFilter: string }) {
+export default function BadgeManagement({
+  dateFilter,
+}: {
+  dateFilter: string;
+}) {
   const [selectedBadges, setSelectedBadges] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [typeFilter, setTypeFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'productName' | 'awardedAt' | 'expiresAt'>('awardedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<
+    "productName" | "awardedAt" | "expiresAt"
+  >("awardedAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedBadges(mockBadges.map(badge => badge.id));
+      setSelectedBadges(mockBadges.map((badge) => badge.id));
     } else {
       setSelectedBadges([]);
     }
@@ -59,7 +73,7 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
 
   const handleSelectBadge = (badgeId: string) => {
     if (selectedBadges.includes(badgeId)) {
-      setSelectedBadges(selectedBadges.filter(id => id !== badgeId));
+      setSelectedBadges(selectedBadges.filter((id) => id !== badgeId));
     } else {
       setSelectedBadges([...selectedBadges, badgeId]);
     }
@@ -67,41 +81,44 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Expired':
-        return 'bg-gray-100 text-gray-800';
-      case 'Revoked':
-        return 'bg-red-100 text-red-800';
+      case "Active":
+        return "bg-green-100 text-green-800";
+      case "Expired":
+        return "bg-gray-100 text-gray-800";
+      case "Revoked":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getBadgeTypeColor = (type: string) => {
     switch (type) {
-      case 'Day':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Week':
-        return 'bg-blue-100 text-blue-800';
-      case 'Month':
-        return 'bg-purple-100 text-purple-800';
-      case 'Year':
-        return 'bg-green-100 text-green-800';
+      case "Day":
+        return "bg-yellow-100 text-yellow-800";
+      case "Week":
+        return "bg-blue-100 text-blue-800";
+      case "Month":
+        return "bg-purple-100 text-purple-800";
+      case "Year":
+        return "bg-green-100 text-green-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredBadges = mockBadges
-    .filter(badge => 
-      badge.productName.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (typeFilter === 'All' || badge.type === typeFilter) &&
-      (statusFilter === 'All' || badge.status === statusFilter)
+    .filter(
+      (badge) =>
+        badge.productName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (typeFilter === "All" || badge.type === typeFilter) &&
+        (statusFilter === "All" || badge.status === statusFilter)
     )
     .sort((a, b) => {
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -110,7 +127,9 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">Badge Management</h2>
+        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+          Badge Management
+        </h2>
         <button className="flex items-center space-x-2 bg-[#AF583B] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#8E4730] transition-colors">
           <Award className="w-4 h-4" />
           <span>Assign Badge</span>
@@ -131,9 +150,9 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
@@ -145,7 +164,7 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
             <option value="Year">Product of the Year</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -158,7 +177,7 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -168,10 +187,10 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
               <option value="expiresAt">Sort by Expiry Date</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -209,19 +228,34 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Product
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Badge Type
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Awarded At
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Expires At
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -243,25 +277,39 @@ export default function BadgeManagement({ dateFilter }: { dateFilter: string }) 
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <img
+                      <Image
                         className="h-10 w-10 rounded-lg object-cover"
                         src={`https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80`}
                         alt=""
+                        height={40}
+                        width={40}
                       />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{badge.productName}</div>
-                      <div className="text-sm text-gray-500">ID: {badge.productId}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {badge.productName}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        ID: {badge.productId}
+                      </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeTypeColor(badge.type)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getBadgeTypeColor(
+                      badge.type
+                    )}`}
+                  >
                     {badge.type}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(badge.status)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      badge.status
+                    )}`}
+                  >
                     {badge.status}
                   </span>
                 </td>

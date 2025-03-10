@@ -1,5 +1,17 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Download, Star, CheckCircle, XCircle, MessageSquare, Flag, Trash2 } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Download,
+  Star,
+  CheckCircle,
+  XCircle,
+  MessageSquare,
+  Flag,
+  Trash2,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Review {
   id: string;
@@ -7,7 +19,7 @@ interface Review {
   productImage: string;
   rating: number;
   content: string;
-  status: 'Approved' | 'Pending' | 'Rejected';
+  status: "Approved" | "Pending" | "Rejected";
   likes: number;
   replies: number;
   reports: number;
@@ -21,69 +33,77 @@ interface Review {
 
 const mockReviews: Review[] = [
   {
-    id: '1',
-    productName: 'TechLaunch Pro',
-    productImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
+    id: "1",
+    productName: "TechLaunch Pro",
+    productImage:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
     rating: 5,
-    content: 'This product has completely transformed our workflow. The automation features are incredible, and the interface is intuitive. Highly recommended!',
-    status: 'Approved',
+    content:
+      "This product has completely transformed our workflow. The automation features are incredible, and the interface is intuitive. Highly recommended!",
+    status: "Approved",
     likes: 24,
     replies: 3,
     reports: 0,
     author: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=1'
+      name: "John Doe",
+      email: "john@example.com",
+      avatar: "https://i.pravatar.cc/40?u=1",
     },
-    createdAt: '2024-02-15T10:00:00Z'
+    createdAt: "2024-02-15T10:00:00Z",
   },
   {
-    id: '2',
-    productName: 'DesignFlow',
-    productImage: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
+    id: "2",
+    productName: "DesignFlow",
+    productImage:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
     rating: 4,
-    content: 'Great design tool with some room for improvement. The collaboration features are excellent, but export options could be better.',
-    status: 'Pending',
+    content:
+      "Great design tool with some room for improvement. The collaboration features are excellent, but export options could be better.",
+    status: "Pending",
     likes: 12,
     replies: 1,
     reports: 0,
     author: {
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=2'
+      name: "Jane Smith",
+      email: "jane@example.com",
+      avatar: "https://i.pravatar.cc/40?u=2",
     },
-    createdAt: '2024-02-14T15:30:00Z'
+    createdAt: "2024-02-14T15:30:00Z",
   },
   {
-    id: '3',
-    productName: 'MarketMaster',
-    productImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
+    id: "3",
+    productName: "MarketMaster",
+    productImage:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
     rating: 2,
-    content: 'The analytics are unreliable and customer support is unresponsive. Not worth the price.',
-    status: 'Rejected',
+    content:
+      "The analytics are unreliable and customer support is unresponsive. Not worth the price.",
+    status: "Rejected",
     likes: 5,
     replies: 2,
     reports: 3,
     author: {
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=3'
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      avatar: "https://i.pravatar.cc/40?u=3",
     },
-    createdAt: '2024-02-13T09:15:00Z'
-  }
+    createdAt: "2024-02-13T09:15:00Z",
+  },
 ];
 
 export default function ReviewList({ dateFilter }: { dateFilter: string }) {
   const [selectedReviews, setSelectedReviews] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [ratingFilter, setRatingFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'rating' | 'likes' | 'createdAt'>('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [ratingFilter, setRatingFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<"rating" | "likes" | "createdAt">(
+    "createdAt"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedReviews(mockReviews.map(review => review.id));
+      setSelectedReviews(mockReviews.map((review) => review.id));
     } else {
       setSelectedReviews([]);
     }
@@ -91,7 +111,7 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
 
   const handleSelectReview = (reviewId: string) => {
     if (selectedReviews.includes(reviewId)) {
-      setSelectedReviews(selectedReviews.filter(id => id !== reviewId));
+      setSelectedReviews(selectedReviews.filter((id) => id !== reviewId));
     } else {
       setSelectedReviews([...selectedReviews, reviewId]);
     }
@@ -99,34 +119,37 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Approved':
-        return 'bg-green-100 text-green-800';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Rejected':
-        return 'bg-red-100 text-red-800';
+      case "Approved":
+        return "bg-green-100 text-green-800";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredReviews = mockReviews
-    .filter(review => 
-      (review.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       review.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       review.author.name.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (statusFilter === 'All' || review.status === statusFilter) &&
-      (ratingFilter === 'All' || review.rating === parseInt(ratingFilter))
+    .filter(
+      (review) =>
+        (review.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          review.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          review.author.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) &&
+        (statusFilter === "All" || review.status === statusFilter) &&
+        (ratingFilter === "All" || review.rating === parseInt(ratingFilter))
     )
     .sort((a, b) => {
-      if (sortBy === 'rating' || sortBy === 'likes') {
-        return sortOrder === 'asc' ? 
-          a[sortBy] - b[sortBy] : 
-          b[sortBy] - a[sortBy];
+      if (sortBy === "rating" || sortBy === "likes") {
+        return sortOrder === "asc"
+          ? a[sortBy] - b[sortBy]
+          : b[sortBy] - a[sortBy];
       }
-      return sortOrder === 'asc' ? 
-        a[sortBy].localeCompare(b[sortBy]) : 
-        b[sortBy].localeCompare(a[sortBy]);
+      return sortOrder === "asc"
+        ? a[sortBy].localeCompare(b[sortBy])
+        : b[sortBy].localeCompare(a[sortBy]);
     });
 
   return (
@@ -154,9 +177,9 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -167,7 +190,7 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
             <option value="Rejected">Rejected</option>
           </select>
 
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={ratingFilter}
             onChange={(e) => setRatingFilter(e.target.value)}
@@ -182,7 +205,7 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -192,10 +215,10 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
               <option value="createdAt">Sort by Date</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -241,25 +264,46 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Product
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Review
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Rating
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Engagement
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Author
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Date
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -281,28 +325,46 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <img className="h-10 w-10 rounded-lg object-cover" src={review.productImage} alt="" />
+                      <Image
+                        className="h-10 w-10 rounded-lg object-cover"
+                        src={review.productImage}
+                        alt=""
+                        height={32}
+                        width={32}
+                      />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{review.productName}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {review.productName}
+                      </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="text-sm text-gray-900 max-w-md">{review.content}</div>
+                  <div className="text-sm text-gray-900 max-w-md">
+                    {review.content}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                        className={`w-4 h-4 ${
+                          i < review.rating
+                            ? "text-yellow-400 fill-current"
+                            : "text-gray-300"
+                        }`}
                       />
                     ))}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(review.status)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      review.status
+                    )}`}
+                  >
                     {review.status}
                   </span>
                 </td>
@@ -325,11 +387,21 @@ export default function ReviewList({ dateFilter }: { dateFilter: string }) {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-8 w-8">
-                      <img className="h-8 w-8 rounded-full" src={review.author.avatar} alt="" />
+                      <Image
+                        className="h-8 w-8 rounded-full"
+                        src={review.author.avatar}
+                        alt=""
+                        height={32}
+                        width={32}
+                      />
                     </div>
                     <div className="ml-3">
-                      <div className="text-sm font-medium text-gray-900">{review.author.name}</div>
-                      <div className="text-sm text-gray-500">{review.author.email}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {review.author.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {review.author.email}
+                      </div>
                     </div>
                   </div>
                 </td>

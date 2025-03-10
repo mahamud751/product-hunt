@@ -110,10 +110,12 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                 >
                   <div className="p-4">
                     <div className="flex items-start">
-                      <img
-                        src={product.logo}
-                        alt={product.name}
+                      <Image
+                        src={product.logo ? product.logo : ""}
+                        alt={product.name || ""}
                         className="w-16 h-16 rounded-lg object-cover"
+                        width={64}
+                        height={64}
                       />
                       <div className="ml-4 flex-1">
                         <div className="flex items-start justify-between">
@@ -197,10 +199,12 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                 <span className="text-xs text-gray-500 ml-auto">Ad</span>
               </div>
               <div className="flex items-center gap-3 mb-3">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1664575602554-2087b04935a5?w=64&h=64&fit=crop"
                   alt="Efficient App"
                   className="w-8 h-8 rounded-lg"
+                  height={32}
+                  width={32}
                 />
                 <h3 className="font-bold text-xl">Efficient App</h3>
               </div>
@@ -223,10 +227,12 @@ const CategoryPageClient: React.FC<CategoryPageClientProps> = ({
                     key={product.id}
                     className="flex items-start p-4 hover:bg-[#F5F5F5] rounded-lg transition-colors"
                   >
-                    <img
-                      src={product.logo}
-                      alt={product.name}
+                    <Image
+                      src={product.logo || ""}
+                      alt={product.name || ""}
                       className="w-12 h-12 rounded-lg object-cover"
+                      width={48}
+                      height={48}
                     />
                     <div className="ml-3 flex-1">
                       <h3 className="font-medium text-sm">

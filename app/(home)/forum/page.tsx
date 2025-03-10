@@ -12,6 +12,7 @@ import {
   Flame,
   Clock,
 } from "lucide-react";
+import Image from "next/image";
 
 type Thread = {
   id: number;
@@ -64,10 +65,12 @@ const productForums: Category[] = [
     name: "Cal",
     path: "p/cal",
     icon: (
-      <img
+      <Image
         src="https://ph-files.imgix.net/d1a35e06-ec86-4a7c-b0f0-b066bef2d1ce.png?auto=format"
         className="w-5 h-5 rounded"
         alt="Cal"
+        width={20}
+        height={20}
       />
     ),
   },
@@ -75,7 +78,7 @@ const productForums: Category[] = [
     name: "Claude",
     path: "p/claude",
     icon: (
-      <img
+      <Image
         src="https://ph-files.imgix.net/3e3b3dd3-cf7d-4354-b90f-5f4d2d3e0a5d.png?auto=format"
         className="w-5 h-5 rounded"
         alt="Claude"
@@ -86,10 +89,12 @@ const productForums: Category[] = [
     name: "Cursor",
     path: "p/cursor",
     icon: (
-      <img
+      <Image
         src="https://ph-files.imgix.net/ec7f0711-b108-4a5e-9d4b-9a0a4fb2901e.png?auto=format"
         className="w-5 h-5 rounded"
         alt="Cursor"
+        width={20}
+        height={20}
       />
     ),
   },
@@ -97,10 +102,12 @@ const productForums: Category[] = [
     name: "Deepgram",
     path: "p/deepgram",
     icon: (
-      <img
+      <Image
         src="https://ph-files.imgix.net/d8c6a846-6451-4e86-b3f7-c7278f51bb46.png?auto=format"
         className="w-5 h-5 rounded"
         alt="Deepgram"
+        width={20}
+        height={20}
       />
     ),
   },
@@ -108,10 +115,12 @@ const productForums: Category[] = [
     name: "Dub",
     path: "p/dub",
     icon: (
-      <img
+      <Image
         src="https://ph-files.imgix.net/4b7c5f2d-ff3b-4bc0-8548-6fdce2c3f96d.png?auto=format"
         className="w-5 h-5 rounded"
         alt="Dub"
+        width={20}
+        height={20}
       />
     ),
   },
@@ -265,10 +274,12 @@ const Forum = () => {
                       </a>
                       <span>by</span>
                       <div className="flex items-center gap-2">
-                        <img
+                        <Image
                           src={thread.author.avatar}
                           alt={thread.author.name}
                           className="w-5 h-5 rounded-full"
+                          height={20}
+                          width={20}
                         />
                         <a
                           href="#"

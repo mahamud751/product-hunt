@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, MessageSquare, Users, Flag, TrendingUp } from 'lucide-react';
+import React, { useState } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  MessageSquare,
+  Users,
+  Flag,
+  TrendingUp,
+} from "lucide-react";
 
 interface ForumOverviewProps {
   dateFilter: string;
@@ -8,33 +15,33 @@ interface ForumOverviewProps {
 }
 
 const threadData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Total Threads',
+      label: "Total Threads",
       data: [150, 230, 180, 290, 320, 250, 180],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const engagementData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Comments',
+      label: "Comments",
       data: [450, 680, 540, 870, 960, 750, 540],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
     },
     {
-      label: 'Active Users',
+      label: "Active Users",
       data: [120, 180, 150, 220, 240, 200, 160],
-      borderColor: '#4B5563',
+      borderColor: "#4B5563",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -42,26 +49,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: any;
+  title: string;
+  value: any;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -71,20 +98,44 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function TopThreadCard({ rank, title, author, category, replies, views }) {
+function TopThreadCard({
+  rank,
+  title,
+  author,
+  category,
+  replies,
+  views,
+}: {
+  rank: number;
+  title: string;
+  author: string;
+  category: string;
+  replies: number;
+  views: number;
+}) {
   return (
     <div className="flex items-center space-x-4 p-4 bg-white rounded-lg border border-gray-200">
       <div className="flex-shrink-0 w-12 h-12">
-        <div className={`w-full h-full rounded-lg flex items-center justify-center ${
-          rank === 1 ? 'bg-yellow-100' :
-          rank === 2 ? 'bg-gray-100' :
-          'bg-orange-100'
-        }`}>
-          <span className={`text-lg font-bold ${
-            rank === 1 ? 'text-yellow-800' :
-            rank === 2 ? 'text-gray-800' :
-            'text-orange-800'
-          }`}>#{rank}</span>
+        <div
+          className={`w-full h-full rounded-lg flex items-center justify-center ${
+            rank === 1
+              ? "bg-yellow-100"
+              : rank === 2
+              ? "bg-gray-100"
+              : "bg-orange-100"
+          }`}
+        >
+          <span
+            className={`text-lg font-bold ${
+              rank === 1
+                ? "text-yellow-800"
+                : rank === 2
+                ? "text-gray-800"
+                : "text-orange-800"
+            }`}
+          >
+            #{rank}
+          </span>
         </div>
       </div>
       <div className="flex-1 min-w-0">
@@ -92,7 +143,9 @@ function TopThreadCard({ rank, title, author, category, replies, views }) {
         <div className="flex items-center text-sm text-gray-500">
           <span>{author}</span>
           <span className="mx-2">•</span>
-          <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">{category}</span>
+          <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs">
+            {category}
+          </span>
         </div>
       </div>
       <div className="flex items-center space-x-4 text-sm text-gray-500">
@@ -107,8 +160,11 @@ function TopThreadCard({ rank, title, author, category, replies, views }) {
   );
 }
 
-export default function ForumOverview({ dateFilter, onDateFilterChange }: ForumOverviewProps) {
-  const [chartPeriod, setChartPeriod] = useState('daily');
+export default function ForumOverview({
+  dateFilter,
+  onDateFilterChange,
+}: ForumOverviewProps) {
+  const [chartPeriod, setChartPeriod] = useState("daily");
 
   return (
     <div className="space-y-6">
@@ -164,8 +220,10 @@ export default function ForumOverview({ dateFilter, onDateFilterChange }: ForumO
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Thread Activity</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Thread Activity
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -181,8 +239,10 @@ export default function ForumOverview({ dateFilter, onDateFilterChange }: ForumO
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">User Engagement</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              User Engagement
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -200,7 +260,9 @@ export default function ForumOverview({ dateFilter, onDateFilterChange }: ForumO
 
       {/* Top Threads */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Trending Discussions</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Trending Discussions
+        </h3>
         <div className="space-y-4">
           <TopThreadCard
             rank={1}

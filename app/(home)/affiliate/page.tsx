@@ -15,6 +15,7 @@ import {
   CreditCard,
   LineChart,
 } from "lucide-react";
+import Image from "next/image";
 
 function Affiliate() {
   const [planType, setPlanType] = useState("pro");
@@ -310,7 +311,7 @@ function Affiliate() {
                 <h3 className="text-xl font-bold mb-2">Real-Time Tracking</h3>
                 <p>
                   Monitor clicks, conversions & payouts with our intuitive
-                  dashboard. Always know how you're performing.
+                  dashboard. Always know how you&apos;re performing.
                 </p>
               </div>
             </div>
@@ -346,10 +347,12 @@ function Affiliate() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-[#F5F5F5] p-8 rounded-xl shadow-md">
               <div className="flex items-center mb-4">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"
                   alt="John D."
                   className="w-16 h-16 rounded-full object-cover mr-4"
+                  width={100}
+                  height={100}
                 />
                 <div>
                   <h3 className="font-bold">John D.</h3>
@@ -366,18 +369,20 @@ function Affiliate() {
                 </div>
               </div>
               <p className="italic">
-                "I made over $3,500 in my first month! The recurring commissions
-                are a game-changer. This is the easiest way to generate passive
-                income online."
+                &quot;I made over $3,500 in my first month! The recurring
+                commissions are a game-changer. This is the easiest way to
+                generate passive income online.&quot;
               </p>
             </div>
 
             <div className="bg-[#F5F5F5] p-8 rounded-xl shadow-md">
               <div className="flex items-center mb-4">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"
                   alt="Sarah M."
                   className="w-16 h-16 rounded-full object-cover mr-4"
+                  height={100}
+                  width={100}
                 />
                 <div>
                   <h3 className="font-bold">Sarah M.</h3>
@@ -394,18 +399,20 @@ function Affiliate() {
                 </div>
               </div>
               <p className="italic">
-                "As a blogger, I've tried many affiliate programs, but this one
-                has the best conversion rates by far. The recurring commissions
-                have doubled my monthly income!"
+                &ldquo;As a blogger, I&apos;ve tried many affiliate programs,
+                but this one has the best conversion rates by far. The recurring
+                commissions have doubled my monthly income!&rdquo;
               </p>
             </div>
 
             <div className="bg-[#F5F5F5] p-8 rounded-xl shadow-md">
               <div className="flex items-center mb-4">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80"
                   alt="Michael T."
                   className="w-16 h-16 rounded-full object-cover mr-4"
+                  height={100}
+                  width={100}
                 />
                 <div>
                   <h3 className="font-bold">Michael T.</h3>
@@ -422,9 +429,9 @@ function Affiliate() {
                 </div>
               </div>
               <p className="italic">
-                "The tracking dashboard is incredible. I can see exactly where
-                my conversions are coming from and optimize my strategy. I'm now
-                earning $5,000+ monthly!"
+                &quot;The tracking dashboard is incredible. I can see exactly
+                where my conversions are coming from and optimize my strategy.
+                I&apos;m now earning $5,000+ monthly!&quot;
               </p>
             </div>
           </div>
@@ -436,7 +443,7 @@ function Affiliate() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Got Questions? We've Got Answers!
+              Got Questions? We&apos;ve Got Answers!
             </h2>
           </div>
 

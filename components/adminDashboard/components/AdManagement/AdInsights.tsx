@@ -1,39 +1,47 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, DollarSign, Eye, MousePointer, TrendingUp } from 'lucide-react';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  DollarSign,
+  Eye,
+  MousePointer,
+  TrendingUp,
+} from "lucide-react";
+import Image from "next/image";
 
 interface AdInsightsProps {
   dateFilter: string;
 }
 
 const performanceData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Impressions',
+      label: "Impressions",
       data: [15000, 23000, 18000, 29000, 32000, 25000],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
     },
     {
-      label: 'Clicks',
+      label: "Clicks",
       data: [750, 1150, 900, 1450, 1600, 1250],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const conversionData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Conversion Rate',
+      label: "Conversion Rate",
       data: [4.2, 4.3, 4.1, 4.4, 4.5, 4.3],
-      borderColor: '#4B5563',
+      borderColor: "#4B5563",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -41,26 +49,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -70,18 +98,44 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function TopPerformerCard({ rank, name, image, impressions, clicks, ctr, revenue }) {
+function TopPerformerCard({
+  rank,
+  name,
+  image,
+  impressions,
+  clicks,
+  ctr,
+  revenue,
+}: {
+  rank: number;
+  name: string;
+  image: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  revenue: number;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
       <div className="flex items-center mb-4">
-        <img src={image} alt={name} className="w-12 h-12 rounded-lg object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          className="w-12 h-12 rounded-lg object-cover"
+          width={64}
+          height={64}
+        />
         <div className="ml-4">
           <h3 className="text-lg font-medium text-gray-900">{name}</h3>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            rank === 1 ? 'bg-yellow-100 text-yellow-800' :
-            rank === 2 ? 'bg-gray-100 text-gray-800' :
-            'bg-orange-100 text-orange-800'
-          }`}>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${
+              rank === 1
+                ? "bg-yellow-100 text-yellow-800"
+                : rank === 2
+                ? "bg-gray-100 text-gray-800"
+                : "bg-orange-100 text-orange-800"
+            }`}
+          >
             #{rank} Top Performer
           </span>
         </div>
@@ -89,11 +143,15 @@ function TopPerformerCard({ rank, name, image, impressions, clicks, ctr, revenue
       <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <p className="text-sm text-gray-500">Impressions</p>
-          <p className="text-lg font-semibold text-gray-900">{impressions.toLocaleString()}</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {impressions.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-500">Clicks</p>
-          <p className="text-lg font-semibold text-gray-900">{clicks.toLocaleString()}</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {clicks.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="text-sm text-gray-500">CTR</p>
@@ -101,7 +159,9 @@ function TopPerformerCard({ rank, name, image, impressions, clicks, ctr, revenue
         </div>
         <div>
           <p className="text-sm text-gray-500">Revenue</p>
-          <p className="text-lg font-semibold text-[#AF583B]">${revenue.toLocaleString()}</p>
+          <p className="text-lg font-semibold text-[#AF583B]">
+            ${revenue.toLocaleString()}
+          </p>
         </div>
       </div>
     </div>
@@ -157,13 +217,17 @@ export default function AdInsights({ dateFilter }: AdInsightsProps) {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Performance Metrics</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Performance Metrics
+          </h3>
           <div className="h-80">
             <Line data={performanceData} options={chartOptions} />
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Conversion Trends</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Conversion Trends
+          </h3>
           <div className="h-80">
             <Line data={conversionData} options={chartOptions} />
           </div>
@@ -172,7 +236,9 @@ export default function AdInsights({ dateFilter }: AdInsightsProps) {
 
       {/* Top Performers */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Top Performing Ads</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Top Performing Ads
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <TopPerformerCard
             rank={1}

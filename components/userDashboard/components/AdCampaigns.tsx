@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Package,
   Edit,
@@ -13,14 +13,15 @@ import {
   ChevronDown,
   CreditCard,
   Image as ImageIcon,
-} from 'lucide-react';
-import clsx from 'clsx';
+} from "lucide-react";
+import clsx from "clsx";
+import Image from "next/image";
 
 type Campaign = {
   id: string;
   productName: string;
   headline: string;
-  status: 'active' | 'pending';
+  status: "active" | "pending";
   startDate: string;
   endDate: string;
   placements: string[];
@@ -28,43 +29,54 @@ type Campaign = {
 
 const MOCK_CAMPAIGNS: Campaign[] = [
   {
-    id: '1',
-    productName: 'ProductX',
-    headline: 'The next generation of product management',
-    status: 'active',
-    startDate: '2024-03-15',
-    endDate: '2024-04-15',
-    placements: ['Spotlight', 'Top of Search'],
+    id: "1",
+    productName: "ProductX",
+    headline: "The next generation of product management",
+    status: "active",
+    startDate: "2024-03-15",
+    endDate: "2024-04-15",
+    placements: ["Spotlight", "Top of Search"],
   },
   {
-    id: '2',
-    productName: 'LaunchPro',
-    headline: 'Launch your product with confidence',
-    status: 'active',
-    startDate: '2024-03-10',
-    endDate: '2024-04-10',
-    placements: ['Sidebar'],
+    id: "2",
+    productName: "LaunchPro",
+    headline: "Launch your product with confidence",
+    status: "active",
+    startDate: "2024-03-10",
+    endDate: "2024-04-10",
+    placements: ["Sidebar"],
   },
 ];
 
-const StatusBadge = ({ status }: { status: Campaign['status'] }) => {
+const StatusBadge = ({ status }: { status: Campaign["status"] }) => {
   const statusConfig = {
-    active: { color: 'bg-green-100 text-green-800', icon: CheckCircle2 },
-    pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
+    active: { color: "bg-green-100 text-green-800", icon: CheckCircle2 },
+    pending: { color: "bg-yellow-100 text-yellow-800", icon: Clock },
   };
 
   const config = statusConfig[status];
   const Icon = config.icon;
 
   return (
-    <span className={clsx('px-3 py-1 rounded-full flex items-center gap-1 w-fit', config.color)}>
+    <span
+      className={clsx(
+        "px-3 py-1 rounded-full flex items-center gap-1 w-fit",
+        config.color
+      )}
+    >
       <Icon className="w-4 h-4" />
       <span className="capitalize">{status}</span>
     </span>
   );
 };
 
-const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const CreateCampaignModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
   const [step, setStep] = useState(1);
   const [selectedPlacements, setSelectedPlacements] = useState<string[]>([]);
 
@@ -72,33 +84,37 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   const placements = [
     {
-      id: 'spotlight',
-      name: 'Spotlight Ad',
+      id: "spotlight",
+      name: "Spotlight Ad",
       price: 10,
-      description: 'Featured in the spotlight section',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=300&h=200',
+      description: "Featured in the spotlight section",
+      image:
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=300&h=200",
     },
     {
-      id: 'top-search',
-      name: 'Top of Search Ad',
+      id: "top-search",
+      name: "Top of Search Ad",
       price: 50,
-      description: 'Appear at the top of search results',
-      image: 'https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?auto=format&fit=crop&q=80&w=300&h=200',
+      description: "Appear at the top of search results",
+      image:
+        "https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?auto=format&fit=crop&q=80&w=300&h=200",
     },
     {
-      id: 'sidebar',
-      name: 'Sidebar Ad',
+      id: "sidebar",
+      name: "Sidebar Ad",
       price: 20,
-      description: 'Display in the sidebar section',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=300&h=200',
+      description: "Display in the sidebar section",
+      image:
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=300&h=200",
     },
   ];
 
   const calculateTotal = () => {
     const days = 20; // Example duration
     return selectedPlacements.reduce((total, placement) => {
-      const placementPrice = placements.find(p => p.id === placement)?.price || 0;
-      return total + (placementPrice * days);
+      const placementPrice =
+        placements.find((p) => p.id === placement)?.price || 0;
+      return total + placementPrice * days;
     }, 0);
   };
 
@@ -107,7 +123,10 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
       <div className="bg-white rounded-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Create Ad Campaign</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             <AlertCircle className="w-6 h-6" />
           </button>
         </div>
@@ -147,25 +166,27 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                       <div
                         key={placement.id}
                         className={clsx(
-                          'border rounded-lg p-4 cursor-pointer transition-all',
+                          "border rounded-lg p-4 cursor-pointer transition-all",
                           selectedPlacements.includes(placement.id)
-                            ? 'border-[#AF583B] bg-[#AF583B]/5'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? "border-[#AF583B] bg-[#AF583B]/5"
+                            : "border-gray-200 hover:border-gray-300"
                         )}
                         onClick={() => {
-                          setSelectedPlacements(prev =>
+                          setSelectedPlacements((prev) =>
                             prev.includes(placement.id)
-                              ? prev.filter(id => id !== placement.id)
+                              ? prev.filter((id) => id !== placement.id)
                               : [...prev, placement.id]
                           );
                         }}
                       >
                         <div className="flex gap-4">
                           <div className="w-32 h-20 bg-gray-100 rounded-lg overflow-hidden">
-                            <img
+                            <Image
                               src={placement.image}
                               alt={placement.name}
                               className="w-full h-full object-cover"
+                              height={80}
+                              width={120}
                             />
                           </div>
                           <div>
@@ -193,13 +214,18 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-medium mb-2">Selected Placements</h4>
                   {selectedPlacements.length === 0 ? (
-                    <p className="text-sm text-gray-500">No placements selected</p>
+                    <p className="text-sm text-gray-500">
+                      No placements selected
+                    </p>
                   ) : (
                     <div className="space-y-2">
-                      {selectedPlacements.map(id => {
-                        const placement = placements.find(p => p.id === id);
+                      {selectedPlacements.map((id) => {
+                        const placement = placements.find((p) => p.id === id);
                         return (
-                          <div key={id} className="flex justify-between text-sm">
+                          <div
+                            key={id}
+                            className="flex justify-between text-sm"
+                          >
                             <span>{placement?.name}</span>
                             <span>${placement?.price} / day</span>
                           </div>
@@ -222,7 +248,8 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
                     Proceed to Payment
                   </button>
                   <p className="text-xs text-gray-500 text-center">
-                    By proceeding, you agree that campaigns cannot be canceled/edited without admin approval.
+                    By proceeding, you agree that campaigns cannot be
+                    canceled/edited without admin approval.
                   </p>
                 </div>
               </div>
@@ -235,19 +262,19 @@ const CreateCampaignModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 };
 
 export default function AdCampaigns() {
-  const [activeTab, setActiveTab] = useState<'active' | 'pending'>('active');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState<"active" | "pending">("active");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const tabs = [
-    { id: 'active' as const, label: 'Active', count: 2 },
-    { id: 'pending' as const, label: 'Pending', count: 0 },
+    { id: "active" as const, label: "Active", count: 2 },
+    { id: "pending" as const, label: "Pending", count: 0 },
   ];
 
   const filteredCampaigns = MOCK_CAMPAIGNS.filter(
     (campaign) =>
       campaign.status === activeTab &&
-      (searchTerm === '' ||
+      (searchTerm === "" ||
         campaign.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         campaign.headline.toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -273,10 +300,10 @@ export default function AdCampaigns() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={clsx(
-                    'px-4 py-2 rounded-lg flex items-center gap-2',
+                    "px-4 py-2 rounded-lg flex items-center gap-2",
                     activeTab === tab.id
-                      ? 'bg-gray-50 text-gray-900 font-medium'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      ? "bg-gray-50 text-gray-900 font-medium"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   )}
                 >
                   {tab.label}
@@ -312,12 +339,24 @@ export default function AdCampaigns() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="text-left p-4 font-medium text-gray-600">Product Name</th>
-                  <th className="text-left p-4 font-medium text-gray-600">Headline</th>
-                  <th className="text-left p-4 font-medium text-gray-600">Status</th>
-                  <th className="text-left p-4 font-medium text-gray-600">Start Date</th>
-                  <th className="text-left p-4 font-medium text-gray-600">End Date</th>
-                  <th className="text-right p-4 font-medium text-gray-600">Actions</th>
+                  <th className="text-left p-4 font-medium text-gray-600">
+                    Product Name
+                  </th>
+                  <th className="text-left p-4 font-medium text-gray-600">
+                    Headline
+                  </th>
+                  <th className="text-left p-4 font-medium text-gray-600">
+                    Status
+                  </th>
+                  <th className="text-left p-4 font-medium text-gray-600">
+                    Start Date
+                  </th>
+                  <th className="text-left p-4 font-medium text-gray-600">
+                    End Date
+                  </th>
+                  <th className="text-right p-4 font-medium text-gray-600">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -325,7 +364,9 @@ export default function AdCampaigns() {
                   <tr key={campaign.id} className="border-b border-gray-100">
                     <td className="p-4">
                       <div className="flex flex-col gap-1">
-                        <span className="font-medium">{campaign.productName}</span>
+                        <span className="font-medium">
+                          {campaign.productName}
+                        </span>
                         <div className="flex gap-1">
                           {campaign.placements.map((placement) => (
                             <span

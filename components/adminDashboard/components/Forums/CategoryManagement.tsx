@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Plus, Edit3, Trash2, MessageSquare } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Plus,
+  Edit3,
+  Trash2,
+  MessageSquare,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Category {
   id: string;
@@ -18,70 +27,76 @@ interface Category {
 
 const mockCategories: Category[] = [
   {
-    id: '1',
-    name: 'Product Launch',
-    slug: 'product-launch',
-    description: 'Discussions about launching and promoting new products',
+    id: "1",
+    name: "Product Launch",
+    slug: "product-launch",
+    description: "Discussions about launching and promoting new products",
     threadCount: 156,
     moderators: [
       {
-        name: 'John Doe',
-        email: 'john@example.com',
-        avatar: 'https://i.pravatar.cc/40?u=1'
+        name: "John Doe",
+        email: "john@example.com",
+        avatar: "https://i.pravatar.cc/40?u=1",
       },
       {
-        name: 'Jane Smith',
-        email: 'jane@example.com',
-        avatar: 'https://i.pravatar.cc/40?u=2'
-      }
+        name: "Jane Smith",
+        email: "jane@example.com",
+        avatar: "https://i.pravatar.cc/40?u=2",
+      },
     ],
     isPrivate: false,
-    createdAt: '2024-02-15T10:00:00Z'
+    createdAt: "2024-02-15T10:00:00Z",
   },
   {
-    id: '2',
-    name: 'Marketing',
-    slug: 'marketing',
-    description: 'Marketing strategies and best practices',
+    id: "2",
+    name: "Marketing",
+    slug: "marketing",
+    description: "Marketing strategies and best practices",
     threadCount: 98,
     moderators: [
       {
-        name: 'Mike Johnson',
-        email: 'mike@example.com',
-        avatar: 'https://i.pravatar.cc/40?u=3'
-      }
+        name: "Mike Johnson",
+        email: "mike@example.com",
+        avatar: "https://i.pravatar.cc/40?u=3",
+      },
     ],
     isPrivate: false,
-    createdAt: '2024-02-14T15:30:00Z'
+    createdAt: "2024-02-14T15:30:00Z",
   },
   {
-    id: '3',
-    name: 'Community',
-    slug: 'community',
-    description: 'Building and managing product communities',
+    id: "3",
+    name: "Community",
+    slug: "community",
+    description: "Building and managing product communities",
     threadCount: 45,
     moderators: [
       {
-        name: 'Sarah Wilson',
-        email: 'sarah@example.com',
-        avatar: 'https://i.pravatar.cc/40?u=4'
-      }
+        name: "Sarah Wilson",
+        email: "sarah@example.com",
+        avatar: "https://i.pravatar.cc/40?u=4",
+      },
     ],
     isPrivate: true,
-    createdAt: '2024-02-13T09:15:00Z'
-  }
+    createdAt: "2024-02-13T09:15:00Z",
+  },
 ];
 
-export default function CategoryManagement({ dateFilter }: { dateFilter: string }) {
+export default function CategoryManagement({
+  dateFilter,
+}: {
+  dateFilter: string;
+}) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [visibilityFilter, setVisibilityFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'name' | 'threadCount' | 'createdAt'>('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [visibilityFilter, setVisibilityFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<"name" | "threadCount" | "createdAt">(
+    "createdAt"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedCategories(mockCategories.map(category => category.id));
+      setSelectedCategories(mockCategories.map((category) => category.id));
     } else {
       setSelectedCategories([]);
     }
@@ -89,25 +104,36 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
 
   const handleSelectCategory = (categoryId: string) => {
     if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+      setSelectedCategories(
+        selectedCategories.filter((id) => id !== categoryId)
+      );
     } else {
       setSelectedCategories([...selectedCategories, categoryId]);
     }
   };
 
   const filteredCategories = mockCategories
-    .filter(category => 
-      (category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       category.description.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (visibilityFilter === 'All' || 
-       (visibilityFilter === 'Private' ? category.isPrivate : !category.isPrivate))
+    .filter(
+      (category) =>
+        (category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          category.description
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) &&
+        (visibilityFilter === "All" ||
+          (visibilityFilter === "Private"
+            ? category.isPrivate
+            : !category.isPrivate))
     )
     .sort((a, b) => {
-      if (sortBy === 'threadCount') {
-        return sortOrder === 'asc' ? a.threadCount - b.threadCount : b.threadCount - a.threadCount;
+      if (sortBy === "threadCount") {
+        return sortOrder === "asc"
+          ? a.threadCount - b.threadCount
+          : b.threadCount - a.threadCount;
       }
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -116,7 +142,9 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">Category Management</h2>
+        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+          Category Management
+        </h2>
         <button className="flex items-center space-x-2 bg-[#AF583B] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#8E4730] transition-colors">
           <Plus className="w-4 h-4" />
           <span>New Category</span>
@@ -137,9 +165,9 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={visibilityFilter}
             onChange={(e) => setVisibilityFilter(e.target.value)}
@@ -151,7 +179,7 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -161,10 +189,10 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
               <option value="createdAt">Sort by Created</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -202,19 +230,34 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Category
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Threads
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Visibility
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Moderators
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Created At
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -235,9 +278,15 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                 </td>
                 <td className="px-6 py-4">
                   <div>
-                    <div className="text-sm font-medium text-gray-900">{category.name}</div>
-                    <div className="text-sm text-gray-500">{category.description}</div>
-                    <div className="text-xs text-gray-400 mt-1">Slug: {category.slug}</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {category.name}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {category.description}
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Slug: {category.slug}
+                    </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -247,21 +296,27 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    category.isPrivate ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'
-                  }`}>
-                    {category.isPrivate ? 'Private' : 'Public'}
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      category.isPrivate
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {category.isPrivate ? "Private" : "Public"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex -space-x-2">
                     {category.moderators.map((moderator, index) => (
-                      <img
+                      <Image
                         key={index}
                         className="h-8 w-8 rounded-full ring-2 ring-white"
                         src={moderator.avatar}
                         alt={moderator.name}
                         title={moderator.name}
+                        width={32}
+                        height={32}
                       />
                     ))}
                   </div>

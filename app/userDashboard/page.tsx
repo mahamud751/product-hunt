@@ -33,6 +33,7 @@ import Deals from "@/components/userDashboard/components/Deals";
 import Reviews from "@/components/userDashboard/components/Reviews";
 import Affiliate from "@/components/userDashboard/components/Affiliate";
 import RewardsTab from "@/components/userDashboard/components/Rewards";
+import Image from "next/image";
 
 const data = [
   { name: "Mon", views: 4000, upvotes: 2400 },
@@ -113,10 +114,12 @@ const Header = () => (
           <Bell className="w-5 h-5" />
         </button>
         <div className="flex items-center space-x-2">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             alt="Profile"
             className="w-8 h-8 rounded-full"
+            width={32}
+            height={32}
           />
           <button className="flex items-center space-x-1 hover:bg-gray-100 p-2 rounded-lg">
             <span>John Doe</span>
@@ -232,7 +235,7 @@ const Dashboard = () => (
                 <div>
                   <h3 className="font-medium">New Product Submitted</h3>
                   <p className="text-sm text-gray-600">
-                    You submitted "ProductX" for review
+                    You submitted &quot;ProductX&quot; for review
                   </p>
                   <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
                 </div>

@@ -40,6 +40,7 @@ import AdManagement from "@/components/adminDashboard/components/AdManagement";
 import Rewards from "@/components/adminDashboard/components/Rewards";
 import Settings from "@/components/adminDashboard/components/Settings";
 import Products from "@/components/adminDashboard/components/Products";
+import Image from "next/image";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", color: "#AF583B" },
@@ -63,18 +64,32 @@ function App() {
   const [blogTab, setBlogTab] = useState("posts");
   const [blogMode, setBlogMode] = useState<"list" | "create">("list");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (!savedTheme) {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return savedTheme === "dark";
-  });
+  const [darkMode, setDarkMode] = useState(false); // Default to false until client-side check
+  const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
 
+  // Ensure localStorage and window are only accessed after mounting on the client
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem("theme", darkMode ? "dark" : "light");
-  }, [darkMode]);
+    setIsMounted(true); // Mark as mounted
+    const savedTheme =
+      typeof window !== "undefined" ? localStorage.getItem("theme") : null;
+    const prefersDark =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (savedTheme) {
+      setDarkMode(savedTheme === "dark");
+    } else {
+      setDarkMode(prefersDark);
+    }
+  }, []);
+
+  // Update document class and localStorage only after mounting
+  useEffect(() => {
+    if (isMounted) {
+      document.documentElement.classList.toggle("dark", darkMode);
+      localStorage.setItem("theme", darkMode ? "dark" : "light");
+    }
+  }, [darkMode, isMounted]);
 
   const renderBlogContent = () => {
     if (blogMode === "create") {
@@ -163,6 +178,11 @@ function App() {
     }
   };
 
+  // Avoid rendering until the component is mounted to prevent hydration mismatches
+  if (!isMounted) {
+    return null; // Or a loading placeholder if preferred
+  }
+
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
       <aside
@@ -246,10 +266,12 @@ function App() {
                 <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <div className="flex items-center space-x-3">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
+                  width={32}
+                  height={32}
                 />
                 <div>
                   <p className="text-sm font-medium text-content-light dark:text-content-dark">

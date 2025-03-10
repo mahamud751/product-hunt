@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Download, Plus, CheckCircle, XCircle, Edit3, Trash2 } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Download,
+  Plus,
+  CheckCircle,
+  XCircle,
+  Edit3,
+  Trash2,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Deal {
   id: string;
   productName: string;
   productImage: string;
   dealName: string;
-  discountType: 'percentage' | 'fixed';
+  discountType: "percentage" | "fixed";
   discountValue: number;
-  status: 'Draft' | 'Submitted' | 'Approved' | 'Rejected' | 'Active' | 'Expired';
+  status:
+    | "Draft"
+    | "Submitted"
+    | "Approved"
+    | "Rejected"
+    | "Active"
+    | "Expired";
   startDate: string;
   endDate: string;
   redemptions: number;
@@ -21,68 +38,79 @@ interface Deal {
 
 const mockDeals: Deal[] = [
   {
-    id: '1',
-    productName: 'TechLaunch Pro',
-    productImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    dealName: 'Launch Week Special',
-    discountType: 'percentage',
+    id: "1",
+    productName: "TechLaunch Pro",
+    productImage:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    dealName: "Launch Week Special",
+    discountType: "percentage",
     discountValue: 50,
-    status: 'Active',
-    startDate: '2024-02-15',
-    endDate: '2024-03-15',
+    status: "Active",
+    startDate: "2024-02-15",
+    endDate: "2024-03-15",
     redemptions: 156,
     createdBy: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=1'
-    }
+      name: "John Doe",
+      email: "john@example.com",
+      avatar: "https://i.pravatar.cc/40?u=1",
+    },
   },
   {
-    id: '2',
-    productName: 'DesignFlow',
-    productImage: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    dealName: 'Early Bird Discount',
-    discountType: 'percentage',
+    id: "2",
+    productName: "DesignFlow",
+    productImage:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    dealName: "Early Bird Discount",
+    discountType: "percentage",
     discountValue: 30,
-    status: 'Submitted',
-    startDate: '2024-03-01',
-    endDate: '2024-03-31',
+    status: "Submitted",
+    startDate: "2024-03-01",
+    endDate: "2024-03-31",
     redemptions: 0,
     createdBy: {
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=2'
-    }
+      name: "Jane Smith",
+      email: "jane@example.com",
+      avatar: "https://i.pravatar.cc/40?u=2",
+    },
   },
   {
-    id: '3',
-    productName: 'MarketMaster',
-    productImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80',
-    dealName: 'Spring Sale',
-    discountType: 'fixed',
+    id: "3",
+    productName: "MarketMaster",
+    productImage:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80",
+    dealName: "Spring Sale",
+    discountType: "fixed",
     discountValue: 99,
-    status: 'Draft',
-    startDate: '2024-04-01',
-    endDate: '2024-04-30',
+    status: "Draft",
+    startDate: "2024-04-01",
+    endDate: "2024-04-30",
     redemptions: 0,
     createdBy: {
-      name: 'Mike Johnson',
-      email: 'mike@example.com',
-      avatar: 'https://i.pravatar.cc/40?u=3'
-    }
-  }
+      name: "Mike Johnson",
+      email: "mike@example.com",
+      avatar: "https://i.pravatar.cc/40?u=3",
+    },
+  },
 ];
 
-export default function DealList({ status, dateFilter }: { status: string; dateFilter: string }) {
+export default function DealList({
+  status,
+  dateFilter,
+}: {
+  status: string;
+  dateFilter: string;
+}) {
   const [selectedDeals, setSelectedDeals] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [discountFilter, setDiscountFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'productName' | 'startDate' | 'redemptions'>('startDate');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [discountFilter, setDiscountFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<
+    "productName" | "startDate" | "redemptions"
+  >("startDate");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedDeals(mockDeals.map(deal => deal.id));
+      setSelectedDeals(mockDeals.map((deal) => deal.id));
     } else {
       setSelectedDeals([]);
     }
@@ -90,7 +118,7 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
 
   const handleSelectDeal = (dealId: string) => {
     if (selectedDeals.includes(dealId)) {
-      setSelectedDeals(selectedDeals.filter(id => id !== dealId));
+      setSelectedDeals(selectedDeals.filter((id) => id !== dealId));
     } else {
       setSelectedDeals([...selectedDeals, dealId]);
     }
@@ -98,34 +126,40 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Active':
-        return 'bg-green-100 text-green-800';
-      case 'Draft':
-        return 'bg-gray-100 text-gray-800';
-      case 'Submitted':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Rejected':
-        return 'bg-red-100 text-red-800';
-      case 'Expired':
-        return 'bg-purple-100 text-purple-800';
+      case "Active":
+        return "bg-green-100 text-green-800";
+      case "Draft":
+        return "bg-gray-100 text-gray-800";
+      case "Submitted":
+        return "bg-yellow-100 text-yellow-800";
+      case "Rejected":
+        return "bg-red-100 text-red-800";
+      case "Expired":
+        return "bg-purple-100 text-purple-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const filteredDeals = mockDeals
-    .filter(deal => 
-      (deal.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       deal.dealName.toLowerCase().includes(searchQuery.toLowerCase())) &&
-      (discountFilter === 'All' || deal.discountType === discountFilter.toLowerCase()) &&
-      (status === 'overview' || deal.status.toLowerCase() === status)
+    .filter(
+      (deal) =>
+        (deal.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          deal.dealName.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (discountFilter === "All" ||
+          deal.discountType === discountFilter.toLowerCase()) &&
+        (status === "overview" || deal.status.toLowerCase() === status)
     )
     .sort((a, b) => {
-      if (sortBy === 'redemptions') {
-        return sortOrder === 'asc' ? a.redemptions - b.redemptions : b.redemptions - a.redemptions;
+      if (sortBy === "redemptions") {
+        return sortOrder === "asc"
+          ? a.redemptions - b.redemptions
+          : b.redemptions - a.redemptions;
       }
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -163,9 +197,9 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={discountFilter}
             onChange={(e) => setDiscountFilter(e.target.value)}
@@ -177,7 +211,7 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -187,10 +221,10 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
               <option value="redemptions">Sort by Redemptions</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -236,22 +270,40 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Product
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Deal
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Discount
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Duration
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Created By
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -273,10 +325,18 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <img className="h-10 w-10 rounded-lg object-cover" src={deal.productImage} alt="" />
+                      <Image
+                        className="h-10 w-10 rounded-lg object-cover"
+                        src={deal.productImage}
+                        alt=""
+                        height={40}
+                        width={40}
+                      />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{deal.productName}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {deal.productName}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -284,10 +344,16 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
                   {deal.dealName}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {deal.discountType === 'percentage' ? `${deal.discountValue}% off` : `$${deal.discountValue} off`}
+                  {deal.discountType === "percentage"
+                    ? `${deal.discountValue}% off`
+                    : `$${deal.discountValue} off`}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(deal.status)}`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      deal.status
+                    )}`}
+                  >
                     {deal.status}
                   </span>
                 </td>
@@ -299,11 +365,21 @@ export default function DealList({ status, dateFilter }: { status: string; dateF
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-8 w-8">
-                      <img className="h-8 w-8 rounded-full" src={deal.createdBy.avatar} alt="" />
+                      <Image
+                        className="h-8 w-8 rounded-full"
+                        src={deal.createdBy.avatar}
+                        alt=""
+                        height={32}
+                        width={32}
+                      />
                     </div>
                     <div className="ml-3">
-                      <div className="text-sm font-medium text-gray-900">{deal.createdBy.name}</div>
-                      <div className="text-sm text-gray-500">{deal.createdBy.email}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {deal.createdBy.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {deal.createdBy.email}
+                      </div>
                     </div>
                   </div>
                 </td>

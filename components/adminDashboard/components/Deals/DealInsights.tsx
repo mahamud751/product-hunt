@@ -1,39 +1,47 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, Gift, Clock, CheckCircle, XCircle } from 'lucide-react';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  Gift,
+  Clock,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import Image from "next/image";
 
 interface DealInsightsProps {
   dateFilter: string;
 }
 
 const dealTrendsData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Approved Deals',
+      label: "Approved Deals",
       data: [45, 52, 49, 60, 55, 65],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
     },
     {
-      label: 'Rejected Deals',
+      label: "Rejected Deals",
       data: [10, 15, 12, 8, 9, 11],
-      borderColor: '#DC2626',
+      borderColor: "#DC2626",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const redemptionData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
-      label: 'Deal Redemptions',
+      label: "Deal Redemptions",
       data: [150, 230, 180, 290, 320, 250],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -41,26 +49,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: any;
+  title: any;
+  value: any;
+  trend: any;
+  isPositive: any;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -70,11 +98,31 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function ModeratorCard({ name, email, avatar, approvals, rejections, avgResponseTime }) {
+function ModeratorCard({
+  name,
+  email,
+  avatar,
+  approvals,
+  rejections,
+  avgResponseTime,
+}: {
+  name: string;
+  email: string;
+  avatar: string;
+  approvals: number;
+  rejections: number;
+  avgResponseTime: number;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200">
       <div className="flex items-center mb-4">
-        <img src={avatar} alt={name} className="w-12 h-12 rounded-full" />
+        <Image
+          src={avatar}
+          alt={name}
+          className="w-12 h-12 rounded-full"
+          height={48}
+          width={48}
+        />
         <div className="ml-4">
           <h3 className="text-lg font-medium text-gray-900">{name}</h3>
           <p className="text-sm text-gray-500">{email}</p>
@@ -91,7 +139,9 @@ function ModeratorCard({ name, email, avatar, approvals, rejections, avgResponse
         </div>
         <div>
           <p className="text-sm text-gray-500">Avg. Response</p>
-          <p className="text-lg font-semibold text-blue-600">{avgResponseTime}</p>
+          <p className="text-lg font-semibold text-blue-600">
+            {avgResponseTime}
+          </p>
         </div>
       </div>
     </div>
@@ -147,13 +197,17 @@ export default function DealInsights({ dateFilter }: DealInsightsProps) {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Deal Approval Trends</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Deal Approval Trends
+          </h3>
           <div className="h-80">
             <Line data={dealTrendsData} options={chartOptions} />
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Redemption Trends</h3>
+          <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+            Redemption Trends
+          </h3>
           <div className="h-80">
             <Line data={redemptionData} options={chartOptions} />
           </div>
@@ -162,7 +216,9 @@ export default function DealInsights({ dateFilter }: DealInsightsProps) {
 
       {/* Moderator Performance */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Moderator Performance</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Moderator Performance
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <ModeratorCard
             name="John Doe"
@@ -170,7 +226,7 @@ export default function DealInsights({ dateFilter }: DealInsightsProps) {
             avatar="https://i.pravatar.cc/150?u=1"
             approvals={124}
             rejections={18}
-            avgResponseTime="1.8h"
+            avgResponseTime={1.8}
           />
           <ModeratorCard
             name="Jane Smith"
@@ -178,7 +234,7 @@ export default function DealInsights({ dateFilter }: DealInsightsProps) {
             avatar="https://i.pravatar.cc/150?u=2"
             approvals={98}
             rejections={12}
-            avgResponseTime="2.2h"
+            avgResponseTime={2.2}
           />
           <ModeratorCard
             name="Mike Johnson"
@@ -186,7 +242,7 @@ export default function DealInsights({ dateFilter }: DealInsightsProps) {
             avatar="https://i.pravatar.cc/150?u=3"
             approvals={156}
             rejections={24}
-            avgResponseTime="1.5h"
+            avgResponseTime={1.5}
           />
         </div>
       </div>

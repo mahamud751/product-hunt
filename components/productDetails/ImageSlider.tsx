@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 
 const ImageSlider = ({ photos }: { photos: string[] }) => {
@@ -40,10 +41,12 @@ const ImageSlider = ({ photos }: { photos: string[] }) => {
                 index
               )} px-1`}
             >
-              <img
+              <Image
                 src={photo}
                 alt={`Product Screenshot ${index + 1}`}
                 className="w-full h-[200px] object-cover rounded-lg"
+                width={800}
+                height={450}
               />
             </div>
           ))}

@@ -13,6 +13,7 @@ import {
 import { Breadcrumbs } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Link from "next/link";
+import Image from "next/image";
 
 const testimonialAvatar =
   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80";
@@ -84,10 +85,12 @@ const Submit = () => {
             </p>
           </div>
           <div className="mt-6 flex items-center justify-center gap-3">
-            <img
+            <Image
               src={testimonialAvatar}
               alt="Customer Avatar"
               className="w-10 h-10 rounded-full"
+              width={40}
+              height={40}
             />
             <p>Used by 1000+ founders</p>
           </div>
@@ -104,10 +107,12 @@ const Submit = () => {
             Our customers achieved incredible outcomes in just 30 days!
           </p>
           <div className="rounded-xl overflow-hidden shadow-xl">
-            <img
+            <Image
               src={screenshotImage}
               alt="Dashboard Screenshot"
               className="w-full h-auto"
+              width={1200}
+              height={800}
             />
           </div>
         </div>
@@ -412,10 +417,12 @@ const Submit = () => {
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-white p-8 rounded-xl shadow-md">
                 <div className="flex items-start gap-4 mb-4">
-                  <img
+                  <Image
                     src={testimonial.avatar}
                     alt={testimonial.name}
                     className="w-12 h-12 rounded-full"
+                    height={48}
+                    width={48}
                   />
                   <div>
                     <h3 className="font-semibold">{testimonial.name}</h3>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Camera, Shield, History, Link } from "lucide-react";
+import Image from "next/image";
 
 interface User {
   name: string;
@@ -21,10 +22,12 @@ export function ProfileSettings({ user }: { user: User }) {
       {/* Profile Picture Section */}
       <div className="flex items-start space-x-6">
         <div className="relative">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover"
+            height={96}
+            width={96}
           />
           <button className="absolute bottom-0 right-0 p-1.5 bg-[#AF583B] rounded-full text-white hover:bg-[#8F4731] transition-colors">
             <Camera className="w-4 h-4" />

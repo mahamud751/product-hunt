@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { ArrowUpRight, ArrowDownRight, DollarSign, Eye, MousePointer, TrendingUp } from 'lucide-react';
+import React, { useState } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  DollarSign,
+  Eye,
+  MousePointer,
+  TrendingUp,
+} from "lucide-react";
+import Image from "next/image";
 
 interface AdOverviewProps {
   dateFilter: string;
@@ -8,33 +16,33 @@ interface AdOverviewProps {
 }
 
 const revenueData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Ad Revenue',
+      label: "Ad Revenue",
       data: [1500, 2300, 1800, 2900, 3200, 2500, 1800],
-      borderColor: '#AF583B',
+      borderColor: "#AF583B",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const performanceData = {
-  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   datasets: [
     {
-      label: 'Impressions',
+      label: "Impressions",
       data: [15000, 23000, 18000, 29000, 32000, 25000, 18000],
-      borderColor: '#198E49',
+      borderColor: "#198E49",
       tension: 0.4,
     },
     {
-      label: 'Clicks',
+      label: "Clicks",
       data: [750, 1150, 900, 1450, 1600, 1250, 900],
-      borderColor: '#4B5563',
+      borderColor: "#4B5563",
       tension: 0.4,
-    }
-  ]
+    },
+  ],
 };
 
 const chartOptions = {
@@ -42,26 +50,46 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
   },
   scales: {
     y: {
       beginAtZero: true,
-      type: 'linear' as const,
-    }
-  }
+      type: "linear" as const,
+    },
+  },
 };
 
-function StatCard({ icon: Icon, title, value, trend, isPositive }) {
+function StatCard({
+  icon: Icon,
+  title,
+  value,
+  trend,
+  isPositive,
+}: {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  trend: string;
+  isPositive: boolean;
+}) {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="p-2 bg-[#F5F5F5] rounded-lg">
           <Icon className="w-6 h-6 text-[#AF583B]" />
         </div>
-        <div className={`flex items-center space-x-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-          {isPositive ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        <div
+          className={`flex items-center space-x-1 ${
+            isPositive ? "text-green-500" : "text-red-500"
+          }`}
+        >
+          {isPositive ? (
+            <ArrowUpRight className="w-4 h-4" />
+          ) : (
+            <ArrowDownRight className="w-4 h-4" />
+          )}
           <span className="text-sm font-medium">{trend}</span>
         </div>
       </div>
@@ -71,11 +99,31 @@ function StatCard({ icon: Icon, title, value, trend, isPositive }) {
   );
 }
 
-function TopCampaignCard({ rank, name, impressions, clicks, ctr, image }) {
+function TopCampaignCard({
+  rank,
+  name,
+  impressions,
+  clicks,
+  ctr,
+  image,
+}: {
+  rank: number;
+  name: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  image: string;
+}) {
   return (
     <div className="flex items-center space-x-4 p-4 bg-white rounded-lg border border-gray-200">
       <div className="flex-shrink-0 w-12 h-12">
-        <img src={image} alt={name} className="w-full h-full rounded-lg object-cover" />
+        <Image
+          src={image}
+          alt={name}
+          className="w-full h-full rounded-lg object-cover"
+          height={48}
+          width={48}
+        />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
@@ -88,11 +136,15 @@ function TopCampaignCard({ rank, name, impressions, clicks, ctr, image }) {
         </div>
       </div>
       <div className="flex-shrink-0">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          rank === 1 ? 'bg-yellow-100 text-yellow-800' :
-          rank === 2 ? 'bg-gray-100 text-gray-800' :
-          'bg-orange-100 text-orange-800'
-        }`}>
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            rank === 1
+              ? "bg-yellow-100 text-yellow-800"
+              : rank === 2
+              ? "bg-gray-100 text-gray-800"
+              : "bg-orange-100 text-orange-800"
+          }`}
+        >
           #{rank}
         </span>
       </div>
@@ -100,8 +152,11 @@ function TopCampaignCard({ rank, name, impressions, clicks, ctr, image }) {
   );
 }
 
-export default function AdOverview({ dateFilter, onDateFilterChange }: AdOverviewProps) {
-  const [chartPeriod, setChartPeriod] = useState('daily');
+export default function AdOverview({
+  dateFilter,
+  onDateFilterChange,
+}: AdOverviewProps) {
+  const [chartPeriod, setChartPeriod] = useState("daily");
 
   return (
     <div className="space-y-6">
@@ -157,8 +212,10 @@ export default function AdOverview({ dateFilter, onDateFilterChange }: AdOvervie
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Revenue Trends</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Revenue Trends
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -174,8 +231,10 @@ export default function AdOverview({ dateFilter, onDateFilterChange }: AdOvervie
         </div>
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-[#1F1F1F]">Performance Metrics</h3>
-            <select 
+            <h3 className="text-lg font-semibold text-[#1F1F1F]">
+              Performance Metrics
+            </h3>
+            <select
               className="border border-gray-200 rounded-lg px-3 py-1 text-sm"
               value={chartPeriod}
               onChange={(e) => setChartPeriod(e.target.value)}
@@ -193,29 +252,31 @@ export default function AdOverview({ dateFilter, onDateFilterChange }: AdOvervie
 
       {/* Top Performing Campaigns */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">Top Performing Campaigns</h3>
+        <h3 className="text-lg font-semibold text-[#1F1F1F] mb-4">
+          Top Performing Campaigns
+        </h3>
         <div className="space-y-4">
           <TopCampaignCard
             rank={1}
             name="TechLaunch Pro - Spotlight"
-            impressions="15.4K"
-            clicks="770"
+            impressions={15.4}
+            clicks={770}
             ctr={5.0}
             image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80"
           />
           <TopCampaignCard
             rank={2}
             name="DesignFlow - Top of Search"
-            impressions="12.2K"
-            clicks="610"
+            impressions={12.2}
+            clicks={610}
             ctr={5.0}
             image="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80"
           />
           <TopCampaignCard
             rank={3}
             name="MarketMaster - Sidebar"
-            impressions="8.8K"
-            clicks="396"
+            impressions={parseInt("8.8K")}
+            clicks={396}
             ctr={4.5}
             image="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=64&h=64&q=80"
           />

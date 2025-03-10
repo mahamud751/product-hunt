@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  CheckCircle,
+  XCircle,
+  Trash2,
+} from "lucide-react";
+import Image from "next/image";
 
 interface Affiliate {
   id: string;
@@ -8,53 +16,55 @@ interface Affiliate {
   countryCode: string;
   totalConversions: number;
   revenueGenerated: number;
-  status: 'Active' | 'Suspended';
+  status: "Active" | "Suspended";
   joinDate: string;
 }
 
 const mockAffiliates: Affiliate[] = [
   {
-    id: '1',
-    email: 'sarah@example.com',
-    country: 'United States',
-    countryCode: 'US',
+    id: "1",
+    email: "sarah@example.com",
+    country: "United States",
+    countryCode: "US",
     totalConversions: 156,
     revenueGenerated: 12500,
-    status: 'Active',
-    joinDate: '2024-01-15'
+    status: "Active",
+    joinDate: "2024-01-15",
   },
   {
-    id: '2',
-    email: 'michael@example.com',
-    country: 'United Kingdom',
-    countryCode: 'GB',
+    id: "2",
+    email: "michael@example.com",
+    country: "United Kingdom",
+    countryCode: "GB",
     totalConversions: 98,
     revenueGenerated: 8200,
-    status: 'Active',
-    joinDate: '2024-01-20'
+    status: "Active",
+    joinDate: "2024-01-20",
   },
   {
-    id: '3',
-    email: 'emma@example.com',
-    country: 'Canada',
-    countryCode: 'CA',
+    id: "3",
+    email: "emma@example.com",
+    country: "Canada",
+    countryCode: "CA",
     totalConversions: 45,
     revenueGenerated: 3800,
-    status: 'Suspended',
-    joinDate: '2024-02-01'
-  }
+    status: "Suspended",
+    joinDate: "2024-02-01",
+  },
 ];
 
 export default function AffiliatePartners() {
   const [selectedAffiliates, setSelectedAffiliates] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'email' | 'conversions' | 'revenue'>('revenue');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState<"email" | "conversions" | "revenue">(
+    "revenue"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedAffiliates(mockAffiliates.map(affiliate => affiliate.id));
+      setSelectedAffiliates(mockAffiliates.map((affiliate) => affiliate.id));
     } else {
       setSelectedAffiliates([]);
     }
@@ -62,29 +72,32 @@ export default function AffiliatePartners() {
 
   const handleSelectAffiliate = (affiliateId: string) => {
     if (selectedAffiliates.includes(affiliateId)) {
-      setSelectedAffiliates(selectedAffiliates.filter(id => id !== affiliateId));
+      setSelectedAffiliates(
+        selectedAffiliates.filter((id) => id !== affiliateId)
+      );
     } else {
       setSelectedAffiliates([...selectedAffiliates, affiliateId]);
     }
   };
 
   const filteredAffiliates = mockAffiliates
-    .filter(affiliate => 
-      affiliate.email.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (statusFilter === 'All' || affiliate.status === statusFilter)
+    .filter(
+      (affiliate) =>
+        affiliate.email.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (statusFilter === "All" || affiliate.status === statusFilter)
     )
     .sort((a, b) => {
-      if (sortBy === 'email') {
-        return sortOrder === 'asc' 
+      if (sortBy === "email") {
+        return sortOrder === "asc"
           ? a.email.localeCompare(b.email)
           : b.email.localeCompare(a.email);
       }
-      if (sortBy === 'conversions') {
-        return sortOrder === 'asc'
+      if (sortBy === "conversions") {
+        return sortOrder === "asc"
           ? a.totalConversions - b.totalConversions
           : b.totalConversions - a.totalConversions;
       }
-      return sortOrder === 'asc'
+      return sortOrder === "asc"
         ? a.revenueGenerated - b.revenueGenerated
         : b.revenueGenerated - a.revenueGenerated;
     });
@@ -93,7 +106,9 @@ export default function AffiliatePartners() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#1F1F1F]">Affiliate Partners</h2>
+        <h2 className="text-2xl font-bold text-[#1F1F1F]">
+          Affiliate Partners
+        </h2>
       </div>
 
       {/* Search and Filters */}
@@ -110,9 +125,9 @@ export default function AffiliatePartners() {
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -124,7 +139,7 @@ export default function AffiliatePartners() {
 
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
-            <select 
+            <select
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -134,10 +149,10 @@ export default function AffiliatePartners() {
               <option value="revenue">Sort by Revenue</option>
             </select>
             <button
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
             >
-              {sortOrder === 'asc' ? '↑' : '↓'}
+              {sortOrder === "asc" ? "↑" : "↓"}
             </button>
           </div>
         </div>
@@ -179,19 +194,34 @@ export default function AffiliatePartners() {
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Affiliate
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Country
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Conversions
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Revenue Generated
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Status
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -211,17 +241,25 @@ export default function AffiliatePartners() {
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{affiliate.email}</div>
-                  <div className="text-sm text-gray-500">Joined {new Date(affiliate.joinDate).toLocaleDateString()}</div>
+                  <div className="text-sm font-medium text-gray-900">
+                    {affiliate.email}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Joined {new Date(affiliate.joinDate).toLocaleDateString()}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <img
+                    <Image
                       src={`https://flagcdn.com/w20/${affiliate.countryCode.toLowerCase()}.png`}
                       alt={affiliate.country}
                       className="mr-2 h-4"
+                      height={20}
+                      width={20}
                     />
-                    <span className="text-sm text-gray-900">{affiliate.country}</span>
+                    <span className="text-sm text-gray-900">
+                      {affiliate.country}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -231,9 +269,13 @@ export default function AffiliatePartners() {
                   ${affiliate.revenueGenerated.toLocaleString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    affiliate.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      affiliate.status === "Active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
                     {affiliate.status}
                   </span>
                 </td>
