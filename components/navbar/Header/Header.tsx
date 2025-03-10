@@ -127,9 +127,11 @@ export default function Header({
 
           {/* Right Section - CTAs & User Controls */}
           <div className="hidden lg:flex items-center space-x-4">
-            <button className="px-4 py-2 text-sm font-medium text-[#AF583B] hover:text-[#8E472F] transition-colors">
-              Advertise
-            </button>
+            <Link href="/affiliate">
+              <button className="px-4 py-2 text-sm font-medium text-[#AF583B] hover:text-[#8E472F] transition-colors">
+                Advertise
+              </button>
+            </Link>
             <Submit products={products} authenticatedUser={authenticatedUser} />
             <UserDropdown
               isLoggedIn={isLoggedIn}
