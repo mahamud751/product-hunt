@@ -23,6 +23,7 @@ import {
   Sun,
   Moon,
   Award,
+  LucideIcon,
 } from "lucide-react";
 import Dashboard from "@/components/adminDashboard/components/Dashboard";
 import UsersComponent from "@/components/adminDashboard/components/Users";
@@ -42,34 +43,91 @@ import Settings from "@/components/adminDashboard/components/Settings";
 import Products from "@/components/adminDashboard/components/Products";
 import Image from "next/image";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", color: "#AF583B" },
-  { icon: Users, label: "Users", color: "#1F1F1F" },
-  { icon: Package, label: "Products", color: "#1F1F1F" },
-  { icon: ThumbsUp, label: "Upvotes", color: "#1F1F1F" },
-  { icon: MessageSquare, label: "Reviews", color: "#1F1F1F" },
-  { icon: DollarSign, label: "Revenue", color: "#1F1F1F" },
-  { icon: Gift, label: "Deals", color: "#1F1F1F" },
-  { icon: Megaphone, label: "Ads", color: "#1F1F1F" },
-  { icon: BookOpen, label: "Blog", color: "#1F1F1F" },
-  { icon: MessageSquareDashed, label: "Forum", color: "#1F1F1F" },
-  { icon: Share2, label: "Affiliates", color: "#1F1F1F" },
-  { icon: Award, label: "Rewards", color: "#1F1F1F" },
-  { icon: Briefcase, label: "Services", color: "#1F1F1F" },
-  { icon: SettingsIcon, label: "Settings", color: "#1F1F1F" },
+// Define the type for menu items and subitems
+interface SubMenuItem {
+  label: string;
+  component: React.ReactNode;
+  date?: string; // Optional date for timeline
+}
+
+interface MenuItem {
+  icon: LucideIcon;
+  label: string;
+  color: string;
+  subItems: SubMenuItem[];
+}
+
+const menuItems: MenuItem[] = [
+  { icon: LayoutDashboard, label: "Dashboard", color: "#AF583B", subItems: [] },
+  {
+    icon: Users,
+    label: "Users",
+    color: "#1F1F1F",
+    subItems: [
+      { label: "User List", component: <UsersComponent /> },
+      {
+        label: "Roles",
+        component: <div>Roles Management</div>,
+      },
+    ],
+  },
+  {
+    icon: Package,
+    label: "Products",
+    color: "#1F1F1F",
+    subItems: [
+      { label: "Product List", component: <Products /> },
+      {
+        label: "Categories",
+        component: <div>Categories Management</div>,
+      },
+    ],
+  },
+  {
+    icon: DollarSign,
+    label: "Revenue",
+    color: "#1F1F1F",
+    subItems: [
+      {
+        label: "Orders",
+        component: <div>Orders Management</div>,
+      },
+      {
+        label: "Subscriptions",
+        component: <div>Subscriptions Management</div>,
+      },
+      {
+        label: "Transactions",
+        component: <div>Transactions Management</div>,
+      },
+    ],
+  },
+  { icon: ThumbsUp, label: "Upvotes", color: "#1F1F1F", subItems: [] },
+  { icon: MessageSquare, label: "Reviews", color: "#1F1F1F", subItems: [] },
+  { icon: Gift, label: "Deals", color: "#1F1F1F", subItems: [] },
+  { icon: Megaphone, label: "Ads", color: "#1F1F1F", subItems: [] },
+  { icon: BookOpen, label: "Blog", color: "#1F1F1F", subItems: [] },
+  { icon: MessageSquareDashed, label: "Forum", color: "#1F1F1F", subItems: [] },
+  { icon: Share2, label: "Affiliates", color: "#1F1F1F", subItems: [] },
+  { icon: Award, label: "Rewards", color: "#1F1F1F", subItems: [] },
+  { icon: Briefcase, label: "Services", color: "#1F1F1F", subItems: [] },
+  { icon: SettingsIcon, label: "Settings", color: "#1F1F1F", subItems: [] },
 ];
 
-function App() {
-  const [activeSection, setActiveSection] = useState("Dashboard");
-  const [blogTab, setBlogTab] = useState("posts");
+const App: React.FC = () => {
+  const [activeSection, setActiveSection] = useState<string>("Dashboard");
+  const [activeSubSection, setActiveSubSection] = useState<string>("");
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
+    {}
+  );
+  const [blogTab, setBlogTab] = useState<"posts" | "categories">("posts");
   const [blogMode, setBlogMode] = useState<"list" | "create">("list");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [darkMode, setDarkMode] = useState(false); // Default to false until client-side check
-  const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  // Ensure localStorage and window are only accessed after mounting on the client
   useEffect(() => {
-    setIsMounted(true); // Mark as mounted
+    setIsMounted(true);
     const savedTheme =
       typeof window !== "undefined" ? localStorage.getItem("theme") : null;
     const prefersDark =
@@ -83,7 +141,6 @@ function App() {
     }
   }, []);
 
-  // Update document class and localStorage only after mounting
   useEffect(() => {
     if (isMounted) {
       document.documentElement.classList.toggle("dark", darkMode);
@@ -91,7 +148,7 @@ function App() {
     }
   }, [darkMode, isMounted]);
 
-  const renderBlogContent = () => {
+  const renderBlogContent = (): JSX.Element => {
     if (blogMode === "create") {
       return (
         <div className="p-8">
@@ -103,7 +160,6 @@ function App() {
         </div>
       );
     }
-
     return (
       <div className="p-8">
         <div className="flex justify-between items-center mb-6">
@@ -139,13 +195,21 @@ function App() {
             <span>New {blogTab === "posts" ? "Post" : "Category"}</span>
           </button>
         </div>
-
         {blogTab === "posts" ? <BlogList /> : <BlogCategories />}
       </div>
     );
   };
 
-  const renderContent = () => {
+  const renderContent = (): JSX.Element => {
+    const activeItem = menuItems.find((item) => item.label === activeSection);
+    if (activeSubSection && activeItem?.subItems) {
+      const subItem = activeItem.subItems.find(
+        (sub) => sub.label === activeSubSection
+      );
+      return subItem
+        ? (subItem.component as React.ReactElement)
+        : (null as unknown as React.ReactElement);
+    }
     switch (activeSection) {
       case "Dashboard":
         return <Dashboard />;
@@ -178,9 +242,15 @@ function App() {
     }
   };
 
-  // Avoid rendering until the component is mounted to prevent hydration mismatches
+  const toggleMenu = (label: string): void => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
+
   if (!isMounted) {
-    return null; // Or a loading placeholder if preferred
+    return null;
   }
 
   return (
@@ -205,22 +275,89 @@ function App() {
             {menuItems.map((item) => (
               <li key={item.label}>
                 <button
-                  onClick={() => setActiveSection(item.label)}
+                  onClick={() => {
+                    if (item.subItems.length > 0) {
+                      toggleMenu(item.label);
+                    } else {
+                      setActiveSection(item.label);
+                      setActiveSubSection("");
+                    }
+                  }}
                   className={`flex items-center px-4 py-2 rounded-lg transition-colors w-full text-left ${
-                    activeSection === item.label
+                    activeSection === item.label && !activeSubSection
                       ? "text-primary-500 bg-primary-50 dark:bg-gray-800"
                       : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                   }`}
                 >
                   <item.icon
                     className={`w-5 h-5 mr-3 ${
-                      activeSection === item.label ? "text-primary-500" : ""
+                      activeSection === item.label && !activeSubSection
+                        ? "text-primary-500"
+                        : ""
                     }`}
                   />
                   <span className={`${sidebarCollapsed ? "hidden" : "block"}`}>
                     {item.label}
                   </span>
+                  {item.subItems.length > 0 && !sidebarCollapsed && (
+                    <ChevronDown
+                      className={`w-4 h-4 ml-auto transition-transform ${
+                        expandedMenus[item.label] ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
                 </button>
+                {item.subItems.length > 0 &&
+                  expandedMenus[item.label] &&
+                  !sidebarCollapsed && (
+                    <ul className="ml-8 relative">
+                      {/* Vertical timeline line spanning the entire list */}
+                      <div className="absolute w-px bg-gray-300 dark:bg-gray-600" />
+                      {item.subItems.map((subItem, index) => (
+                        <li
+                          key={subItem.label}
+                          className={`relative rounded-md ${
+                            activeSubSection === subItem.label
+                              ? "text-primary-500 bg-primary-50 dark:bg-gray-800"
+                              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          }`}
+                        >
+                          <div
+                            className="flex items-center w-full rounded-lg transition-colors py-2 mt-1"
+                            onClick={() => {
+                              setActiveSection(item.label);
+                              setActiveSubSection(subItem.label);
+                            }}
+                          >
+                            <div className="relative flex h-6 w-6 items-center justify-center">
+                              {index === 0 && (
+                                <div className="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600" />
+                              )}
+                              {index > 0 &&
+                                index < item.subItems.length - 1 && (
+                                  <>
+                                    <div className="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600" />
+                                    <div className="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600" />
+                                  </>
+                                )}
+                              {index === item.subItems.length - 1 &&
+                                item.subItems.length > 1 && (
+                                  <div className="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600" />
+                                )}
+
+                              {
+                                <span className="relative h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500" />
+                              }
+                            </div>
+
+                            <span className="ml-2 text-sm">
+                              {subItem.label}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
               </li>
             ))}
           </ul>
@@ -260,7 +397,6 @@ function App() {
                   <Moon className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 )}
               </button>
-
               <button className="relative">
                 <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -291,6 +427,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;
