@@ -1,71 +1,29 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  LayoutDashboard,
-  Users,
-  Package,
-  ThumbsUp,
-  MessageSquare,
-  DollarSign,
   Settings as SettingsIcon,
   Bell,
   Search,
   ChevronDown,
-  Megaphone,
-  Gift,
-  BookOpen,
-  MessageSquareDashed,
-  Share2,
-  Briefcase,
   Plus,
-  ChevronLeft,
-  ChevronRight,
   Sun,
   Moon,
-  Award,
   LucideIcon,
 } from "lucide-react";
-import Dashboard from "@/components/adminDashboard/components/Dashboard";
-import UsersComponent from "@/components/adminDashboard/components/Users";
 import BlogList from "@/components/adminDashboard/components/Blog/BlogList";
 import BlogCategories from "@/components/adminDashboard/components/Blog/BlogCategories";
 import BlogEditor from "@/components/adminDashboard/components/Blog/BlogEditor";
 import CategoryEditor from "@/components/adminDashboard/components/Blog/CategoryEditor";
-import Affiliates from "@/components/adminDashboard/components/Affiliates";
-import Revenue from "@/components/adminDashboard/components/Revenue";
-import Upvotes from "@/components/adminDashboard/components/Upvotes";
-import Reviews from "@/components/adminDashboard/components/Reviews";
-import Deals from "@/components/adminDashboard/components/Deals";
-import Forums from "@/components/adminDashboard/components/Forums";
-import AdManagement from "@/components/adminDashboard/components/AdManagement";
-import Rewards from "@/components/adminDashboard/components/Rewards";
-import Settings from "@/components/adminDashboard/components/Settings";
-import Products from "@/components/adminDashboard/components/Products/ProductsList";
 import Image from "next/image";
 
 // Define the type for menu items and subitems
-interface SubMenuItem {
-  label: string;
-  component: React.ReactNode;
-  date?: string; // Optional date for timeline
-}
-
-interface MenuItem {
-  icon: LucideIcon;
-  label: string;
-  color: string;
-  subItems: SubMenuItem[];
-}
 
 const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<string>("Dashboard");
-  const [activeSubSection, setActiveSubSection] = useState<string>("");
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
     {}
   );
   const [blogTab, setBlogTab] = useState<"posts" | "categories">("posts");
   const [blogMode, setBlogMode] = useState<"list" | "create">("list");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [isMounted, setIsMounted] = useState<boolean>(false);
 

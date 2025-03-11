@@ -11,10 +11,9 @@ import {
   Save,
 } from "lucide-react";
 import CreateCategoryModal from "./CreateCategoryModal";
-import { getCategories, categoryUpdate } from "@/lib/server-actions"; // Import categoryUpdate
-import { toast } from "sonner"; // For user feedback
+import { getCategories, categoryUpdate } from "@/lib/server-actions";
+import { toast } from "sonner";
 
-// Update Category interface to match Prisma model
 interface Category {
   id: string;
   name: string;
@@ -22,14 +21,14 @@ interface Category {
   title: string;
   url: string;
   status: "PENDING" | "ACTIVE" | "REJECTED";
-  products: any[]; // Adjust if you have a specific Product type
-  subcategories: any[]; // Adjust if you have a specific Subcategory type
-  slug?: string; // Optional, since not in Prisma model but used in UI
-  productCount?: number; // Computed field
-  createdAt?: string; // Optional, add if Prisma includes it
-  updatedAt?: string; // Optional, add if Prisma includes it
-  seoMetaTitle?: string; // Optional, mapped to title
-  seoMetaDescription?: string; // Optional, mapped to description
+  products: any[];
+  subcategories: any[];
+  slug?: string;
+  productCount?: number;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+  seoMetaTitle?: string;
+  seoMetaDescription?: string;
 }
 
 interface CategoryManagementProps {
@@ -60,28 +59,28 @@ export default function CategoryManagement({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories when page, rowsPerPage, or searchQuery changes
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
         const { categories: fetchedCategories, totalCategories: total } =
           await getCategories(page, rowsPerPage);
-
-        // Map fetched data to match UI Category interface
         const mappedCategories = fetchedCategories.map((cat) => ({
           ...cat,
-          slug: cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"), // Generate slug if not in DB
-          productCount: cat.products.length, // Compute product count
-          seoMetaTitle: cat.title, // Map title to seoMetaTitle
-          seoMetaDescription: cat.description, // Map description to seoMetaDescription
-          //@ts-ignore
-          createdAt: cat.createdAt?.toISOString(), // Ensure string format
-          //@ts-ignore
-          updatedAt: cat.updatedAt?.toISOString(), // Ensure string format
+          slug: cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          productCount: cat.products.length,
+          seoMetaTitle: cat.title,
+          seoMetaDescription: cat.description,
+          createdAt:
+            cat.createdAt instanceof Date
+              ? cat.createdAt.toISOString()
+              : cat.createdAt || "",
+          updatedAt:
+            cat.updatedAt instanceof Date
+              ? cat.updatedAt.toISOString()
+              : cat.updatedAt || "",
         }));
 
-        // Client-side filtering for search
         const filteredCategories = searchQuery
           ? mappedCategories.filter(
               (cat) =>
@@ -101,7 +100,6 @@ export default function CategoryManagement({
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, [page, rowsPerPage, searchQuery]);
 
@@ -128,18 +126,16 @@ export default function CategoryManagement({
 
   const handleSave = async () => {
     if (!isEditing || !editForm.id) return;
-
     setLoading(true);
     try {
       const updatedCategory = await categoryUpdate(editForm.id, {
         name: editForm.name,
         description: editForm.description,
-        title: editForm.seoMetaTitle, // Map seoMetaTitle back to title
-        url: editForm.url || "", // Ensure url is provided
-        status: editForm.status || "ACTIVE", // Default to ACTIVE if not set
+        title: editForm.seoMetaTitle,
+        url: editForm.url || "",
+        status: editForm.status || "ACTIVE",
       });
 
-      // Update the local state with the updated category
       setCategories((prev) =>
         prev.map((cat) =>
           cat.id === updatedCategory.id
@@ -149,15 +145,18 @@ export default function CategoryManagement({
                 productCount: updatedCategory.products.length,
                 seoMetaTitle: updatedCategory.title,
                 seoMetaDescription: updatedCategory.description,
-                //@ts-ignore
-                createdAt: updatedCategory.createdAt?.toISOString(),
-                //@ts-ignore
-                updatedAt: updatedCategory.updatedAt?.toISOString(),
+                createdAt:
+                  updatedCategory.createdAt instanceof Date
+                    ? updatedCategory.createdAt.toISOString()
+                    : updatedCategory.createdAt || "",
+                updatedAt:
+                  updatedCategory.updatedAt instanceof Date
+                    ? updatedCategory.updatedAt.toISOString()
+                    : updatedCategory.updatedAt || "",
               }
             : cat
         )
       );
-
       toast("Category updated successfully!");
       setIsEditing(null);
       setEditForm({});
@@ -181,10 +180,26 @@ export default function CategoryManagement({
       return sortOrder === "asc"
         ? (a.productCount || 0) - (b.productCount || 0)
         : (b.productCount || 0) - (a.productCount || 0);
+    } else if (sortBy === "name") {
+      const val1 = a.name || "";
+      const val2 = b.name || "";
+      return sortOrder === "asc"
+        ? val1.localeCompare(val2)
+        : val2.localeCompare(val1);
+    } else if (sortBy === "updatedAt") {
+      const val1 =
+        a.updatedAt instanceof Date
+          ? a.updatedAt.toISOString()
+          : a.updatedAt || "";
+      const val2 =
+        b.updatedAt instanceof Date
+          ? b.updatedAt.toISOString()
+          : b.updatedAt || "";
+      return sortOrder === "asc"
+        ? val1.localeCompare(val2)
+        : val2.localeCompare(val1);
     }
-    const compareValue = (val1: string, val2: string) =>
-      sortOrder === "asc" ? val1.localeCompare(val2) : val2.localeCompare(val1);
-    return compareValue(a[sortBy] || "", b[sortBy] || "");
+    return 0;
   });
 
   const totalPages = Math.ceil(totalCategories / rowsPerPage);
@@ -211,11 +226,8 @@ export default function CategoryManagement({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">
-          Category Management
-        </h2>
+        <h2 className="text-xl font-semibold">Category Management</h2>
         <button
           onClick={() => setIsCreateModalOpen(true)}
           className="flex items-center space-x-2 bg-[#AF583B] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#8E4730] transition-colors"
@@ -225,7 +237,6 @@ export default function CategoryManagement({
         </button>
       </div>
 
-      {/* Search and Filters */}
       <div className="flex flex-wrap gap-4">
         <div className="flex-1 min-w-[240px]">
           <div className="relative">
@@ -239,11 +250,10 @@ export default function CategoryManagement({
             />
           </div>
         </div>
-
         <div className="flex items-center space-x-2">
           <Filter className="w-5 h-5 text-gray-500" />
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
             value={sortBy}
             onChange={(e) =>
               setSortBy(e.target.value as "name" | "productCount" | "updatedAt")
@@ -262,7 +272,6 @@ export default function CategoryManagement({
         </div>
       </div>
 
-      {/* Bulk Actions */}
       {selectedCategories.length > 0 && (
         <div className="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
           <span className="text-sm text-gray-600">
@@ -281,7 +290,6 @@ export default function CategoryManagement({
         </div>
       )}
 
-      {/* Categories Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -389,7 +397,9 @@ export default function CategoryManagement({
                     {category.productCount || category.products.length}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {category.updatedAt
+                    {category.updatedAt instanceof Date
+                      ? category.updatedAt.toLocaleString()
+                      : category.updatedAt
                       ? new Date(category.updatedAt).toLocaleString()
                       : "N/A"}
                   </td>
@@ -427,7 +437,6 @@ export default function CategoryManagement({
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-between items-center">
         <div className="text-sm text-gray-600">
           Showing {page * rowsPerPage + 1} to{" "}

@@ -1,4 +1,3 @@
-// app/products/categories/page.tsx
 import { getCategories } from "@/lib/server-actions";
 import CategoryManagement from "./CategoryManagement";
 

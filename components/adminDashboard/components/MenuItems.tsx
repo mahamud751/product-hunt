@@ -38,7 +38,7 @@ const MenuItems: MenuItem[] = [
     label: "Dashboard",
     color: "#AF583B",
     subItems: [],
-    path: "/", // No submenus, so it keeps its path
+    path: "/",
   },
   {
     icon: Users,
@@ -80,7 +80,7 @@ const MenuItems: MenuItem[] = [
       },
       {
         label: "Pending",
-        path: "/products/pending",
+        path: "/adminDashboard/pendingProducts",
         component: <div>Pending Approvals Management</div>,
       },
       {
