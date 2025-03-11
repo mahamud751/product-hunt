@@ -71,7 +71,7 @@ export default function CategoryManagement({
                   .includes(searchQuery.toLowerCase())
             )
           : fetchedCategories;
-
+        //@ts-ignore
         setCategories(filteredCategories);
         setTotalCategories(total);
       } catch (error) {
