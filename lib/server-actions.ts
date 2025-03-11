@@ -1236,6 +1236,42 @@ export const getCategories = async (
   return { categories, totalCategories };
 };
 
+export const categoryUpdate = async (
+  id: string,
+  data: {
+    name?: string;
+    description?: string;
+    title?: string;
+    url?: string;
+    status?: "PENDING" | "ACTIVE" | "REJECTED";
+  }
+) => {
+  try {
+    const updatedCategory = await db.category.update({
+      where: { id },
+      data: {
+        name: data.name,
+        description: data.description,
+        title: data.title,
+        url: data.url,
+        status: data.status,
+      },
+      include: {
+        products: true,
+        subcategories: {
+          include: {
+            products: true,
+          },
+        },
+      },
+    });
+    return updatedCategory;
+  } catch (error) {
+    console.error("Error updating category:", error);
+    throw new Error("Failed to update category");
+  }
+};
+
 export const updateCategoryStatus = async (
   categoryId: string,
   status: "PENDING" | "ACTIVE" | "REJECTED"

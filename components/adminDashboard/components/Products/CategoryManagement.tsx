@@ -11,18 +11,25 @@ import {
   Save,
 } from "lucide-react";
 import CreateCategoryModal from "./CreateCategoryModal";
-import { getCategories } from "@/lib/server-actions"; // Import directly
+import { getCategories, categoryUpdate } from "@/lib/server-actions"; // Import categoryUpdate
+import { toast } from "sonner"; // For user feedback
 
+// Update Category interface to match Prisma model
 interface Category {
   id: string;
   name: string;
   description: string;
-  slug: string;
-  productCount: number;
-  createdAt: string;
-  updatedAt: string;
-  seoMetaTitle?: string;
-  seoMetaDescription?: string;
+  title: string;
+  url: string;
+  status: "PENDING" | "ACTIVE" | "REJECTED";
+  products: any[]; // Adjust if you have a specific Product type
+  subcategories: any[]; // Adjust if you have a specific Subcategory type
+  slug?: string; // Optional, since not in Prisma model but used in UI
+  productCount?: number; // Computed field
+  createdAt?: string; // Optional, add if Prisma includes it
+  updatedAt?: string; // Optional, add if Prisma includes it
+  seoMetaTitle?: string; // Optional, mapped to title
+  seoMetaDescription?: string; // Optional, mapped to description
 }
 
 interface CategoryManagementProps {
@@ -61,21 +68,35 @@ export default function CategoryManagement({
         const { categories: fetchedCategories, totalCategories: total } =
           await getCategories(page, rowsPerPage);
 
-        // Client-side filtering for search (since getCategories doesn't handle it)
+        // Map fetched data to match UI Category interface
+        const mappedCategories = fetchedCategories.map((cat) => ({
+          ...cat,
+          slug: cat.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"), // Generate slug if not in DB
+          productCount: cat.products.length, // Compute product count
+          seoMetaTitle: cat.title, // Map title to seoMetaTitle
+          seoMetaDescription: cat.description, // Map description to seoMetaDescription
+          //@ts-ignore
+          createdAt: cat.createdAt?.toISOString(), // Ensure string format
+          //@ts-ignore
+          updatedAt: cat.updatedAt?.toISOString(), // Ensure string format
+        }));
+
+        // Client-side filtering for search
         const filteredCategories = searchQuery
-          ? fetchedCategories.filter(
+          ? mappedCategories.filter(
               (cat) =>
                 cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 cat.description
                   .toLowerCase()
                   .includes(searchQuery.toLowerCase())
             )
-          : fetchedCategories;
-        //@ts-ignore
+          : mappedCategories;
+
         setCategories(filteredCategories);
         setTotalCategories(total);
       } catch (error) {
         console.error("Error fetching categories:", error);
+        toast("Failed to load categories");
       } finally {
         setLoading(false);
       }
@@ -105,10 +126,47 @@ export default function CategoryManagement({
     setEditForm(category);
   };
 
-  const handleSave = () => {
-    // Save changes to backend (implement API call if needed)
-    setIsEditing(null);
-    setEditForm({});
+  const handleSave = async () => {
+    if (!isEditing || !editForm.id) return;
+
+    setLoading(true);
+    try {
+      const updatedCategory = await categoryUpdate(editForm.id, {
+        name: editForm.name,
+        description: editForm.description,
+        title: editForm.seoMetaTitle, // Map seoMetaTitle back to title
+        url: editForm.url || "", // Ensure url is provided
+        status: editForm.status || "ACTIVE", // Default to ACTIVE if not set
+      });
+
+      // Update the local state with the updated category
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.id === updatedCategory.id
+            ? {
+                ...updatedCategory,
+                slug: editForm.slug || generateSlug(updatedCategory.name),
+                productCount: updatedCategory.products.length,
+                seoMetaTitle: updatedCategory.title,
+                seoMetaDescription: updatedCategory.description,
+                //@ts-ignore
+                createdAt: updatedCategory.createdAt?.toISOString(),
+                //@ts-ignore
+                updatedAt: updatedCategory.updatedAt?.toISOString(),
+              }
+            : cat
+        )
+      );
+
+      toast("Category updated successfully!");
+      setIsEditing(null);
+      setEditForm({});
+    } catch (error) {
+      console.error("Error updating category:", error);
+      toast("Failed to update category");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const generateSlug = (name: string) => {
@@ -121,12 +179,12 @@ export default function CategoryManagement({
   const sortedCategories = [...categories].sort((a, b) => {
     if (sortBy === "productCount") {
       return sortOrder === "asc"
-        ? a.productCount - b.productCount
-        : b.productCount - a.productCount;
+        ? (a.productCount || 0) - (b.productCount || 0)
+        : (b.productCount || 0) - (a.productCount || 0);
     }
     const compareValue = (val1: string, val2: string) =>
       sortOrder === "asc" ? val1.localeCompare(val2) : val2.localeCompare(val1);
-    return compareValue(a[sortBy], b[sortBy]);
+    return compareValue(a[sortBy] || "", b[sortBy] || "");
   });
 
   const totalPages = Math.ceil(totalCategories / rowsPerPage);
@@ -324,21 +382,26 @@ export default function CategoryManagement({
                         className="w-full px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
                       />
                     ) : (
-                      category.slug
+                      category.slug || generateSlug(category.name)
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {category.productCount}
+                    {category.productCount || category.products.length}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(category.updatedAt).toLocaleString()}
+                    {category.updatedAt
+                      ? new Date(category.updatedAt).toLocaleString()
+                      : "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-2">
                       {isEditing === category.id ? (
                         <button
                           onClick={handleSave}
-                          className="text-green-600 hover:text-green-700"
+                          disabled={loading}
+                          className={`text-green-600 hover:text-green-700 ${
+                            loading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                         >
                           <Save className="w-4 h-4" />
                         </button>
