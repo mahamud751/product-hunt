@@ -40,7 +40,7 @@ import Forums from "@/components/adminDashboard/components/Forums";
 import AdManagement from "@/components/adminDashboard/components/AdManagement";
 import Rewards from "@/components/adminDashboard/components/Rewards";
 import Settings from "@/components/adminDashboard/components/Settings";
-import Products from "@/components/adminDashboard/components/Products";
+import Products from "@/components/adminDashboard/components/Products/ProductsList";
 import Image from "next/image";
 
 // Define the type for menu items and subitems
@@ -56,63 +56,6 @@ interface MenuItem {
   color: string;
   subItems: SubMenuItem[];
 }
-
-const menuItems: MenuItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard", color: "#AF583B", subItems: [] },
-  {
-    icon: Users,
-    label: "Users",
-    color: "#1F1F1F",
-    subItems: [
-      { label: "User List", component: <UsersComponent /> },
-      {
-        label: "Roles",
-        component: <div>Roles Management</div>,
-      },
-    ],
-  },
-  {
-    icon: Package,
-    label: "Products",
-    color: "#1F1F1F",
-    subItems: [
-      { label: "Product List", component: <Products /> },
-      {
-        label: "Categories",
-        component: <div>Categories Management</div>,
-      },
-    ],
-  },
-  {
-    icon: DollarSign,
-    label: "Revenue",
-    color: "#1F1F1F",
-    subItems: [
-      {
-        label: "Orders",
-        component: <div>Orders Management</div>,
-      },
-      {
-        label: "Subscriptions",
-        component: <div>Subscriptions Management</div>,
-      },
-      {
-        label: "Transactions",
-        component: <div>Transactions Management</div>,
-      },
-    ],
-  },
-  { icon: ThumbsUp, label: "Upvotes", color: "#1F1F1F", subItems: [] },
-  { icon: MessageSquare, label: "Reviews", color: "#1F1F1F", subItems: [] },
-  { icon: Gift, label: "Deals", color: "#1F1F1F", subItems: [] },
-  { icon: Megaphone, label: "Ads", color: "#1F1F1F", subItems: [] },
-  { icon: BookOpen, label: "Blog", color: "#1F1F1F", subItems: [] },
-  { icon: MessageSquareDashed, label: "Forum", color: "#1F1F1F", subItems: [] },
-  { icon: Share2, label: "Affiliates", color: "#1F1F1F", subItems: [] },
-  { icon: Award, label: "Rewards", color: "#1F1F1F", subItems: [] },
-  { icon: Briefcase, label: "Services", color: "#1F1F1F", subItems: [] },
-  { icon: SettingsIcon, label: "Settings", color: "#1F1F1F", subItems: [] },
-];
 
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("Dashboard");
@@ -200,48 +143,6 @@ const App: React.FC = () => {
     );
   };
 
-  const renderContent = (): JSX.Element => {
-    const activeItem = menuItems.find((item) => item.label === activeSection);
-    if (activeSubSection && activeItem?.subItems) {
-      const subItem = activeItem.subItems.find(
-        (sub) => sub.label === activeSubSection
-      );
-      return subItem
-        ? (subItem.component as React.ReactElement)
-        : (null as unknown as React.ReactElement);
-    }
-    switch (activeSection) {
-      case "Dashboard":
-        return <Dashboard />;
-      case "Users":
-        return <UsersComponent />;
-      case "Products":
-        return <Products />;
-      case "Revenue":
-        return <Revenue />;
-      case "Upvotes":
-        return <Upvotes />;
-      case "Reviews":
-        return <Reviews />;
-      case "Deals":
-        return <Deals />;
-      case "Ads":
-        return <AdManagement />;
-      case "Blog":
-        return renderBlogContent();
-      case "Forum":
-        return <Forums />;
-      case "Affiliates":
-        return <Affiliates />;
-      case "Rewards":
-        return <Rewards />;
-      case "Settings":
-        return <Settings />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
   const toggleMenu = (label: string): void => {
     setExpandedMenus((prev) => ({
       ...prev,
@@ -255,126 +156,6 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
-      <aside
-        className={`${
-          sidebarCollapsed ? "w-16" : "w-64"
-        } border-r border-gray-200 dark:border-gray-700 px-4 py-6 transition-all duration-300 ease-in-out relative bg-white dark:bg-gray-900`}
-      >
-        <div className="mb-8 flex items-center">
-          <h1
-            className={`text-xl font-bold text-content-light dark:text-content-dark ${
-              sidebarCollapsed ? "hidden" : "block"
-            }`}
-          >
-            LaunchPad
-          </h1>
-        </div>
-
-        <nav>
-          <ul className="space-y-2">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <button
-                  onClick={() => {
-                    if (item.subItems.length > 0) {
-                      toggleMenu(item.label);
-                    } else {
-                      setActiveSection(item.label);
-                      setActiveSubSection("");
-                    }
-                  }}
-                  className={`flex items-center px-4 py-2 rounded-lg transition-colors w-full text-left ${
-                    activeSection === item.label && !activeSubSection
-                      ? "text-primary-500 bg-primary-50 dark:bg-gray-800"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  }`}
-                >
-                  <item.icon
-                    className={`w-5 h-5 mr-3 ${
-                      activeSection === item.label && !activeSubSection
-                        ? "text-primary-500"
-                        : ""
-                    }`}
-                  />
-                  <span className={`${sidebarCollapsed ? "hidden" : "block"}`}>
-                    {item.label}
-                  </span>
-                  {item.subItems.length > 0 && !sidebarCollapsed && (
-                    <ChevronDown
-                      className={`w-4 h-4 ml-auto transition-transform ${
-                        expandedMenus[item.label] ? "rotate-180" : ""
-                      }`}
-                    />
-                  )}
-                </button>
-                {item.subItems.length > 0 &&
-                  expandedMenus[item.label] &&
-                  !sidebarCollapsed && (
-                    <ul className="ml-8 relative">
-                      {/* Vertical timeline line spanning the entire list */}
-                      <div className="absolute w-px bg-gray-300 dark:bg-gray-600" />
-                      {item.subItems.map((subItem, index) => (
-                        <li
-                          key={subItem.label}
-                          className={`relative rounded-md ${
-                            activeSubSection === subItem.label
-                              ? "text-primary-500 bg-primary-50 dark:bg-gray-800"
-                              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
-                          }`}
-                        >
-                          <div
-                            className="flex items-center w-full rounded-lg transition-colors py-2 mt-1"
-                            onClick={() => {
-                              setActiveSection(item.label);
-                              setActiveSubSection(subItem.label);
-                            }}
-                          >
-                            <div className="relative flex h-6 w-6 items-center justify-center">
-                              {index === 0 && (
-                                <div className="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600" />
-                              )}
-                              {index > 0 &&
-                                index < item.subItems.length - 1 && (
-                                  <>
-                                    <div className="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600" />
-                                    <div className="absolute -bottom-1/2 top-1/2 w-px bg-gray-300 dark:bg-gray-600" />
-                                  </>
-                                )}
-                              {index === item.subItems.length - 1 &&
-                                item.subItems.length > 1 && (
-                                  <div className="absolute -top-1/2 bottom-1/2 w-px bg-gray-300 dark:bg-gray-600" />
-                                )}
-
-                              {
-                                <span className="relative h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500" />
-                              }
-                            </div>
-
-                            <span className="ml-2 text-sm">
-                              {subItem.label}
-                            </span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <button
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          {sidebarCollapsed ? (
-            <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-          ) : (
-            <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-          )}
-        </button>
-      </aside>
-
       <main className="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
         <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-8 py-4 sticky top-0 z-10">
           <div className="flex items-center justify-between">
@@ -422,8 +203,6 @@ const App: React.FC = () => {
             </div>
           </div>
         </header>
-
-        {renderContent()}
       </main>
     </div>
   );
