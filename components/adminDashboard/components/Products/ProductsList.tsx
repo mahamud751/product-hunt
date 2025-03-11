@@ -1,7 +1,8 @@
 import React from "react";
 import ProductList from "./ProductList";
 
-import { getProducts } from "@/lib/server-actions";
+import { getActiveCategory, getProducts } from "@/lib/server-actions";
+import { Category } from "@/services/types";
 
 export default async function ProductsList() {
   const initialPage = 0;
@@ -10,15 +11,16 @@ export default async function ProductsList() {
     initialPage,
     initialRowsPerPage
   );
+  const categories: Category[] = await getActiveCategory();
 
   return (
     <div className="p-8">
-      {/* Section: Products */}
       <section className="mb-12">
         <ProductList
           //@ts-ignore
           initialProducts={products}
           initialTotalProducts={totalProducts}
+          initialCategories={categories} // Pass categories as a prop
         />
       </section>
 

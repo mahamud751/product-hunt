@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import { getProducts, updateProduct } from "@/lib/server-actions";
 import { toast } from "sonner";
+import { Category } from "@/services/types";
 
 // Updated ProductData to include all fields from updateProduct and Prisma model
 interface ProductData {
@@ -87,12 +88,14 @@ interface ProductListProps {
   initialProducts: Product[];
   initialTotalProducts: number;
   dateFilter: string;
+  initialCategories: Category[];
 }
 
 export default function ProductList({
   initialProducts,
   initialTotalProducts,
   dateFilter,
+  initialCategories,
 }: ProductListProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [totalProducts, setTotalProducts] = useState(initialTotalProducts);
@@ -329,18 +332,20 @@ export default function ProductList({
 
         <div className="flex items-center space-x-4">
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="All">All Categories</option>
-            <option value="Development Tools">Development Tools</option>
-            <option value="Design Tools">Design Tools</option>
-            <option value="Marketing">Marketing</option>
+            {initialCategories?.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
 
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -351,7 +356,7 @@ export default function ProductList({
           </select>
 
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
             value={pricingFilter}
             onChange={(e) => setPricingFilter(e.target.value)}
           >
@@ -364,7 +369,7 @@ export default function ProductList({
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
             <select
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
               value={sortBy}
               onChange={(e) =>
                 setSortBy(
@@ -539,7 +544,7 @@ export default function ProductList({
                             )}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {product.description}
+                            {product?.description?.slice(0, 40) || "N/A"}...
                           </div>
                         </div>
                       </div>
@@ -568,7 +573,7 @@ export default function ProductList({
                       </span>
                       {product.price && (
                         <div className="text-sm text-gray-500 mt-1">
-                          {product.price}
+                          From ${product.price}
                         </div>
                       )}
                     </div>

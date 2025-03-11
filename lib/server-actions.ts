@@ -189,6 +189,10 @@ export const getProducts = async (
     skip,
     take,
     where,
+    include: {
+      category: true,
+      user: true,
+    },
   });
 
   const totalProducts = await db.product.count({ where });

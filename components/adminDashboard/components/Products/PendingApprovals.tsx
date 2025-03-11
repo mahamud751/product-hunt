@@ -18,13 +18,15 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  category: string;
-  submittedBy: {
+  category: {
+    name: string;
+  };
+  user: {
     name: string;
     email: string;
-    avatar: string;
+    image: string;
   };
-  submittedAt: string;
+  createdAt: string;
   status: "PENDING" | "ACTIVE" | "REJECTED";
   notes?: string;
   flags: {
@@ -46,8 +48,8 @@ export default function PendingApprovals({
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
-  const [sortBy, setSortBy] = useState<"name" | "submittedAt" | "status">(
-    "submittedAt"
+  const [sortBy, setSortBy] = useState<"name" | "createdAt" | "status">(
+    "createdAt"
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
@@ -136,7 +138,7 @@ export default function PendingApprovals({
           product.description
             .toLowerCase()
             .includes(searchQuery.toLowerCase())) &&
-        (categoryFilter === "All" || product.category === categoryFilter)
+        (categoryFilter === "All" || product.category.name === categoryFilter)
     )
     .sort((a, b) => {
       const compareValue = (val1: string, val2: string) =>
@@ -153,7 +155,7 @@ export default function PendingApprovals({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+        <h2 className="text-xl font-semibold">
           Pending Approvals ({initialTotalProducts})
         </h2>
       </div>
@@ -175,7 +177,7 @@ export default function PendingApprovals({
 
         <div className="flex items-center space-x-4">
           <select
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
@@ -188,12 +190,12 @@ export default function PendingApprovals({
           <div className="flex items-center space-x-2">
             <Filter className="w-5 h-5 text-gray-500" />
             <select
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B] text-black"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
             >
               <option value="name">Sort by Name</option>
-              <option value="submittedAt">Sort by Date</option>
+              <option value="createdAt">Sort by Date</option>
               <option value="status">Sort by Status</option>
             </select>
             <button
@@ -295,7 +297,7 @@ export default function PendingApprovals({
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {product.category}
+                    {product.category?.name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -322,7 +324,7 @@ export default function PendingApprovals({
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(product.submittedAt).toLocaleString()}
+                    {new Date(product.createdAt).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
@@ -355,18 +357,18 @@ export default function PendingApprovals({
                   </h4>
                   <div className="flex items-center">
                     <Image
-                      src={selectedProduct?.submittedBy?.avatar}
-                      alt={selectedProduct?.submittedBy?.name}
+                      src={selectedProduct?.user?.image}
+                      alt={selectedProduct?.user?.name}
                       className="w-10 h-10 rounded-full"
                       height={40}
                       width={40}
                     />
                     <div className="ml-3">
                       <p className="text-sm font-medium text-gray-900">
-                        {selectedProduct?.submittedBy?.name}
+                        {selectedProduct?.user?.name}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {selectedProduct?.submittedBy?.email}
+                        {selectedProduct?.user?.email}
                       </p>
                     </div>
                   </div>
@@ -383,7 +385,7 @@ export default function PendingApprovals({
                     <div className="flex items-center space-x-2">
                       <span className="text-sm text-gray-500">Category:</span>
                       <span className="text-sm text-gray-900">
-                        {selectedProduct?.category}
+                        {selectedProduct?.category.name}
                       </span>
                     </div>
                   </div>
