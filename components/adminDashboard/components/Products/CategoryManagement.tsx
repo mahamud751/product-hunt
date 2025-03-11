@@ -1,6 +1,15 @@
-import React, { useState } from 'react';
-import { Search, Filter, MoreVertical, Plus, Edit3, Trash2, MoveRight, Save } from 'lucide-react';
-import CreateCategoryModal from './CreateCategoryModal';
+import React, { useState } from "react";
+import {
+  Search,
+  Filter,
+  MoreVertical,
+  Plus,
+  Edit3,
+  Trash2,
+  MoveRight,
+  Save,
+} from "lucide-react";
+import CreateCategoryModal from "./CreateCategoryModal";
 
 interface Category {
   id: string;
@@ -16,52 +25,60 @@ interface Category {
 
 const mockCategories: Category[] = [
   {
-    id: '1',
-    name: 'Development Tools',
-    description: 'Tools for software development and programming',
-    slug: 'development-tools',
+    id: "1",
+    name: "Development Tools",
+    description: "Tools for software development and programming",
+    slug: "development-tools",
     productCount: 156,
-    createdAt: '2024-02-15T10:00:00Z',
-    updatedAt: '2024-02-15T10:00:00Z',
-    seoMetaTitle: 'Best Development Tools | LaunchPad',
-    seoMetaDescription: 'Discover the best development tools for your next project'
+    createdAt: "2024-02-15T10:00:00Z",
+    updatedAt: "2024-02-15T10:00:00Z",
+    seoMetaTitle: "Best Development Tools | LaunchPad",
+    seoMetaDescription:
+      "Discover the best development tools for your next project",
   },
   {
-    id: '2',
-    name: 'Design Tools',
-    description: 'Tools for graphic design and UI/UX',
-    slug: 'design-tools',
+    id: "2",
+    name: "Design Tools",
+    description: "Tools for graphic design and UI/UX",
+    slug: "design-tools",
     productCount: 98,
-    createdAt: '2024-02-14T15:30:00Z',
-    updatedAt: '2024-02-14T15:30:00Z',
-    seoMetaTitle: 'Design Tools | LaunchPad',
-    seoMetaDescription: 'Find the perfect design tools for your creative workflow'
+    createdAt: "2024-02-14T15:30:00Z",
+    updatedAt: "2024-02-14T15:30:00Z",
+    seoMetaTitle: "Design Tools | LaunchPad",
+    seoMetaDescription:
+      "Find the perfect design tools for your creative workflow",
   },
   {
-    id: '3',
-    name: 'Marketing',
-    description: 'Marketing and promotion tools',
-    slug: 'marketing',
+    id: "3",
+    name: "Marketing",
+    description: "Marketing and promotion tools",
+    slug: "marketing",
     productCount: 124,
-    createdAt: '2024-02-13T09:15:00Z',
-    updatedAt: '2024-02-13T09:15:00Z',
-    seoMetaTitle: 'Marketing Tools | LaunchPad',
-    seoMetaDescription: 'Explore marketing tools to grow your business'
-  }
+    createdAt: "2024-02-13T09:15:00Z",
+    updatedAt: "2024-02-13T09:15:00Z",
+    seoMetaTitle: "Marketing Tools | LaunchPad",
+    seoMetaDescription: "Explore marketing tools to grow your business",
+  },
 ];
 
-export default function CategoryManagement({ dateFilter }: { dateFilter: string }) {
+export default function CategoryManagement({
+  dateFilter,
+}: {
+  dateFilter: string;
+}) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'productCount' | 'updatedAt'>('updatedAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "productCount" | "updatedAt">(
+    "updatedAt"
+  );
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Category>>({});
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedCategories(mockCategories.map(category => category.id));
+      setSelectedCategories(mockCategories.map((category) => category.id));
     } else {
       setSelectedCategories([]);
     }
@@ -69,7 +86,9 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
 
   const handleSelectCategory = (categoryId: string) => {
     if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+      setSelectedCategories(
+        selectedCategories.filter((id) => id !== categoryId)
+      );
     } else {
       setSelectedCategories([...selectedCategories, categoryId]);
     }
@@ -87,27 +106,37 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
   };
 
   const generateSlug = (name: string) => {
-    return name.toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
   };
 
-  const handleCreateCategory = (category: { name: string; description: string; slug: string }) => {
+  const handleCreateCategory = (category: {
+    name: string;
+    description: string;
+    slug: string;
+  }) => {
     // Here you would normally make an API call to create the category
-    console.log('Creating category:', category);
+    console.log("Creating category:", category);
   };
 
   const filteredCategories = mockCategories
-    .filter(category => 
-      category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(
+      (category) =>
+        category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        category.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortBy === 'productCount') {
-        return sortOrder === 'asc' ? a.productCount - b.productCount : b.productCount - a.productCount;
+      if (sortBy === "productCount") {
+        return sortOrder === "asc"
+          ? a.productCount - b.productCount
+          : b.productCount - a.productCount;
       }
       const compareValue = (val1: string, val2: string) => {
-        return sortOrder === 'asc' ? val1.localeCompare(val2) : val2.localeCompare(val1);
+        return sortOrder === "asc"
+          ? val1.localeCompare(val2)
+          : val2.localeCompare(val1);
       };
       return compareValue(a[sortBy], b[sortBy]);
     });
@@ -116,8 +145,10 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-[#1F1F1F]">Category Management</h2>
-        <button 
+        <h2 className="text-xl font-semibold text-[#1F1F1F]">
+          Category Management
+        </h2>
+        <button
           onClick={() => setIsCreateModalOpen(true)}
           className="flex items-center space-x-2 bg-[#AF583B] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#8E4730] transition-colors"
         >
@@ -140,10 +171,10 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Filter className="w-5 h-5 text-gray-500" />
-          <select 
+          <select
             className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
@@ -153,10 +184,10 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
             <option value="updatedAt">Sort by Updated</option>
           </select>
           <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             className="px-3 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
           >
-            {sortOrder === 'asc' ? '↑' : '↓'}
+            {sortOrder === "asc" ? "↑" : "↓"}
           </button>
         </div>
       </div>
@@ -193,16 +224,28 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                   className="rounded border-gray-300 text-[#AF583B] focus:ring-[#AF583B]"
                 />
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Category
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Slug
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Products
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Last Updated
               </th>
               <th scope="col" className="relative px-6 py-3">
@@ -226,21 +269,32 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                     <div className="space-y-2">
                       <input
                         type="text"
-                        value={editForm.name || ''}
-                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                        value={editForm.name || ""}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, name: e.target.value })
+                        }
                         className="w-full px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
                       />
                       <textarea
-                        value={editForm.description || ''}
-                        onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                        value={editForm.description || ""}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            description: e.target.value,
+                          })
+                        }
                         className="w-full px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
                         rows={2}
                       />
                     </div>
                   ) : (
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{category.name}</div>
-                      <div className="text-sm text-gray-500">{category.description}</div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {category.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {category.description}
+                      </div>
                     </div>
                   )}
                 </td>
@@ -248,8 +302,10 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
                   {isEditing === category.id ? (
                     <input
                       type="text"
-                      value={editForm.slug || generateSlug(editForm.name || '')}
-                      onChange={(e) => setEditForm({ ...editForm, slug: e.target.value })}
+                      value={editForm.slug || generateSlug(editForm.name || "")}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, slug: e.target.value })
+                      }
                       className="w-full px-2 py-1 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-[#AF583B]"
                     />
                   ) : (
@@ -295,7 +351,6 @@ export default function CategoryManagement({ dateFilter }: { dateFilter: string 
       <CreateCategoryModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSubmit={handleCreateCategory}
       />
     </div>
   );
