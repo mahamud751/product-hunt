@@ -141,11 +141,11 @@ export default function PendingApprovals({
         (categoryFilter === "All" || product.category.name === categoryFilter)
     )
     .sort((a, b) => {
-      const compareValue = (val1: string, val2: string) =>
-        sortOrder === "asc"
-          ? val1.localeCompare(val2)
-          : val2.localeCompare(val1);
-      return compareValue(a[sortBy], b[sortBy]);
+      const aValue = String(a[sortBy] ?? ""); // Convert to string, fallback to empty string
+      const bValue = String(b[sortBy] ?? ""); // Convert to string, fallback to empty string
+      return sortOrder === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
     });
 
   const selectedProduct = selectedProductId

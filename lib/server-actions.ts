@@ -81,7 +81,9 @@ export const createProduct = async ({
   makers,
   photos,
   averageRating,
-}: ProductData): Promise<any> => {
+  sameProductIds, // Add this new parameter
+}: ProductData & { sameProductIds?: string[] }): Promise<any> => {
+  // Updated type
   try {
     const authenticatedUser = await auth();
 
@@ -97,15 +99,30 @@ export const createProduct = async ({
     if (!category) {
       throw new Error("Category not found");
     }
+
     const alternatives = await db.alternative.findMany({
       where: {
         id: {
-          in: alternativeIds, // Check if all provided alternativeIds exist
+          in: alternativeIds,
         },
       },
     });
     if (!alternatives) {
-      throw new Error("Category not found");
+      throw new Error("Alternatives not found"); // Updated error message
+    }
+
+    // Optional: Verify sameProducts exist
+    if (sameProductIds?.length) {
+      const existingSameProducts = await db.product.findMany({
+        where: {
+          id: {
+            in: sameProductIds,
+          },
+        },
+      });
+      if (existingSameProducts.length !== sameProductIds.length) {
+        throw new Error("One or more sameProductIds not found");
+      }
     }
 
     const userId = authenticatedUser.user?.id;
@@ -144,9 +161,11 @@ export const createProduct = async ({
           },
         },
         alternatives: {
-          connect: alternativeIds.map((id) => ({ id })), // Connect multiple alternatives
+          connect: alternativeIds.map((id) => ({ id })),
         },
-
+        sameProducts: {
+          connect: sameProductIds?.map((id) => ({ id })) || [], // Fixed relation typing
+        },
         images: {
           createMany: {
             data: images?.map((image) => ({ url: image })),

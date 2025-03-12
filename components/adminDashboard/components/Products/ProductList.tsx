@@ -262,16 +262,19 @@ export default function ProductList({
     if (!price) return "bg-green-100 text-green-800";
     return "bg-blue-100 text-blue-800";
   };
-
   const sortedProducts = [...products].sort((a, b) => {
     if (sortBy === "views" || sortBy === "upvotes") {
       const aValue = sortBy === "views" ? a.views : a.upvotes || 0;
       const bValue = sortBy === "views" ? b.views : b.upvotes || 0;
       return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+    } else {
+      // Handle string-based sorting for 'name' and 'updatedAt'
+      const aValue = String(a[sortBy] ?? ""); // Convert to string, fallback to empty string
+      const bValue = String(b[sortBy] ?? ""); // Convert to string, fallback to empty string
+      return sortOrder === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
     }
-    const compareValue = (val1: string, val2: string) =>
-      sortOrder === "asc" ? val1.localeCompare(val2) : val2.localeCompare(val1);
-    return compareValue(a[sortBy] || "", b[sortBy] || "");
   });
 
   const totalPages = Math.ceil(totalProducts / rowsPerPage);
@@ -539,7 +542,7 @@ export default function ProductList({
                             <div className="text-sm font-medium text-gray-900">
                               {product.name}
                             </div>
-                            {product.featured && (
+                            {product?.featured && (
                               <Star className="w-4 h-4 ml-2 text-yellow-400 fill-current" />
                             )}
                           </div>

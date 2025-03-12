@@ -26,8 +26,10 @@ import {
   getActiveAlternative,
   getActiveCategory,
   getUsers,
+  getProducts,
+  getActiveProducts, // Add this import
 } from "@/lib/server-actions";
-import { Alternative, Category, User } from "@/services/types";
+import { Alternative, Category, User, Product } from "@/services/types"; // Add Product type
 import {
   ArrowRight,
   Save,
@@ -63,6 +65,7 @@ interface ProductFormData {
   launchDate: Date | null;
   launchNotes: string;
   submissionTier: string;
+  sameProductIds: string[]; // Added sameProductIds
 }
 
 interface Step {
@@ -553,6 +556,7 @@ const initialFormData: ProductFormData = {
   launchDate: new Date(),
   launchNotes: "",
   submissionTier: "regular",
+  sameProductIds: [], // Added sameProductIds
 };
 
 // Main Component
@@ -564,15 +568,20 @@ const NewProduct: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
+  const [products, setProducts] = useState<Product[]>([]); // Added products state
+  const [productsLoading, setProductsLoading] = useState<boolean>(true);
 
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [subCategoryId, setSubCategoryId] = useState<string | null>(null);
   const [alternativeIds, setAlternativeIds] = useState<string[]>([]);
+  const [sameProductIds, setSameProductIds] = useState<string[]>([]); // Added sameProductIds state
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchSubQuery, setSearchSubQuery] = useState<string>("");
   const [searchUser, setSearchUser] = useState<string>("");
   const [searchAlternativeQuery, setAlternativeSearchQuery] =
     useState<string>("");
+  const [searchSameProductQuery, setSearchSameProductQuery] =
+    useState<string>(""); // Added search for same products
 
   const [promoOffer, setPromoOffer] = useState<string>("");
   const [promoCode, setPromoCode] = useState<string>("");
@@ -582,9 +591,35 @@ const NewProduct: React.FC = () => {
 
   // Fetch Data
   useEffect(() => {
-    getActiveCategory().then((data) => setCategories(data));
-    getUsers().then((data) => setUsers(data as any));
-    getActiveAlternative().then((data) => setAlternatives(data));
+    const fetchData = async () => {
+      try {
+        const [categoryData, userData, alternativeData, productData] =
+          await Promise.all([
+            getActiveCategory(),
+            getUsers(),
+            getActiveAlternative(),
+            getActiveProducts(), // Use the new function
+          ]);
+        setCategories(categoryData);
+        setUsers(userData as any);
+        setAlternatives(alternativeData);
+        setProducts(
+          productData.map((product: any) => ({
+            ...product,
+            reviews: product.reviews || [],
+            notification: product.notification || null,
+            user: product.user || null,
+            sameProductIds: product.sameProductIds || [],
+          }))
+        ); // Map the products to match the Product type
+        setProductsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load data. Please try again.");
+        setProductsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   // Generate Slug from Name
@@ -789,9 +824,7 @@ const NewProduct: React.FC = () => {
       await createProduct({
         name: formData.name,
         tags: formData.tags,
-
-        //@ts-ignore
-        linkedin: formData.socialLinks.linkedin,
+        linkedin: formData.socialLinks.linkedin || "",
         weburl: formData.websiteUrl,
         suggestUrl: "",
         promoOffer,
@@ -802,8 +835,7 @@ const NewProduct: React.FC = () => {
         slug: formData.slug,
         headline: formData.tagline,
         website: formData.websiteUrl,
-        //@ts-ignore
-        twitter: formData.socialLinks.twitter,
+        twitter: formData.socialLinks.twitter || "",
         discord: "",
         isMaker: formData.workedOnProduct,
         makers: formData.makers,
@@ -816,6 +848,7 @@ const NewProduct: React.FC = () => {
         categoryId: categoryId || "",
         alternativeIds,
         subcategoryId: subCategoryId || "",
+        sameProductIds, // Pass sameProductIds
       });
 
       toast.success("Product submitted successfully!");
@@ -823,6 +856,7 @@ const NewProduct: React.FC = () => {
       setPromoOffer("");
       setPromoCode("");
       setPromoExpireDate(new Date());
+      setSameProductIds([]); // Reset sameProductIds
       setCurrentStep(1);
     } catch (error) {
       console.log(error);
@@ -839,7 +873,7 @@ const NewProduct: React.FC = () => {
           Tell Us About Your Product
         </h2>
         <p className="text-gray-600">
-          We&apos;ll need its name, tagline, launch tags, and description.
+          We'll need its name, tagline, launch tags, and description.
         </p>
 
         <FormField
@@ -894,9 +928,9 @@ const NewProduct: React.FC = () => {
           tooltip="Add relevant tags to help people discover your product."
         >
           <MultiSelect
-            options={categories?.map((cat) => cat.name) || []} // Ensure options are available
-            value={formData.tags} // Array of selected tags
-            onChange={(value) => handleInputChange("tags", value)} // Passes array directly
+            options={categories?.map((cat) => cat.name) || []}
+            value={formData.tags}
+            onChange={(value) => handleInputChange("tags", value)}
             placeholder="e.g., SaaS, AI, Productivity"
             maxItems={3}
           />
@@ -1001,6 +1035,42 @@ const NewProduct: React.FC = () => {
             }}
             placeholder="Which well-known tool is this an alternative to?"
           />
+        </FormField>
+
+        <FormField
+          label="Similar Products"
+          tooltip="Select products that are similar to yours."
+        >
+          {productsLoading ? (
+            <p className="text-gray-500">Loading products...</p>
+          ) : products.length === 0 ? (
+            <p className="text-gray-500">No active products available.</p>
+          ) : (
+            <MultiSelect
+              options={products
+                .map((prod) => prod.name)
+                .filter((name): name is string => name !== undefined)}
+              value={formData.sameProductIds
+                .map((id) => {
+                  const product = products.find((p) => p.id === id);
+                  return product ? product.name : undefined;
+                })
+                .filter((name): name is string => name !== undefined)}
+              onChange={(value) => {
+                const selectedIds = products
+                  .filter(
+                    (prod) =>
+                      prod.name !== undefined && value.includes(prod.name)
+                  )
+                  .map((prod) => prod.id)
+                  .filter((id) => id !== undefined) as string[];
+                handleInputChange("sameProductIds", selectedIds);
+                setSameProductIds(selectedIds);
+              }}
+              placeholder="Select similar products"
+              maxItems={5}
+            />
+          )}
         </FormField>
       </div>
 
@@ -1173,7 +1243,7 @@ const NewProduct: React.FC = () => {
           Did you work on this product?
         </h2>
         <p className="text-gray-600">
-          It&apos;s fine either way. Just need to know.
+          It's fine either way. Just need to know.
         </p>
 
         <div className="space-y-4">
@@ -1190,7 +1260,7 @@ const NewProduct: React.FC = () => {
                 I worked on this product
               </p>
               <p className="text-sm text-blue-600">
-                I&apos;ll be listed as both Hunter and Maker of this product
+                I'll be listed as both Hunter and Maker of this product
               </p>
             </div>
           </label>
@@ -1205,10 +1275,10 @@ const NewProduct: React.FC = () => {
             />
             <div>
               <p className="font-medium text-[#1F1F1F]">
-                I didn&apos;t work on this product
+                I didn't work on this product
               </p>
               <p className="text-sm text-blue-600">
-                I&apos;ll be listed as Hunter of this product
+                I'll be listed as Hunter of this product
               </p>
             </div>
           </label>
@@ -1220,7 +1290,7 @@ const NewProduct: React.FC = () => {
           Who worked on this product?
         </h2>
         <p className="text-gray-600">
-          You&apos;re free to add anyone who worked on this product.
+          You're free to add anyone who worked on this product.
         </p>
 
         <div className="space-y-4">
@@ -1460,6 +1530,14 @@ const NewProduct: React.FC = () => {
             <div className="flex">
               <dt className="w-1/3 text-gray-500">Tags:</dt>
               <dd className="w-2/3">{formData.tags.join(", ") || "—"}</dd>
+            </div>
+            <div className="flex">
+              <dt className="w-1/3 text-gray-500">Similar Products:</dt>
+              <dd className="w-2/3">
+                {formData.sameProductIds
+                  .map((id) => products.find((p) => p.id === id)?.name)
+                  .join(", ") || "—"}
+              </dd>
             </div>
           </dl>
         </div>

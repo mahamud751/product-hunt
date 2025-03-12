@@ -173,6 +173,7 @@ export interface Product {
   isMaker: boolean;
   makers: string[];
   photos: string[];
+  sameProductIds: string[];
 }
 
 export interface ProductData {
@@ -205,6 +206,7 @@ export interface ProductData {
   isMaker: boolean;
   photos: string[];
   makers: string[];
+  sameProductIds: string[];
 }
 
 export interface Image {

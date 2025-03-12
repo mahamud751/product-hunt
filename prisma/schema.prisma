@@ -167,6 +167,9 @@ model Product {
   views         Int            @default(0)
   activityLogs  ActivityLog[]
 
+  sameProducts Product[] @relation("SameProducts")
+  sameAs       Product[] @relation("SameProducts")
+
   @@index([userId])
   @@index([status])
 }
