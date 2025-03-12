@@ -119,6 +119,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ product }) => {
             : product?.images?.map((image: any) => image?.url),
         isMaker,
         makers,
+        sameProductIds: product.sameProducts.map((product: any) => product.id),
         photos:
           uploadedProductImages.length > 0
             ? uploadedProductImages
