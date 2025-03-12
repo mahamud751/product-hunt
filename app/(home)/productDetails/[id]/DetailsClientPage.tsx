@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
+import { debounce } from "lodash";
 import {
   Star,
   ThumbsUp,
@@ -712,39 +713,46 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
   ];
 
   // Refetch function
-  const fetchProductDetails = useCallback(async () => {
-    if (!id) return;
-    try {
-      setLoading(true);
-      const productData = await getProductById(id);
-      setData({
-        ...productData,
-        reviews: Array.isArray(productData?.reviews) ? productData.reviews : [],
-        comments: Array.isArray(productData?.comments)
-          ? productData.comments
-          : [],
-      } as unknown as Product);
-      // Set initial upvotes from product data
-      setTotalUpvotes(productData?.upvotes?.length || 0);
-      // Check if current user has upvoted (assuming user.id is available)
-      setHasUpvoted(
-        Array.isArray(productData?.upvotes) && user?.id
-          ? productData.upvotes.some(
-              (upvoter: any) => upvoter?.userId === user.id
-            )
-          : false
-      ); // Check if user has upvoted
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [id, user?.id]);
-  console.log(data);
+  const fetchProductDetails = useCallback(
+    debounce(async (id: string) => {
+      try {
+        setLoading(true);
+        const productData = await getProductById(id);
+        setData({
+          ...productData,
+          reviews: Array.isArray(productData?.reviews)
+            ? productData.reviews
+            : [],
+          comments: Array.isArray(productData?.comments)
+            ? productData.comments
+            : [],
+        } as unknown as Product);
+        setTotalUpvotes(productData?.upvotes?.length || 0);
+        setHasUpvoted(
+          Array.isArray(productData?.upvotes) && user?.id
+            ? productData.upvotes.some(
+                (upvoter: any) => upvoter?.userId === user.id
+              )
+            : false
+        );
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    }, 300), // 300ms debounce delay
+    [user?.id]
+  );
 
   useEffect(() => {
-    fetchProductDetails();
-  }, [fetchProductDetails]);
+    if (id) {
+      fetchProductDetails(id);
+    }
+    // Cleanup debounce on unmount to prevent memory leaks
+    return () => {
+      fetchProductDetails.cancel();
+    };
+  }, [id, fetchProductDetails]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -770,6 +778,13 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
       setTotalUpvotes(hasUpvoted ? totalUpvotes - 1 : totalUpvotes + 1);
     } catch (error) {
       console.error("Error upvoting product:", error);
+    }
+  };
+
+  const refetchProductDetails = () => {
+    if (id) {
+      // Type guard to ensure id is not null
+      fetchProductDetails(id);
     }
   };
 
@@ -1014,7 +1029,7 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
                       data={data}
                       setIsReviewModalOpen={setIsReviewModalOpen}
                       isOverview={true}
-                      refetch={fetchProductDetails}
+                      refetch={refetchProductDetails}
                     />
                   )}
 
@@ -1023,7 +1038,7 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
                       productId={data.id}
                       comments={data.comments}
                       data={data}
-                      refetch={fetchProductDetails}
+                      refetch={refetchProductDetails}
                       user={user}
                     />
                   )}
@@ -1039,7 +1054,7 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
                 data={data}
                 setIsReviewModalOpen={setIsReviewModalOpen}
                 isOverview={false}
-                refetch={fetchProductDetails}
+                refetch={refetchProductDetails}
               />
             )}
 
@@ -1048,7 +1063,7 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
                 productId={data.id}
                 comments={data.comments}
                 data={data}
-                refetch={fetchProductDetails}
+                refetch={refetchProductDetails}
                 user={user}
               />
             )}
@@ -1190,7 +1205,7 @@ const DetailsClientPage: React.FC<AvatarProps> = ({ user }) => {
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         productId={data.id}
-        refetch={fetchProductDetails}
+        refetch={refetchProductDetails}
       />
     </div>
   );

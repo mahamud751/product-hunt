@@ -90,7 +90,7 @@ const MenuItems: MenuItem[] = [
       },
       {
         label: "Analytics",
-        path: "/products/analytics",
+        path: "/adminDashboard/productAnalytic",
         component: <div>Analytics Management</div>,
       },
     ],

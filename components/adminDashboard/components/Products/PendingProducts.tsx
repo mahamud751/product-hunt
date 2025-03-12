@@ -14,8 +14,6 @@ export default async function PendingProducts() {
     "PENDING" // Add status filter for pending products
   );
 
-  console.log(products);
-
   return (
     <div className="p-8">
       <section className="mb-12">

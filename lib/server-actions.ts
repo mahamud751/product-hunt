@@ -471,9 +471,15 @@ export const getOwnerProducts = async () => {
 
 export const getProductById = async (productId: string) => {
   try {
-    const product = await db.product.findUnique({
+    // Increment the views count for the product
+    const updatedProduct = await db.product.update({
       where: {
         id: productId,
+      },
+      data: {
+        views: {
+          increment: 1, // Increment views by 1
+        },
       },
       include: {
         category: true,
@@ -488,7 +494,7 @@ export const getProductById = async (productId: string) => {
         reviews: {
           include: {
             user: true,
-            helpfulUsers: true, // Added to fetch helpfulUsers for reviews
+            helpfulUsers: true,
           },
         },
         upvotes: {
@@ -500,24 +506,24 @@ export const getProductById = async (productId: string) => {
       },
     });
 
-    if (!product) return null;
+    if (!updatedProduct) return null;
 
     // Recalculate averageRating to ensure it’s current
-    const reviews = product.reviews;
+    const reviews = updatedProduct.reviews;
     const avgRating =
       reviews.length > 0
         ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
         : 0.0;
 
-    if (product.averageRating !== avgRating) {
+    if (updatedProduct.averageRating !== avgRating) {
       await db.product.update({
         where: { id: productId },
         data: { averageRating: avgRating },
       });
-      product.averageRating = avgRating; // Update the returned object
+      updatedProduct.averageRating = avgRating; // Update the returned object
     }
 
-    return product;
+    return updatedProduct;
   } catch (error) {
     console.error("Error getting product by id:", error);
     return null;

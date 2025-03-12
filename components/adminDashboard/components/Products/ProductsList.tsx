@@ -32,13 +32,7 @@ export default async function ProductsList() {
       </section>
 
      
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          Pending Approvals
-        </h2>
-        <PendingApprovals dateFilter={dateFilter} />
-      </section>
-
+     
     
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
